@@ -1,0 +1,99 @@
+package components
+
+import (
+	"fmt"
+	"languagepapi/internal/models"
+)
+
+templ Calendar(data *models.CalendarData) {
+	@Layout("stats") {
+		<main class="cal">
+			<header class="page-header">
+				<a href="/" class="back-link" hx-get="/" hx-target="body">&larr; back</a>
+				<h1>stats</h1>
+			</header>
+
+			<section class="cal-stats">
+				<div class="cal-stat">
+					<b>{ fmt.Sprintf("%d", data.Stats.Level) }</b>
+					<small>level</small>
+				</div>
+				<div class="cal-stat">
+					if data.Stats.CurrentStreak > 0 {
+						<b><span class="fire">🔥</span> { fmt.Sprintf("%d", data.Stats.CurrentStreak) }</b>
+					} else {
+						<b>{ fmt.Sprintf("%d", data.Stats.CurrentStreak) }</b>
+					}
+					<small>streak</small>
+				</div>
+				<div class="cal-stat">
+					<b>{ fmt.Sprintf("%d", data.TotalXP) }</b>
+					<small>total xp</small>
+				</div>
+				<div class="cal-stat">
+					<b>{ fmt.Sprintf("%d", data.Stats.DailyProgress) }/{ fmt.Sprintf("%d", data.Stats.DailyGoal) }</b>
+					<small>today</small>
+				</div>
+			</section>
+
+			<section class="heatmap">
+				<h2>activity</h2>
+				<div class="hm-grid">
+					for _, row := range data.Heatmap {
+						<div class="hm-row">
+							for _, day := range row {
+								<div
+									class={ fmt.Sprintf("hm-cell %s", levelClass(day.Level)) }
+									title={ fmt.Sprintf("%s: %dxp, %d cards", day.Date, day.XPEarned, day.CardsReviewed) }
+								></div>
+							}
+						</div>
+					}
+				</div>
+				<div class="hm-legend">
+					<span>less</span>
+					<div class="hm-cell l0"></div>
+					<div class="hm-cell l1"></div>
+					<div class="hm-cell l2"></div>
+					<div class="hm-cell l3"></div>
+					<div class="hm-cell l4"></div>
+					<span>more</span>
+				</div>
+			</section>
+
+			<section class="badges">
+				<h2>achievements ({ fmt.Sprintf("%d/%d", data.Stats.EarnedBadges, data.Stats.TotalBadges) })</h2>
+				<div class="badge-grid">
+					for _, a := range data.Stats.Achievements {
+						<div class={ templ.KV("bdg", true), templ.KV("earned", a.Earned) }>
+							<span class="bdg-icon">{ achievementIcon(a.Icon) }</span>
+							<div class="bdg-info">
+								<span class="bdg-name">{ a.Name }</span>
+								<span class="bdg-desc">{ a.Description }</span>
+							</div>
+						</div>
+					}
+				</div>
+			</section>
+		</main>
+	}
+}
+
+func levelClass(level int) string {
+	if level < 0 {
+		return "lf"
+	}
+	return fmt.Sprintf("l%d", level)
+}
+
+func achievementIcon(icon string) string {
+	icons := map[string]string{
+		"sparkles": "✨", "seedling": "🌱", "books": "📚", "hundred": "💯",
+		"crown": "👑", "fire": "🔥", "zap": "⚡", "trophy": "🏆",
+		"star": "⭐", "gem": "💎", "rocket": "🚀", "brain": "🧠",
+	}
+	if e, ok := icons[icon]; ok {
+		return e
+	}
+	return "🏅"
+}

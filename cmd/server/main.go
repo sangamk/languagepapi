@@ -38,6 +38,9 @@ func main() {
 	http.HandleFunc("POST /add", handlers.HandleCreateCard)
 	http.HandleFunc("DELETE /words/{id}", handlers.HandleDeleteCard)
 
+	// Calendar / Stats
+	http.HandleFunc("GET /calendar", handlers.HandleCalendar)
+
 	// Static files
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 

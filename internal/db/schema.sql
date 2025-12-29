@@ -131,9 +131,15 @@ INSERT OR IGNORE INTO islands (id, name, description, icon, unlock_xp, sort_orde
 
 -- Seed Data: Sample achievements
 INSERT OR IGNORE INTO achievements (id, name, description, icon, xp_reward, condition_type, condition_value) VALUES
-    (1, 'First Steps', 'Review your first card', '1', 10, 'cards_reviewed', 1),
-    (2, 'Getting Started', 'Review 10 cards', '2', 25, 'cards_reviewed', 10),
-    (3, 'Dedicated Learner', 'Review 100 cards', '3', 100, 'cards_reviewed', 100),
-    (4, 'Week Warrior', '7-day streak', '4', 50, 'streak', 7),
-    (5, 'Month Master', '30-day streak', '5', 200, 'streak', 30),
-    (6, 'Island Explorer', 'Master your first island', '6', 500, 'island_mastered', 1);
+    (1, 'First Steps', 'Review your first card', 'sparkles', 10, 'cards_reviewed', 1),
+    (2, 'Getting Started', 'Review 10 cards', 'seedling', 25, 'cards_reviewed', 10),
+    (3, 'Dedicated Learner', 'Review 100 cards', 'books', 100, 'cards_reviewed', 100),
+    (4, 'Century Club', 'Review 500 cards', 'hundred', 250, 'cards_reviewed', 500),
+    (5, 'Vocabulary Master', 'Review 1000 cards', 'crown', 500, 'cards_reviewed', 1000),
+    (6, 'Week Warrior', '7-day streak', 'fire', 50, 'streak', 7),
+    (7, 'Fortnight Fighter', '14-day streak', 'zap', 100, 'streak', 14),
+    (8, 'Month Master', '30-day streak', 'trophy', 200, 'streak', 30),
+    (9, 'Streak Legend', '100-day streak', 'star', 1000, 'streak', 100),
+    (10, 'Word Collector', 'Learn 50 words', 'gem', 75, 'words_learned', 50),
+    (11, 'Polyglot Path', 'Learn 200 words', 'rocket', 200, 'words_learned', 200),
+    (12, 'Lexicon Lord', 'Learn 500 words', 'brain', 500, 'words_learned', 500);

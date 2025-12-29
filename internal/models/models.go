@@ -179,3 +179,51 @@ type TodayStats struct {
 	DueCount      int
 	NewCount      int
 }
+
+// AchievementWithStatus combines achievement with earned status
+type AchievementWithStatus struct {
+	Achievement
+	Earned   bool
+	EarnedAt sql.NullTime
+}
+
+// HeatmapDay represents a single day in the heatmap
+type HeatmapDay struct {
+	Date          string
+	XPEarned      int
+	CardsReviewed int
+	Level         int // 0-4 intensity level
+}
+
+// GamificationStats holds all gamification data for display
+type GamificationStats struct {
+	// Level system
+	Level           int
+	CurrentXP       int
+	XPForNextLevel  int
+	XPProgress      float64 // 0-100 percentage
+
+	// Streaks
+	CurrentStreak   int
+	LongestStreak   int
+	IsActiveToday   bool
+
+	// Daily goal
+	DailyGoal       int
+	DailyProgress   int
+	DailyPercent    float64
+
+	// Achievements
+	Achievements    []AchievementWithStatus
+	TotalBadges     int
+	EarnedBadges    int
+}
+
+// CalendarData holds all data for the calendar page
+type CalendarData struct {
+	Heatmap         [][]HeatmapDay // 7 rows (days of week) x N weeks
+	Stats           GamificationStats
+	TotalXP         int
+	TotalReviews    int
+	TotalCards      int
+}
