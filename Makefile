@@ -1,4 +1,4 @@
-.PHONY: dev build build-linux run generate clean setup
+.PHONY: dev build run generate clean
 
 # Development with hot reload
 dev:
@@ -9,31 +9,29 @@ dev:
 generate:
 	@templ generate
 
-# Build for current platform
+# Build everything for deployment (Linux server)
 build: generate
+	@mkdir -p bin/deploy
+	GOOS=linux GOARCH=amd64 go build -o bin/deploy/server ./cmd/server
+	@cp -r static bin/deploy/
+	@cp .env.example bin/deploy/.env.example
+	@if [ -f .env ]; then cp .env bin/deploy/.env; fi
+	@if [ -f languagepapi.db ]; then cp languagepapi.db bin/deploy/; fi
+	@echo ""
+	@echo "Build complete! Deploy contents of bin/deploy/ to your server:"
+	@ls -la bin/deploy/
+	@echo ""
+	@echo "On server: ./server"
+
+# Run locally (builds for current platform)
+run: generate
 	go build -o bin/server ./cmd/server
-
-# Build for Linux (server deployment)
-build-linux: generate
-	GOOS=linux GOARCH=amd64 go build -o bin/server-linux ./cmd/server
-
-# Run production build locally
-run: build
 	./bin/server
 
 # Clean build artifacts
 clean:
 	rm -rf bin/
 
-# Setup for first run (create .env from example)
-setup:
-	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env - edit it with your settings"; fi
-
 # Import Spanish words from spanish.json
-import: build
+import:
 	go run scripts/import_spanish.go
-
-# Generate bridges for cards (requires GEMINI_API_KEY)
-bridges:
-	@if [ -z "$$GEMINI_API_KEY" ]; then echo "Error: GEMINI_API_KEY not set"; exit 1; fi
-	go run -exec "env $$(cat .env | xargs)" scripts/generate_bridges.go
