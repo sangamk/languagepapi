@@ -1,0 +1,4832 @@
+[
+  {
+    "1",
+    "la",
+    "the, "third person direct object"},{"2","el",
+    "the"
+  },
+  {
+    "3",
+    "que",
+    "which, that"
+  },
+  {
+    "4",
+    "de",
+    "from,  of"
+  },
+  {
+    "5",
+    "en",
+    "on,  in"
+  },
+  {
+    "6",
+    "y  -  and"
+  },
+  {
+    "7",
+    "a",
+    "at,  to"
+  },
+  {
+    "8",
+    "ser",
+    "to be[norm]"
+  },
+  {
+    "9",
+    "no",
+    "no"
+  },
+  {
+    "10",
+    "se  -  [“reﬂexive” marker]"
+  },
+  {
+    "11",
+    "un",
+    "an, a"
+  },
+  {
+    "12",
+    "lo  -  [3rd person][dir obj-m],  the"
+  },
+  {
+    "13",
+    "decir",
+    "say,  to tell"
+  },
+  {
+    "14",
+    "hacer",
+    "make,  to do"
+  },
+  {
+    "15",
+    "su",
+    "her, his,  their,  your[formal]"
+  },
+  {
+    "16",
+    "haber",
+    "to have"
+  },
+  {
+    "17",
+    "tener",
+    "to have"
+  },
+  {
+    "18",
+    "me  -  me[obj]"
+  },
+  {
+    "19",
+    "otro",
+    "another, other"
+  },
+  {
+    "20",
+    "por",
+    "for,  by,  through"
+  },
+  {
+    "21",
+    "con",
+    "with"
+  },
+  {
+    "22",
+    "todo",
+    "every, all"
+  },
+  {
+    "23",
+    "más  -  more"
+  },
+  {
+    "24",
+    "para",
+    "to,  for,  in order to"
+  },
+  {
+    "25",
+    "yo  -  I[subj]"
+  },
+  {
+    "26",
+    "como",
+    "as, like"
+  },
+  {
+    "27",
+    "si",
+    "whether, if"
+  },
+  {
+    "28",
+    "poder",
+    "can,  to be able to"
+  },
+  {
+    "29",
+    "dar",
+    "to give"
+  },
+  {
+    "30",
+    "le  -  [3rd person][indir obj]"
+  },
+  {
+    "31",
+    "estar",
+    "to be"
+  },
+  {
+    "32",
+    "pero",
+    "yet, but,  except"
+  },
+  {
+    "33",
+    "qué",
+    "which?, what?,  how !"
+  },
+  {
+    "34",
+    "este  -  this[m][esta[f]]"
+  },
+  {
+    "35",
+    "entre",
+    "among,  between"
+  },
+  {
+    "36",
+    "pasar",
+    "spend[time],  to pass"
+  },
+  {
+    "37",
+    "mi  -  my"
+  },
+  {
+    "38",
+    "uno  -  one"
+  },
+  {
+    "39",
+    "primero  -  ﬁrst"
+  },
+  {
+    "40",
+    "donde  -  where"
+  },
+  {
+    "41",
+    "porque  -  because"
+  },
+  {
+    "42",
+    "deber",
+    "ought to,  should,  to owe"
+  },
+  {
+    "43",
+    "ese  -  that[m][esa[f]]"
+  },
+  {
+    "44",
+    "sí",
+    "yes"
+  },
+  {
+    "45",
+    "nos  -  us[obj]"
+  },
+  {
+    "46",
+    "ni",
+    "neither, not even,  nor"
+  },
+  {
+    "47",
+    "sobre",
+    "over,  on top of,  about"
+  },
+  {
+    "48",
+    "o  -  or"
+  },
+  {
+    "49",
+    "cuando  -  when"
+  },
+  {
+    "50",
+    "hombre",
+    "mankind, man,  husband"
+  },
+  {
+    "51",
+    "grande",
+    "great, large,  big"
+  },
+  {
+    "52",
+    "ir",
+    "to go"
+  },
+  {
+    "53",
+    "alguno",
+    "someone[pron], some"
+  },
+  {
+    "54",
+    "muy",
+    "really,  very"
+  },
+  {
+    "55",
+    "forma",
+    "shape, form,  way"
+  },
+  {
+    "56",
+    "cada",
+    "every, each"
+  },
+  {
+    "57",
+    "algo",
+    "somewhat, something"
+  },
+  {
+    "58",
+    "tres  -  three"
+  },
+  {
+    "59",
+    "ya",
+    "still,  already"
+  },
+  {
+    "60",
+    "dos  -  two"
+  },
+  {
+    "61",
+    "momento  -  time, moment"
+  },
+  {
+    "62",
+    "menos",
+    "fewer, less"
+  },
+  {
+    "63",
+    "hasta  -  up to,  until,  even"
+  },
+  {
+    "64",
+    "vez  -  time[speciﬁc occurrence]"
+  },
+  {
+    "65",
+    "así",
+    "like that"
+  },
+  {
+    "66",
+    "esto  -  this[n]"
+  },
+  {
+    "67",
+    "ver",
+    "to see"
+  },
+  {
+    "68",
+    "cierto",
+    "true,  sure, certain"
+  },
+  {
+    "69",
+    "mundo  -  world"
+  },
+  {
+    "70",
+    "poner",
+    "get ,  to put[on]"
+  },
+  {
+    "71",
+    "sin",
+    "without"
+  },
+  {
+    "72",
+    "punto",
+    "period,  dot, point"
+  },
+  {
+    "73",
+    "mucho",
+    "many, much,  a lot"
+  },
+  {
+    "74",
+    "después",
+    "after"
+  },
+  {
+    "75",
+    "cosa  -  thing"
+  },
+  {
+    "76",
+    "él  -  [ellos]them[m], he"
+  },
+  {
+    "77",
+    "casi",
+    "nearly,  almost"
+  },
+  {
+    "78",
+    "llegar",
+    "to arrive"
+  },
+  {
+    "79",
+    "tan",
+    "as,  such,  too,  so"
+  },
+  {
+    "80",
+    "también",
+    "also"
+  },
+  {
+    "81",
+    "hablar",
+    "talk,  to speak"
+  },
+  {
+    "82",
+    "mujer",
+    "wife, woman"
+  },
+  {
+    "83",
+    "ella  -  [ellas]them[f], she"
+  },
+  {
+    "84",
+    "hora",
+    "time[speciﬁc], hour"
+  },
+  {
+    "85",
+    "ahora",
+    "now"
+  },
+  {
+    "86",
+    "propio",
+    "typical,  proper, own"
+  },
+  {
+    "87",
+    "saber",
+    "ﬁnd out,  to know[a fact]"
+  },
+  {
+    "88",
+    "tanto",
+    "so many, so much"
+  },
+  {
+    "89",
+    "pensar",
+    "to think"
+  },
+  {
+    "90",
+    "desde",
+    "since,  from"
+  },
+  {
+    "91",
+    "mejor",
+    "better , best"
+  },
+  {
+    "92",
+    "niño",
+    "littleboy, child"
+  },
+  {
+    "93",
+    "mismo  -  same"
+  },
+  {
+    "94",
+    "tipo",
+    "kind, type"
+  },
+  {
+    "95",
+    "pequeño",
+    "young, small, little"
+  },
+  {
+    "96",
+    "te",
+    " you[obj formal]"
+  },
+  {
+    "97",
+    "año  -  year"
+  },
+  {
+    "98",
+    "allí",
+    "over there,  there"
+  },
+  {
+    "99",
+    "parte",
+    "portion, part"
+  },
+  {
+    "100",
+    "vida  -  life"
+  },
+  {
+    "101",
+    "trabajo",
+    "effort,  job, work"
+  },
+  {
+    "102",
+    "querer",
+    "love,  to want"
+  },
+  {
+    "103",
+    "nombre",
+    "noun, name"
+  },
+  {
+    "104",
+    "casa  -  house"
+  },
+  {
+    "105",
+    "país  -  country"
+  },
+  {
+    "106",
+    "siempre",
+    "forever,  always"
+  },
+  {
+    "107",
+    "volver",
+    "to V again,  to return"
+  },
+  {
+    "108",
+    "tiempo",
+    "weather, time[general]"
+  },
+  {
+    "109",
+    "mayor",
+    "main,  older, larger"
+  },
+  {
+    "110",
+    "eso  -  that[n]"
+  },
+  {
+    "111",
+    "bajo",
+    "underneath,  under"
+  },
+  {
+    "112",
+    "nada  -  not]at all, nothing"
+  },
+  {
+    "113",
+    "persona  -  person"
+  },
+  {
+    "114",
+    "bien",
+    "well"
+  },
+  {
+    "115",
+    "nuestro  -  our"
+  },
+  {
+    "116",
+    "antes",
+    "before"
+  },
+  {
+    "117",
+    "historia",
+    "story, history"
+  },
+  {
+    "118",
+    "poco  -  few, little,  a littlebit"
+  },
+  {
+    "119",
+    "durante",
+    "for[time],  during"
+  },
+  {
+    "120",
+    "quien",
+    "whom, who"
+  },
+  {
+    "121",
+    "lugar",
+    "position, place"
+  },
+  {
+    "122",
+    "realidad",
+    "actuality, reality"
+  },
+  {
+    "123",
+    "presentar",
+    "present,  to introduce"
+  },
+  {
+    "124",
+    "conocer",
+    "to know[someone or place]"
+  },
+  {
+    "125",
+    "vivir",
+    "to live"
+  },
+  {
+    "126",
+    "hecho",
+    "happening, fact"
+  },
+  {
+    "127",
+    "entonces",
+    "then,  so"
+  },
+  {
+    "128",
+    "día  -  day"
+  },
+  {
+    "129",
+    "salir",
+    "go out,  to leave"
+  },
+  {
+    "130",
+    "llamar",
+    "name,  to call"
+  },
+  {
+    "131",
+    "cuatro  -  four"
+  },
+  {
+    "132",
+    "seguir",
+    "keep on,  to follow"
+  },
+  {
+    "133",
+    "recordar",
+    "remind,  to remember"
+  },
+  {
+    "134",
+    "cambio  -  change"
+  },
+  {
+    "135",
+    "blanco  -  white"
+  },
+  {
+    "136",
+    "sacar",
+    "to take out"
+  },
+  {
+    "137",
+    "conseguir",
+    "obtain,  acquire,  to get"
+  },
+  {
+    "138",
+    "aquel  -  that[over there]"
+  },
+  {
+    "139",
+    "empezar",
+    "start,  to begin"
+  },
+  {
+    "140",
+    "modo",
+    "manner, way"
+  },
+  {
+    "141",
+    "llevar",
+    "carry,  to take"
+  },
+  {
+    "142",
+    "amigo  -  friend"
+  },
+  {
+    "143",
+    "tema",
+    "topic,  subject, theme"
+  },
+  {
+    "144",
+    "creer",
+    "think,  to believe"
+  },
+  {
+    "145",
+    "dejar",
+    "leave,  to let"
+  },
+  {
+    "146",
+    "existir",
+    "to exist"
+  },
+  {
+    "147",
+    "verdad  -  truth"
+  },
+  {
+    "148",
+    "aquí",
+    "here"
+  },
+  {
+    "149",
+    "ciudad  -  city"
+  },
+  {
+    "150",
+    "general  -  general"
+  },
+  {
+    "151",
+    "sólo",
+    "just,  only"
+  },
+  {
+    "152",
+    "aunque",
+    "even though, although"
+  },
+  {
+    "153",
+    "calle  -  street"
+  },
+  {
+    "154",
+    "parecer",
+    "look like,  to seem"
+  },
+  {
+    "155",
+    "manera",
+    "manner, way"
+  },
+  {
+    "156",
+    "recibir",
+    "to receive"
+  },
+  {
+    "157",
+    "quedar",
+    "stay,  to remain"
+  },
+  {
+    "158",
+    "preguntar",
+    "to ask[a question]"
+  },
+  {
+    "159",
+    "trabajar",
+    "to work"
+  },
+  {
+    "160",
+    "esperar",
+    "expect,  hope[for],  to wait"
+  },
+  {
+    "161",
+    "aceptar",
+    "to accept"
+  },
+  {
+    "162",
+    "formar",
+    "to form"
+  },
+  {
+    "163",
+    "hacia",
+    "towards,  toward"
+  },
+  {
+    "164",
+    "sino",
+    "except, but,  rather"
+  },
+  {
+    "165",
+    "aún",
+    "yet,  still"
+  },
+  {
+    "166",
+    "nunca",
+    "ever,  never"
+  },
+  {
+    "167",
+    "bueno  -  good"
+  },
+  {
+    "168",
+    "caso",
+    "occasion, case"
+  },
+  {
+    "169",
+    "mano  -  hand"
+  },
+  {
+    "170",
+    "nuevo  -  new"
+  },
+  {
+    "171",
+    "pueblo",
+    "village, people"
+  },
+  {
+    "172",
+    "cuanto",
+    "regarding, en cuanto a: in terms of"
+  },
+  {
+    "173",
+    "solo",
+    "alone, lonely"
+  },
+  {
+    "174",
+    "sentir",
+    "regret,  to feel"
+  },
+  {
+    "175",
+    "medio",
+    "middle, half"
+  },
+  {
+    "176",
+    "alcanzar",
+    "catch up with,  to reach"
+  },
+  {
+    "177",
+    "cuyo  -  whose"
+  },
+  {
+    "178",
+    "jugar",
+    "game],  to play[sport"
+  },
+  {
+    "179",
+    "fuerza",
+    "power,  force, strength"
+  },
+  {
+    "180",
+    "tarde  -  evening, afternoon"
+  },
+  {
+    "181",
+    "tal  -  such[a]"
+  },
+  {
+    "182",
+    "posible  -  possible"
+  },
+  {
+    "183",
+    "ejemplo  -  example"
+  },
+  {
+    "184",
+    "tratar",
+    "deal with,  treat,  to try"
+  },
+  {
+    "185",
+    "crear",
+    "to create"
+  },
+  {
+    "186",
+    "encontrar",
+    "to ﬁnd"
+  },
+  {
+    "187",
+    "ante",
+    "in the presence of,  before"
+  },
+  {
+    "188",
+    "ser  -  being"
+  },
+  {
+    "189",
+    "aire",
+    "appearance,  wind, air"
+  },
+  {
+    "190",
+    "venir",
+    "to come"
+  },
+  {
+    "191",
+    "escribir",
+    "to write"
+  },
+  {
+    "192",
+    "viejo",
+    "aged, old"
+  },
+  {
+    "193",
+    "palabra  -  word"
+  },
+  {
+    "194",
+    "obra",
+    "deed,  book, work"
+  },
+  {
+    "195",
+    "ninguno",
+    "nobody[pron],  none, no"
+  },
+  {
+    "196",
+    "mí  -  me[obj prep]"
+  },
+  {
+    "197",
+    "pues",
+    "well then, then"
+  },
+  {
+    "198",
+    "situación  -  situation"
+  },
+  {
+    "199",
+    "campo",
+    "country, ﬁeld"
+  },
+  {
+    "200",
+    "luego",
+    "afterwards,  later"
+  },
+  {
+    "201",
+    "dentro",
+    "inside"
+  },
+  {
+    "202",
+    "cuenta",
+    "account, bill"
+  },
+  {
+    "203",
+    "cuerpo  -  body"
+  },
+  {
+    "204",
+    "segundo  -  second"
+  },
+  {
+    "205",
+    "cual",
+    "whom,  who, which"
+  },
+  {
+    "206",
+    "cambiar",
+    "to change"
+  },
+  {
+    "207",
+    "ocurrir",
+    "occur,  to happen"
+  },
+  {
+    "208",
+    "luz  -  light"
+  },
+  {
+    "209",
+    "anterior",
+    "preceding, previous"
+  },
+  {
+    "210",
+    "menor",
+    "youngest, younger"
+  },
+  {
+    "211",
+    "aparecer",
+    "to appear"
+  },
+  {
+    "212",
+    "éste  -  [ésta[f]], this one[m]"
+  },
+  {
+    "213",
+    "gente  -  people"
+  },
+  {
+    "214",
+    "tomar",
+    "drink,  to take"
+  },
+  {
+    "215",
+    "escuchar",
+    "to listen to"
+  },
+  {
+    "216",
+    "gracia",
+    "favor,  grace, pl]thank you"
+  },
+  {
+    "217",
+    "además",
+    "besides,  as well,  also"
+  },
+  {
+    "218",
+    "gustar",
+    "to be pleasing to"
+  },
+  {
+    "219",
+    "varios",
+    "various, several"
+  },
+  {
+    "220",
+    "cabeza  -  head[part of body]"
+  },
+  {
+    "221",
+    "efecto  -  effect"
+  },
+  {
+    "222",
+    "mantener",
+    "maintain,  to keep"
+  },
+  {
+    "223",
+    "santo  -  saint[m]"
+  },
+  {
+    "224",
+    "quizás",
+    "maybe,  perhaps"
+  },
+  {
+    "225",
+    "servicio",
+    "helpfulness, service"
+  },
+  {
+    "226",
+    "cinco  -  ﬁve"
+  },
+  {
+    "227",
+    "tierra",
+    "ground,  land, earth"
+  },
+  {
+    "228",
+    "cómo",
+    "how?"
+  },
+  {
+    "229",
+    "comprender",
+    "to understand"
+  },
+  {
+    "230",
+    "comer",
+    "to eat"
+  },
+  {
+    "231",
+    "contar",
+    "count,  to tell"
+  },
+  {
+    "232",
+    "mil  -  thousand"
+  },
+  {
+    "233",
+    "programa",
+    "plan, program"
+  },
+  {
+    "234",
+    "distinto  -  different, distinct"
+  },
+  {
+    "235",
+    "ahí",
+    "there"
+  },
+  {
+    "236",
+    "último",
+    "ﬁnal, last"
+  },
+  {
+    "237",
+    "don",
+    "gift,  Mr, courtesy title[m]"
+  },
+  {
+    "238",
+    "pedir",
+    "request,  to ask for"
+  },
+  {
+    "239",
+    "agua  -  [el]water"
+  },
+  {
+    "240",
+    "abrir",
+    "to open"
+  },
+  {
+    "241",
+    "valor",
+    "worth, value"
+  },
+  {
+    "242",
+    "embargo  -  sin embargo: nevertheless"
+  },
+  {
+    "243",
+    "fácil",
+    "easy"
+  },
+  {
+    "244",
+    "nadie",
+    "anybody, nobody"
+  },
+  {
+    "245",
+    "contrario",
+    "opposite, contrary"
+  },
+  {
+    "246",
+    "imaginar",
+    "to imagine"
+  },
+  {
+    "247",
+    "junto",
+    "next to,  together with"
+  },
+  {
+    "248",
+    "partido  -  [sports]match,  group, party"
+  },
+  {
+    "249",
+    "ciento  -  hundred"
+  },
+  {
+    "250",
+    "leer",
+    "to read"
+  },
+  {
+    "251",
+    "pregunta  -  question"
+  },
+  {
+    "252",
+    "español  -  Spanish"
+  },
+  {
+    "253",
+    "hoy",
+    "nowadays,  today"
+  },
+  {
+    "254",
+    "mesa",
+    "board, table"
+  },
+  {
+    "255",
+    "cualquier",
+    "anyone[pron], any"
+  },
+  {
+    "256",
+    "seguridad",
+    "safety,  security"
+  },
+  {
+    "257",
+    "mirar",
+    "watch,  to look"
+  },
+  {
+    "258",
+    "estudiar",
+    "to study"
+  },
+  {
+    "259",
+    "lado  -  side"
+  },
+  {
+    "260",
+    "mientras",
+    "as long as,  whereas, while"
+  },
+  {
+    "261",
+    "base",
+    "basis, base"
+  },
+  {
+    "262",
+    "época",
+    "period,  age, time"
+  },
+  {
+    "263",
+    "claro  -  clear"
+  },
+  {
+    "264",
+    "clase",
+    "order,  class, kind"
+  },
+  {
+    "265",
+    "quién",
+    "whom?, who?"
+  },
+  {
+    "266",
+    "alto",
+    "high, tall"
+  },
+  {
+    "267",
+    "problema  -  problem"
+  },
+  {
+    "268",
+    "antiguo",
+    "former,  ancient, old"
+  },
+  {
+    "269",
+    "posibilidad  -  possibility"
+  },
+  {
+    "270",
+    "vista",
+    "sight, view"
+  },
+  {
+    "271",
+    "obtener",
+    "to obtain"
+  },
+  {
+    "272",
+    "centro",
+    "downtown,  middle, center"
+  },
+  {
+    "273",
+    "carta  -  [playing]card,  letter"
+  },
+  {
+    "274",
+    "pobre  -  poor"
+  },
+  {
+    "275",
+    "contra",
+    "opposite,  against"
+  },
+  {
+    "276",
+    "hijo  -  [pl]children, son"
+  },
+  {
+    "277",
+    "mostrar",
+    "to show"
+  },
+  {
+    "278",
+    "interés  -  interest"
+  },
+  {
+    "279",
+    "término",
+    "end,  term[language]"
+  },
+  {
+    "280",
+    "buscar",
+    "to look for"
+  },
+  {
+    "281",
+    "especial  -  special"
+  },
+  {
+    "282",
+    "político  -  political"
+  },
+  {
+    "283",
+    "desear",
+    "wish for,  desire,  to want"
+  },
+  {
+    "284",
+    "necesario  -  necessary"
+  },
+  {
+    "285",
+    "terminar",
+    "end,  to ﬁnish"
+  },
+  {
+    "286",
+    "perder",
+    "miss,  to lose"
+  },
+  {
+    "287",
+    "deseo",
+    "wish,  desire"
+  },
+  {
+    "288",
+    "padre  -  father"
+  },
+  {
+    "289",
+    "tampoco",
+    "either,  nor,  neither"
+  },
+  {
+    "290",
+    "señor",
+    "lord,  Mr, sir"
+  },
+  {
+    "291",
+    "resultar",
+    "turn out,  to result"
+  },
+  {
+    "292",
+    "función",
+    "meeting,  function"
+  },
+  {
+    "293",
+    "noche",
+    "evening, night"
+  },
+  {
+    "294",
+    "largo  -  long"
+  },
+  {
+    "295",
+    "familia  -  family"
+  },
+  {
+    "296",
+    "desarrollar",
+    "to develop"
+  },
+  {
+    "297",
+    "seis  -  six"
+  },
+  {
+    "298",
+    "bajo",
+    "low, short"
+  },
+  {
+    "299",
+    "producir",
+    "cause,  to produce"
+  },
+  {
+    "300",
+    "segundo",
+    "second"
+  },
+  {
+    "301",
+    "inglés",
+    "English"
+  },
+  {
+    "302",
+    "negro  -  black"
+  },
+  {
+    "303",
+    "miedo  -  fear"
+  },
+  {
+    "304",
+    "entrar",
+    "to enter"
+  },
+  {
+    "305",
+    "dedicar",
+    "devote,  to dedicate"
+  },
+  {
+    "306",
+    "paso",
+    "pace, step"
+  },
+  {
+    "307",
+    "usted",
+    "formal], you[subj"
+  },
+  {
+    "308",
+    "río",
+    "river"
+  },
+  {
+    "309",
+    "dirección  -  address,  direction"
+  },
+  {
+    "310",
+    "cuestión",
+    "matter, question"
+  },
+  {
+    "311",
+    "derecho",
+    "law,  justice, right"
+  },
+  {
+    "312",
+    "malo  -  bad"
+  },
+  {
+    "313",
+    "principio",
+    "principle, beginning"
+  },
+  {
+    "314",
+    "guerra",
+    "warfare, war"
+  },
+  {
+    "315",
+    "único",
+    "sole,  unique, only"
+  },
+  {
+    "316",
+    "avanzar",
+    "progress,  to advance"
+  },
+  {
+    "317",
+    "entender",
+    "to understand"
+  },
+  {
+    "318",
+    "lanzar",
+    "launch,  to throw"
+  },
+  {
+    "319",
+    "diferencia  -  difference"
+  },
+  {
+    "320",
+    "bueno",
+    "well…"
+  },
+  {
+    "321",
+    "propiedad",
+    "property"
+  },
+  {
+    "322",
+    "repetir",
+    "to repeat"
+  },
+  {
+    "323",
+    "viaje",
+    "trip, travel"
+  },
+  {
+    "324",
+    "nosotros  -  we[subj]"
+  },
+  {
+    "325",
+    "diez  -  ten"
+  },
+  {
+    "326",
+    "indicar",
+    "to indicate"
+  },
+  {
+    "327",
+    "capaz",
+    "able, capable"
+  },
+  {
+    "328",
+    "todavía",
+    "yet,  still"
+  },
+  {
+    "329",
+    "servir",
+    "to serve"
+  },
+  {
+    "330",
+    "joven",
+    "young person,  teenager"
+  },
+  {
+    "331",
+    "comenzar",
+    "start,  to begin"
+  },
+  {
+    "332",
+    "idea  -  idea"
+  },
+  {
+    "333",
+    "peso",
+    "load,  weight, peso[money]"
+  },
+  {
+    "334",
+    "ocho  -  eight"
+  },
+  {
+    "335",
+    "estudio",
+    "learning, study"
+  },
+  {
+    "336",
+    "grupo  -  group"
+  },
+  {
+    "337",
+    "decidir",
+    "to decide"
+  },
+  {
+    "338",
+    "considerar",
+    "to consider"
+  },
+  {
+    "339",
+    "allá",
+    "over there,  there"
+  },
+  {
+    "340",
+    "mal",
+    "badly"
+  },
+  {
+    "341",
+    "anunciar",
+    "advertise,  to announce"
+  },
+  {
+    "342",
+    "sociedad  -  society"
+  },
+  {
+    "343",
+    "política",
+    "policy,  politics"
+  },
+  {
+    "344",
+    "detener",
+    "detain,  to stop"
+  },
+  {
+    "345",
+    "camino",
+    "path,  route, road"
+  },
+  {
+    "346",
+    "duda  -  doubt"
+  },
+  {
+    "347",
+    "dinero  -  money"
+  },
+  {
+    "348",
+    "millón",
+    "fortune,  million"
+  },
+  {
+    "349",
+    "abandonar",
+    "leave[a place],  to abandon"
+  },
+  {
+    "350",
+    "pieza",
+    "part,  piece"
+  },
+  {
+    "351",
+    "claro",
+    "clearly,  of course"
+  },
+  {
+    "352",
+    "movimiento  -  movement"
+  },
+  {
+    "353",
+    "sitio",
+    "space,  place"
+  },
+  {
+    "354",
+    "arriba",
+    "above,  up"
+  },
+  {
+    "355",
+    "crecer",
+    "increase,  to grow"
+  },
+  {
+    "356",
+    "siglo",
+    "age, century"
+  },
+  {
+    "357",
+    "necesidad",
+    "need, necessity"
+  },
+  {
+    "358",
+    "verdadero",
+    "real, true"
+  },
+  {
+    "359",
+    "doctor",
+    "doctor"
+  },
+  {
+    "360",
+    "natural  -  natural"
+  },
+  {
+    "361",
+    "contestar",
+    "reply,  to answer"
+  },
+  {
+    "362",
+    "mercado",
+    "market"
+  },
+  {
+    "363",
+    "reconocer",
+    "admit,  to recognize"
+  },
+  {
+    "364",
+    "importante  -  important"
+  },
+  {
+    "365",
+    "recurso",
+    "means,  recourse,  resource"
+  },
+  {
+    "366",
+    "intentar",
+    "attempt,  to try"
+  },
+  {
+    "367",
+    "realizar",
+    "carry out,  to fulﬁll"
+  },
+  {
+    "368",
+    "mes  -  month"
+  },
+  {
+    "369",
+    "golpe",
+    "punch,  strike,  hit"
+  },
+  {
+    "370",
+    "grado",
+    "grade,  degree"
+  },
+  {
+    "371",
+    "morir",
+    "to die"
+  },
+  {
+    "372",
+    "ojo  -  eye"
+  },
+  {
+    "373",
+    "permitir",
+    "permit,  to allow"
+  },
+  {
+    "374",
+    "humano  -  human"
+  },
+  {
+    "375",
+    "físico",
+    "physical"
+  },
+  {
+    "376",
+    "convertir",
+    "become,  change,  to convert"
+  },
+  {
+    "377",
+    "voz  -  voice"
+  },
+  {
+    "378",
+    "incluso",
+    "even ,  including"
+  },
+  {
+    "379",
+    "responsabilidad",
+    "responsibility"
+  },
+  {
+    "380",
+    "bastante",
+    "quite a bit ,  fairly, rather"
+  },
+  {
+    "381",
+    "profundo",
+    "profound, deep"
+  },
+  {
+    "382",
+    "minuto  -  minute"
+  },
+  {
+    "383",
+    "suelo",
+    "ﬂoor, ground"
+  },
+  {
+    "384",
+    "traer",
+    "carry,  to bring"
+  },
+  {
+    "385",
+    "asegurar",
+    "insure,  secure,  to assure"
+  },
+  {
+    "386",
+    "brazo",
+    "arm"
+  },
+  {
+    "387",
+    "uso",
+    "use"
+  },
+  {
+    "388",
+    "parecido",
+    "similar"
+  },
+  {
+    "389",
+    "imagen",
+    "picture, image"
+  },
+  {
+    "390",
+    "origen",
+    "cause,  origin"
+  },
+  {
+    "391",
+    "caer",
+    "to fall"
+  },
+  {
+    "392",
+    "relación  -  relation, relationship"
+  },
+  {
+    "393",
+    "apoyar",
+    "lean on,  to support"
+  },
+  {
+    "394",
+    "sangre",
+    "blood"
+  },
+  {
+    "395",
+    "demás",
+    "others, the rest"
+  },
+  {
+    "396",
+    "igual",
+    "same[as], equal"
+  },
+  {
+    "397",
+    "edad  -  age"
+  },
+  {
+    "398",
+    "cantidad  -  amount, quantity"
+  },
+  {
+    "399",
+    "actuar",
+    "to act"
+  },
+  {
+    "400",
+    "comprobar",
+    "prove,  to verify"
+  },
+  {
+    "401",
+    "comprar",
+    "to buy"
+  },
+  {
+    "402",
+    "según",
+    "according to"
+  },
+  {
+    "403",
+    "observar",
+    "to observe"
+  },
+  {
+    "404",
+    "frente",
+    "frente a: across from, al frente: facing"
+  },
+  {
+    "405",
+    "lograr",
+    "manage,  get,  to achieve"
+  },
+  {
+    "406",
+    "puerta  -  door"
+  },
+  {
+    "407",
+    "completo  -  complete"
+  },
+  {
+    "408",
+    "moderno",
+    "modern"
+  },
+  {
+    "409",
+    "atravesar",
+    "to cross"
+  },
+  {
+    "410",
+    "maestro",
+    "master,  teacher[m]"
+  },
+  {
+    "411",
+    "oír",
+    "to hear"
+  },
+  {
+    "412",
+    "adelante",
+    "further,  forward"
+  },
+  {
+    "413",
+    "diferente",
+    "separate, different"
+  },
+  {
+    "414",
+    "delante",
+    "ahead, [in]front[of]"
+  },
+  {
+    "415",
+    "sentido",
+    "feeling, sense"
+  },
+  {
+    "416",
+    "imposible",
+    "impossible"
+  },
+  {
+    "417",
+    "solamente",
+    "only"
+  },
+  {
+    "418",
+    "libro  -  book"
+  },
+  {
+    "419",
+    "directamente",
+    "straight away,  directly"
+  },
+  {
+    "420",
+    "lenguaje",
+    "speech,  language"
+  },
+  {
+    "421",
+    "ello  -  it[subj-n]"
+  },
+  {
+    "422",
+    "difícil",
+    "hard, difﬁcult"
+  },
+  {
+    "423",
+    "ofrecer",
+    "present,  to offer"
+  },
+  {
+    "424",
+    "sistema  -  system"
+  },
+  {
+    "425",
+    "enorme",
+    "vast, enormous"
+  },
+  {
+    "426",
+    "realmente",
+    "in fact,  actually,  really"
+  },
+  {
+    "427",
+    "social  -  social"
+  },
+  {
+    "428",
+    "abierto",
+    "unlocked, open"
+  },
+  {
+    "429",
+    "subir",
+    "to go up"
+  },
+  {
+    "430",
+    "evitar",
+    "prevent,  to avoid"
+  },
+  {
+    "431",
+    "superar",
+    "surpass,  to overcome"
+  },
+  {
+    "432",
+    "papel",
+    "part,  role, paper"
+  },
+  {
+    "433",
+    "surgir",
+    "spring[forth],  to appear"
+  },
+  {
+    "434",
+    "rojo",
+    "red"
+  },
+  {
+    "435",
+    "pasado",
+    "last, past"
+  },
+  {
+    "436",
+    "favor",
+    "beneﬁt, favor"
+  },
+  {
+    "437",
+    "siguiente  -  next, following"
+  },
+  {
+    "438",
+    "semana  -  week"
+  },
+  {
+    "439",
+    "miembro",
+    "limb,  member"
+  },
+  {
+    "440",
+    "suponer",
+    "assume,  to suppose"
+  },
+  {
+    "441",
+    "puro",
+    "clean,  pure"
+  },
+  {
+    "442",
+    "carga",
+    "cargo,  charge,  load"
+  },
+  {
+    "443",
+    "calor",
+    "warmth,  heat"
+  },
+  {
+    "444",
+    "enemigo",
+    "enemy"
+  },
+  {
+    "445",
+    "tender",
+    "lay out,  to tend to"
+  },
+  {
+    "446",
+    "serio",
+    "serious"
+  },
+  {
+    "447",
+    "madre  -  mother"
+  },
+  {
+    "448",
+    "mover",
+    "incite,  to move"
+  },
+  {
+    "449",
+    "demasiado",
+    "too many, too much"
+  },
+  {
+    "450",
+    "ganar",
+    "earn,  to win"
+  },
+  {
+    "451",
+    "lleno",
+    "ﬁlled,  full"
+  },
+  {
+    "452",
+    "altura",
+    "altitude,  height"
+  },
+  {
+    "453",
+    "civil",
+    "civil"
+  },
+  {
+    "454",
+    "niña",
+    "young girl,  child"
+  },
+  {
+    "455",
+    "cara",
+    "expression, face"
+  },
+  {
+    "456",
+    "metro",
+    "subway,  meter"
+  },
+  {
+    "457",
+    "cuidado",
+    "carefulness,  care"
+  },
+  {
+    "458",
+    "levantar",
+    "lift,  to raise"
+  },
+  {
+    "459",
+    "dios",
+    "divinity, god"
+  },
+  {
+    "460",
+    "hermano  -  [pl]siblings,  brother"
+  },
+  {
+    "461",
+    "participar",
+    "to participate"
+  },
+  {
+    "462",
+    "dónde",
+    "where?"
+  },
+  {
+    "463",
+    "explicar",
+    "to explain"
+  },
+  {
+    "464",
+    "libertad",
+    "liberty, freedom"
+  },
+  {
+    "465",
+    "naturaleza",
+    "character,  nature"
+  },
+  {
+    "466",
+    "sol",
+    "sun"
+  },
+  {
+    "467",
+    "popular",
+    "popular"
+  },
+  {
+    "468",
+    "utilizar",
+    "utilize,  to use"
+  },
+  {
+    "469",
+    "voluntad",
+    "intention,  willpower,  will"
+  },
+  {
+    "470",
+    "verde",
+    "green"
+  },
+  {
+    "471",
+    "extraño",
+    "foreign,  strange"
+  },
+  {
+    "472",
+    "accidente",
+    "irregularity,  accident"
+  },
+  {
+    "473",
+    "económico  -  economic"
+  },
+  {
+    "474",
+    "desaparecer",
+    "vanish,  to disappear"
+  },
+  {
+    "475",
+    "rico",
+    "tasty,  rich"
+  },
+  {
+    "476",
+    "olvidar",
+    "to forget"
+  },
+  {
+    "477",
+    "zona",
+    "zone, area"
+  },
+  {
+    "478",
+    "fuera",
+    "away,  outside,  out"
+  },
+  {
+    "479",
+    "número  -  number"
+  },
+  {
+    "480",
+    "estado",
+    "status,  condition, state"
+  },
+  {
+    "481",
+    "través",
+    "through,  over,  a través: across"
+  },
+  {
+    "482",
+    "especie",
+    "species,  sort, kind"
+  },
+  {
+    "483",
+    "empresa",
+    "venture,  company,  ﬁrm"
+  },
+  {
+    "484",
+    "cincuenta",
+    "ﬁfty"
+  },
+  {
+    "485",
+    "nacer",
+    "to be born"
+  },
+  {
+    "486",
+    "lengua",
+    "strip[of land],  tongue,  language"
+  },
+  {
+    "487",
+    "usar",
+    "to use"
+  },
+  {
+    "488",
+    "pagar",
+    "to pay"
+  },
+  {
+    "489",
+    "tamaño",
+    "dimension,  size"
+  },
+  {
+    "490",
+    "revista",
+    "journal,  magazine"
+  },
+  {
+    "491",
+    "cerrado",
+    "closed"
+  },
+  {
+    "492",
+    "frontera",
+    "frontier,  border"
+  },
+  {
+    "493",
+    "faltar",
+    "to be lacking"
+  },
+  {
+    "494",
+    "animal  -  animal"
+  },
+  {
+    "495",
+    "acción",
+    "deed,  act, action"
+  },
+  {
+    "496",
+    "correr",
+    "to run"
+  },
+  {
+    "497",
+    "corazón",
+    "core,  heart"
+  },
+  {
+    "498",
+    "aprender",
+    "to learn"
+  },
+  {
+    "499",
+    "enseñar",
+    "show,  to teach"
+  },
+  {
+    "500",
+    "quitar",
+    "take away,  to remove"
+  },
+  {
+    "501",
+    "mensaje",
+    "message"
+  },
+  {
+    "502",
+    "analizar",
+    "to analyze"
+  },
+  {
+    "503",
+    "bien",
+    "beneﬁt,  property,  goods"
+  },
+  {
+    "504",
+    "público  -  public"
+  },
+  {
+    "505",
+    "elegir",
+    "elect,  to choose"
+  },
+  {
+    "506",
+    "región",
+    "region"
+  },
+  {
+    "507",
+    "policía",
+    "police ofﬁcer,  police force,  police"
+  },
+  {
+    "508",
+    "comienzo",
+    "beginning,  start"
+  },
+  {
+    "509",
+    "suceder",
+    "to happen"
+  },
+  {
+    "510",
+    "fondo  -  end, bottom"
+  },
+  {
+    "511",
+    "amor  -  love"
+  },
+  {
+    "512",
+    "resolver",
+    "work out,  settle,  to resolve"
+  },
+  {
+    "513",
+    "vecino",
+    "neighbor"
+  },
+  {
+    "514",
+    "actividad",
+    "action, activity"
+  },
+  {
+    "515",
+    "corto",
+    "brief,  short"
+  },
+  {
+    "516",
+    "oportunidad",
+    "chance,  opportunity"
+  },
+  {
+    "517",
+    "derecha",
+    "right hand,  right"
+  },
+  {
+    "518",
+    "dirigir",
+    "manage,  to direct"
+  },
+  {
+    "519",
+    "unir",
+    "join[together],  to unite"
+  },
+  {
+    "520",
+    "muerte  -  death"
+  },
+  {
+    "521",
+    "plantear",
+    "present,  to propose"
+  },
+  {
+    "522",
+    "gobierno  -  government"
+  },
+  {
+    "523",
+    "compartir",
+    "to share"
+  },
+  {
+    "524",
+    "sentar",
+    "seat,  to sit[down]"
+  },
+  {
+    "525",
+    "pensamiento  -  thinking,  thought"
+  },
+  {
+    "526",
+    "ley",
+    "rule,  bill, law"
+  },
+  {
+    "527",
+    "plano",
+    "level,  map,  plane"
+  },
+  {
+    "528",
+    "tocar",
+    "play[instrument],  to touch"
+  },
+  {
+    "529",
+    "importancia  -  importance"
+  },
+  {
+    "530",
+    "terrible",
+    "terrible"
+  },
+  {
+    "531",
+    "línea",
+    "course, line"
+  },
+  {
+    "532",
+    "temprano",
+    "early"
+  },
+  {
+    "533",
+    "andar",
+    "function,  to walk"
+  },
+  {
+    "534",
+    "resultado",
+    "outcome, result"
+  },
+  {
+    "535",
+    "espacio",
+    "room, space"
+  },
+  {
+    "536",
+    "constituir  -  consist of,  to constitute"
+  },
+  {
+    "537",
+    "carrera",
+    "race,  course, career"
+  },
+  {
+    "538",
+    "mañana  -  tomorrow, morning"
+  },
+  {
+    "539",
+    "frase",
+    "phrase"
+  },
+  {
+    "540",
+    "reunión",
+    "reunion,  meeting"
+  },
+  {
+    "541",
+    "cultura",
+    "culture"
+  },
+  {
+    "542",
+    "enfermedad",
+    "sickness,  illness"
+  },
+  {
+    "543",
+    "resto",
+    "leftover,  remainder, rest"
+  },
+  {
+    "544",
+    "literatura",
+    "literature"
+  },
+  {
+    "545",
+    "fe",
+    "faith"
+  },
+  {
+    "546",
+    "sueño",
+    "sleep,  dream"
+  },
+  {
+    "547",
+    "importar",
+    "import,  to matter"
+  },
+  {
+    "548",
+    "dispuesto",
+    "ready,  willing"
+  },
+  {
+    "549",
+    "compañero",
+    "classmate,  companion"
+  },
+  {
+    "550",
+    "depender",
+    "to depend on"
+  },
+  {
+    "551",
+    "poder  -  power"
+  },
+  {
+    "552",
+    "verano",
+    "summer"
+  },
+  {
+    "553",
+    "acontecimiento",
+    "happening,  event"
+  },
+  {
+    "554",
+    "cumplir",
+    "to fulﬁll"
+  },
+  {
+    "555",
+    "jamás",
+    "never"
+  },
+  {
+    "556",
+    "tercero  -  third"
+  },
+  {
+    "557",
+    "continuar",
+    "to continue"
+  },
+  {
+    "558",
+    "arma  -  [el]weapon"
+  },
+  {
+    "559",
+    "pie",
+    "base, foot"
+  },
+  {
+    "560",
+    "esfuerzo  -  endeavor, effort"
+  },
+  {
+    "561",
+    "condición  -  condition"
+  },
+  {
+    "562",
+    "contribuir",
+    "to contribute"
+  },
+  {
+    "563",
+    "cortar",
+    "to cut"
+  },
+  {
+    "564",
+    "atender",
+    "attend to,  to serve"
+  },
+  {
+    "565",
+    "ayudar",
+    "to help"
+  },
+  {
+    "566",
+    "color  -  color"
+  },
+  {
+    "567",
+    "pasado",
+    "past"
+  },
+  {
+    "568",
+    "lista",
+    "roll,  roster,  list"
+  },
+  {
+    "569",
+    "famoso",
+    "well-known,  famous"
+  },
+  {
+    "570",
+    "falta",
+    "shortage, lack"
+  },
+  {
+    "571",
+    "ocasión",
+    "occasion, opportunity"
+  },
+  {
+    "572",
+    "visitar",
+    "to visit"
+  },
+  {
+    "573",
+    "premio",
+    "reward,  prize"
+  },
+  {
+    "574",
+    "visita",
+    "guest,  visitor,  visit"
+  },
+  {
+    "575",
+    "tu",
+    "formal], your[sg"
+  },
+  {
+    "576",
+    "dedo",
+    "digit,  toe,  ﬁnger"
+  },
+  {
+    "577",
+    "quince",
+    "ﬁfteen"
+  },
+  {
+    "578",
+    "demostrar",
+    "demonstrate,  to show"
+  },
+  {
+    "579",
+    "despertar",
+    "arouse,  to wake[up]"
+  },
+  {
+    "580",
+    "existencia",
+    "life,  existence"
+  },
+  {
+    "581",
+    "mente",
+    "mind"
+  },
+  {
+    "582",
+    "mayoría",
+    "majority"
+  },
+  {
+    "583",
+    "conocimiento  -  knowledge"
+  },
+  {
+    "584",
+    "examen",
+    "exam,  examination"
+  },
+  {
+    "585",
+    "teléfono",
+    "telephone,  phone"
+  },
+  {
+    "586",
+    "juego",
+    "sport,  play, game"
+  },
+  {
+    "587",
+    "mío",
+    "mine"
+  },
+  {
+    "588",
+    "acto",
+    "action,  act"
+  },
+  {
+    "589",
+    "rama",
+    "limb,  bough,  branch"
+  },
+  {
+    "590",
+    "libre",
+    "vacant, free"
+  },
+  {
+    "591",
+    "recoger",
+    "to pick up"
+  },
+  {
+    "592",
+    "inmediato",
+    "immediate"
+  },
+  {
+    "593",
+    "nivel  -  level"
+  },
+  {
+    "594",
+    "ciencia",
+    "knowledge,  science"
+  },
+  {
+    "595",
+    "ayuda",
+    "aid,  help"
+  },
+  {
+    "596",
+    "ambiente",
+    "atmosphere,  environment"
+  },
+  {
+    "597",
+    "imponer",
+    "enforce,  to impose"
+  },
+  {
+    "598",
+    "alemán",
+    "German"
+  },
+  {
+    "599",
+    "casar",
+    "to marry"
+  },
+  {
+    "600",
+    "masa",
+    "bulk,  crowd,  dough,  mass"
+  },
+  {
+    "601",
+    "clásico",
+    "classic"
+  },
+  {
+    "602",
+    "futuro",
+    "future"
+  },
+  {
+    "603",
+    "loco",
+    "insane,  crazy"
+  },
+  {
+    "604",
+    "atención  -  attention"
+  },
+  {
+    "605",
+    "pegar",
+    "stick[on],  to hit"
+  },
+  {
+    "606",
+    "comida",
+    "meal,  food"
+  },
+  {
+    "607",
+    "capacidad",
+    "capacity"
+  },
+  {
+    "608",
+    "ambos  -  both"
+  },
+  {
+    "609",
+    "concreto",
+    "real,  concrete"
+  },
+  {
+    "610",
+    "ocupar",
+    "use,  to occupy"
+  },
+  {
+    "611",
+    "entrada",
+    "admission ticket,  entrance"
+  },
+  {
+    "612",
+    "tú",
+    "formal],  you[subj-sg"
+  },
+  {
+    "613",
+    "objetivo",
+    "objective"
+  },
+  {
+    "614",
+    "disposición",
+    "disposition,  disposal"
+  },
+  {
+    "615",
+    "entregar",
+    "to deliver"
+  },
+  {
+    "616",
+    "teatro",
+    "drama,  theater"
+  },
+  {
+    "617",
+    "cuál  -  which?"
+  },
+  {
+    "618",
+    "volumen",
+    "volume"
+  },
+  {
+    "619",
+    "francés",
+    "French"
+  },
+  {
+    "620",
+    "cerca",
+    "near,  close"
+  },
+  {
+    "621",
+    "nueve",
+    "nine"
+  },
+  {
+    "622",
+    "experiencia  -  experience"
+  },
+  {
+    "623",
+    "descubrir",
+    "to discover"
+  },
+  {
+    "624",
+    "pintura",
+    "paint,  painting"
+  },
+  {
+    "625",
+    "precisamente",
+    "precisely"
+  },
+  {
+    "626",
+    "determinar  -  decide,  to determine"
+  },
+  {
+    "627",
+    "materia",
+    "subject,  matter"
+  },
+  {
+    "628",
+    "televisión",
+    "television,  TV"
+  },
+  {
+    "629",
+    "autoridad",
+    "authority"
+  },
+  {
+    "630",
+    "hogar",
+    "hearth,  home"
+  },
+  {
+    "631",
+    "norteamericano",
+    "North American"
+  },
+  {
+    "632",
+    "material",
+    "element,  material"
+  },
+  {
+    "633",
+    "cuándo",
+    "when?"
+  },
+  {
+    "634",
+    "pintar",
+    "to paint"
+  },
+  {
+    "635",
+    "energía",
+    "power,  energy"
+  },
+  {
+    "636",
+    "recuerdo",
+    "keepsake,  memory"
+  },
+  {
+    "637",
+    "conservar",
+    "preserve,  to conserve"
+  },
+  {
+    "638",
+    "meter",
+    "to put[into]"
+  },
+  {
+    "639",
+    "santa",
+    "saint[f]"
+  },
+  {
+    "640",
+    "común  -  common"
+  },
+  {
+    "641",
+    "viajar",
+    "to travel"
+  },
+  {
+    "642",
+    "discutir",
+    "discuss,  to argue"
+  },
+  {
+    "643",
+    "pasión",
+    "desire,  passion"
+  },
+  {
+    "644",
+    "vino",
+    "wine"
+  },
+  {
+    "645",
+    "alma  -  [el]soul"
+  },
+  {
+    "646",
+    "teoría",
+    "theory"
+  },
+  {
+    "647",
+    "temer",
+    "to fear"
+  },
+  {
+    "648",
+    "artista",
+    "performer,  artist"
+  },
+  {
+    "649",
+    "junto",
+    "together"
+  },
+  {
+    "650",
+    "fecha",
+    "day,  date"
+  },
+  {
+    "651",
+    "sufrir",
+    "undergo,  to suffer"
+  },
+  {
+    "652",
+    "cielo",
+    "ceiling,  heaven,  sky"
+  },
+  {
+    "653",
+    "temor",
+    "fear"
+  },
+  {
+    "654",
+    "jefe",
+    "manager,  boss,  leader"
+  },
+  {
+    "655",
+    "capítulo",
+    "chapter"
+  },
+  {
+    "656",
+    "profesional",
+    "professional"
+  },
+  {
+    "657",
+    "techo",
+    "roof"
+  },
+  {
+    "658",
+    "presencia",
+    "appearance,  presence"
+  },
+  {
+    "659",
+    "separar",
+    "to separate"
+  },
+  {
+    "660",
+    "decisión",
+    "decision"
+  },
+  {
+    "661",
+    "absolutamente",
+    "completely,  absolutely"
+  },
+  {
+    "662",
+    "echar",
+    "cast,  to throw"
+  },
+  {
+    "663",
+    "nacional",
+    "national"
+  },
+  {
+    "664",
+    "objeto",
+    "thing, object"
+  },
+  {
+    "665",
+    "autor",
+    "author,  writer"
+  },
+  {
+    "666",
+    "aspecto",
+    "appearance, aspect"
+  },
+  {
+    "667",
+    "seguramente",
+    "securely,  surely"
+  },
+  {
+    "668",
+    "resistir",
+    "endure,  to resist"
+  },
+  {
+    "669",
+    "responder",
+    "respond,  to answer"
+  },
+  {
+    "670",
+    "encima",
+    "in addition,  on top,  above"
+  },
+  {
+    "671",
+    "acercar",
+    "to come near"
+  },
+  {
+    "672",
+    "preparar",
+    "to prepare"
+  },
+  {
+    "673",
+    "citar",
+    "quote,  to cite"
+  },
+  {
+    "674",
+    "extender",
+    "spread,  to extend"
+  },
+  {
+    "675",
+    "descansar",
+    "to rest"
+  },
+  {
+    "676",
+    "asunto",
+    "affair,  issue,  matter"
+  },
+  {
+    "677",
+    "fundamental",
+    "fundamental"
+  },
+  {
+    "678",
+    "facilidad",
+    "facility,  ease"
+  },
+  {
+    "679",
+    "preocupar",
+    "to worry"
+  },
+  {
+    "680",
+    "atrás",
+    "ago,  behind,  back"
+  },
+  {
+    "681",
+    "empleado",
+    "employee"
+  },
+  {
+    "682",
+    "pronto",
+    "quick,  soon"
+  },
+  {
+    "683",
+    "concepto",
+    "concept"
+  },
+  {
+    "684",
+    "grave",
+    "solemn,  serious"
+  },
+  {
+    "685",
+    "retirar",
+    "retire,  to take away"
+  },
+  {
+    "686",
+    "establecer",
+    "to establish"
+  },
+  {
+    "687",
+    "adquirir",
+    "get,  to acquire"
+  },
+  {
+    "688",
+    "costar",
+    "be hard,  to cost"
+  },
+  {
+    "689",
+    "mencionar  -  cite,  to mention"
+  },
+  {
+    "690",
+    "práctica",
+    "skill,  practice"
+  },
+  {
+    "691",
+    "publicar",
+    "to publish"
+  },
+  {
+    "692",
+    "idioma  -  [speciﬁc]language"
+  },
+  {
+    "693",
+    "aprovechar",
+    "to take advantage of"
+  },
+  {
+    "694",
+    "futuro",
+    "future"
+  },
+  {
+    "695",
+    "conclusión",
+    "end,  conclusion"
+  },
+  {
+    "696",
+    "vehículo",
+    "car,  vehicle"
+  },
+  {
+    "697",
+    "militar",
+    "military"
+  },
+  {
+    "698",
+    "compañía",
+    "company"
+  },
+  {
+    "699",
+    "curso",
+    "direction,  course"
+  },
+  {
+    "700",
+    "cine",
+    "US movie theater,  cinema"
+  },
+  {
+    "701",
+    "marcar",
+    "dial,  note,  to mark"
+  },
+  {
+    "702",
+    "comentario",
+    "comment,  remark"
+  },
+  {
+    "703",
+    "vivo",
+    "bright, alive"
+  },
+  {
+    "704",
+    "lucha",
+    "wrestle,  struggle,  ﬁght"
+  },
+  {
+    "705",
+    "daño",
+    "damage,  injury,  harm"
+  },
+  {
+    "706",
+    "intento  -  try,  attempt"
+  },
+  {
+    "707",
+    "enfermo",
+    "sick,  ill"
+  },
+  {
+    "708",
+    "piso",
+    "story,  ﬂoor"
+  },
+  {
+    "709",
+    "gesto",
+    "gesture"
+  },
+  {
+    "710",
+    "derecho",
+    "straight,  right"
+  },
+  {
+    "711",
+    "actual",
+    "current"
+  },
+  {
+    "712",
+    "diciembre",
+    "December"
+  },
+  {
+    "713",
+    "economía",
+    "economics,  economy,  thriftiness"
+  },
+  {
+    "714",
+    "introducir",
+    "bring in,  to introduce"
+  },
+  {
+    "715",
+    "totalmente",
+    "completely,  totally"
+  },
+  {
+    "716",
+    "cuánto",
+    "how much?"
+  },
+  {
+    "717",
+    "posición",
+    "position"
+  },
+  {
+    "718",
+    "lejos",
+    "off],  far[away"
+  },
+  {
+    "719",
+    "leche",
+    "milk"
+  },
+  {
+    "720",
+    "conciencia",
+    "consciousness,  conscience"
+  },
+  {
+    "721",
+    "aplicar",
+    "to apply"
+  },
+  {
+    "722",
+    "bajar",
+    "let down,  to come down"
+  },
+  {
+    "723",
+    "consejo",
+    "counsel,  council,  advice"
+  },
+  {
+    "724",
+    "próximo  -  next"
+  },
+  {
+    "725",
+    "piedra",
+    "rock,  stone"
+  },
+  {
+    "726",
+    "médico",
+    "doctor"
+  },
+  {
+    "727",
+    "director",
+    "principal,  manager,  director"
+  },
+  {
+    "728",
+    "recuperar",
+    "recover,  to recuperate"
+  },
+  {
+    "729",
+    "principal",
+    "principal, main"
+  },
+  {
+    "730",
+    "cuento",
+    "tale,  story"
+  },
+  {
+    "731",
+    "mirada",
+    "look,  gaze"
+  },
+  {
+    "732",
+    "siete  -  seven"
+  },
+  {
+    "733",
+    "duro",
+    "hard"
+  },
+  {
+    "734",
+    "información",
+    "information"
+  },
+  {
+    "735",
+    "espíritu",
+    "ghost,  spirit"
+  },
+  {
+    "736",
+    "artículo",
+    "item,  product,  article"
+  },
+  {
+    "737",
+    "trasladar",
+    "transfer,  to move"
+  },
+  {
+    "738",
+    "hábito",
+    "habit"
+  },
+  {
+    "739",
+    "positivo",
+    "positive"
+  },
+  {
+    "740",
+    "expresión",
+    "expression"
+  },
+  {
+    "741",
+    "exponer",
+    "expose,  to expound"
+  },
+  {
+    "742",
+    "letra",
+    "lyrics,  handwriting,  letter"
+  },
+  {
+    "743",
+    "partida",
+    "departure,  match,  game"
+  },
+  {
+    "744",
+    "sencillo",
+    "easy,  plain,  simple"
+  },
+  {
+    "745",
+    "apenas",
+    "barely,  hardly"
+  },
+  {
+    "746",
+    "estilo",
+    "style"
+  },
+  {
+    "747",
+    "perfecto",
+    "perfect"
+  },
+  {
+    "748",
+    "vuelta",
+    "turn,  return"
+  },
+  {
+    "749",
+    "excepción",
+    "exception"
+  },
+  {
+    "750",
+    "control",
+    "control"
+  },
+  {
+    "751",
+    "esperanza",
+    "hope"
+  },
+  {
+    "752",
+    "superior",
+    "upper,  superior"
+  },
+  {
+    "753",
+    "habitación",
+    "bedroom,  room,  habitat"
+  },
+  {
+    "754",
+    "manejar",
+    "handle,  to drive"
+  },
+  {
+    "755",
+    "representar",
+    "to represent"
+  },
+  {
+    "756",
+    "causa",
+    "cause"
+  },
+  {
+    "757",
+    "semejante",
+    "alike,  such,  similar"
+  },
+  {
+    "758",
+    "alrededor",
+    "round,  around,  about"
+  },
+  {
+    "759",
+    "profesor",
+    "teacher,  professor"
+  },
+  {
+    "760",
+    "siquiera",
+    "even[if]"
+  },
+  {
+    "761",
+    "acompañar",
+    "to accompany"
+  },
+  {
+    "762",
+    "labor",
+    "task,  work,  labor"
+  },
+  {
+    "763",
+    "trabajador",
+    "laborer,  worker"
+  },
+  {
+    "764",
+    "carácter",
+    "nature,  personality"
+  },
+  {
+    "765",
+    "cantar",
+    "to sing"
+  },
+  {
+    "766",
+    "operar",
+    "to operate"
+  },
+  {
+    "767",
+    "obstante",
+    "noobstante: nevertheless"
+  },
+  {
+    "768",
+    "joven  -  young"
+  },
+  {
+    "769",
+    "sexo",
+    "sex"
+  },
+  {
+    "770",
+    "documento",
+    "document"
+  },
+  {
+    "771",
+    "motivo",
+    "cause,  motive"
+  },
+  {
+    "772",
+    "construir",
+    "build,  to construct"
+  },
+  {
+    "773",
+    "opinión  -  view,  opinion"
+  },
+  {
+    "774",
+    "dominar",
+    "master,  to dominate"
+  },
+  {
+    "775",
+    "oscuro",
+    "obscure,  dark"
+  },
+  {
+    "776",
+    "acordar",
+    "remind,  to remember"
+  },
+  {
+    "777",
+    "generalmente",
+    "usually,  generally"
+  },
+  {
+    "778",
+    "cerrar",
+    "to close"
+  },
+  {
+    "779",
+    "cadena",
+    "chain"
+  },
+  {
+    "780",
+    "tras",
+    "behind,  after"
+  },
+  {
+    "781",
+    "repartir",
+    "distribute,  deliver,  to divide"
+  },
+  {
+    "782",
+    "fenómeno",
+    "phenomenon"
+  },
+  {
+    "783",
+    "proceso",
+    "procedure, process"
+  },
+  {
+    "784",
+    "desarrollo",
+    "development"
+  },
+  {
+    "785",
+    "contacto",
+    "contact"
+  },
+  {
+    "786",
+    "dudar",
+    "to[have]doubt"
+  },
+  {
+    "787",
+    "prestar",
+    "to lend"
+  },
+  {
+    "788",
+    "guardar",
+    "save,  to keep"
+  },
+  {
+    "789",
+    "llorar",
+    "to cry"
+  },
+  {
+    "790",
+    "margen",
+    "margin,  edge,  border,  brink"
+  },
+  {
+    "791",
+    "hallar",
+    "to ﬁnd[out]"
+  },
+  {
+    "792",
+    "inmediatamente",
+    "immediately"
+  },
+  {
+    "793",
+    "dolor",
+    "sorrow,  ache,  pain"
+  },
+  {
+    "794",
+    "bomba",
+    "explosion,  bomb,  pump"
+  },
+  {
+    "795",
+    "impresión",
+    "printing,  impression"
+  },
+  {
+    "796",
+    "respuesta",
+    "reply, answer"
+  },
+  {
+    "797",
+    "culpa",
+    "fault,  blame"
+  },
+  {
+    "798",
+    "interesante",
+    "interesting"
+  },
+  {
+    "799",
+    "añadir",
+    "to add"
+  },
+  {
+    "800",
+    "argentino",
+    "Argentine"
+  },
+  {
+    "801",
+    "departamento  -  apartment,  department"
+  },
+  {
+    "802",
+    "durar",
+    "to last"
+  },
+  {
+    "803",
+    "tirar",
+    "pull,  to throw"
+  },
+  {
+    "804",
+    "colegio",
+    "college, [high]school"
+  },
+  {
+    "805",
+    "invitar",
+    "to invite"
+  },
+  {
+    "806",
+    "marido",
+    "husband"
+  },
+  {
+    "807",
+    "diario",
+    "daily"
+  },
+  {
+    "808",
+    "naturalmente",
+    "naturally"
+  },
+  {
+    "809",
+    "tarea",
+    "job,  task"
+  },
+  {
+    "810",
+    "acceso",
+    "entry,  access"
+  },
+  {
+    "811",
+    "impedir",
+    "hinder,  to prevent"
+  },
+  {
+    "812",
+    "crisis",
+    "crisis"
+  },
+  {
+    "813",
+    "sala",
+    "hall,  room"
+  },
+  {
+    "814",
+    "actitud",
+    "attitude"
+  },
+  {
+    "815",
+    "raro",
+    "scarce,  rare,  strange"
+  },
+  {
+    "816",
+    "muerto",
+    "dead"
+  },
+  {
+    "817",
+    "suerte",
+    "fortune,  luck"
+  },
+  {
+    "818",
+    "religioso",
+    "religious"
+  },
+  {
+    "819",
+    "instalar",
+    "to install"
+  },
+  {
+    "820",
+    "serie",
+    "series"
+  },
+  {
+    "821",
+    "cubrir",
+    "to cover"
+  },
+  {
+    "822",
+    "cercano",
+    "near"
+  },
+  {
+    "823",
+    "argumento",
+    "plot,  argument"
+  },
+  {
+    "824",
+    "prueba",
+    "test,  trial,  proof"
+  },
+  {
+    "825",
+    "hundir",
+    "submerge,  to sink"
+  },
+  {
+    "826",
+    "éxito",
+    "success"
+  },
+  {
+    "827",
+    "absoluto",
+    "absolute"
+  },
+  {
+    "828",
+    "interpretar",
+    "to interpret"
+  },
+  {
+    "829",
+    "pleno",
+    "full,  complete"
+  },
+  {
+    "830",
+    "normal",
+    "regular,  usual,  normal"
+  },
+  {
+    "831",
+    "funcionar",
+    "function,  to work"
+  },
+  {
+    "832",
+    "señalar",
+    "signal,  to point[out]"
+  },
+  {
+    "833",
+    "cuarto",
+    "fourth"
+  },
+  {
+    "834",
+    "experimentar",
+    "experiment,  to experience"
+  },
+  {
+    "835",
+    "conocido",
+    "well-known,  known"
+  },
+  {
+    "836",
+    "mezclar",
+    "to mix"
+  },
+  {
+    "837",
+    "paz",
+    "peace"
+  },
+  {
+    "838",
+    "proyecto",
+    "plan,  project"
+  },
+  {
+    "839",
+    "caja",
+    "safe,  box,  bank"
+  },
+  {
+    "840",
+    "rápido",
+    "fast,  quick"
+  },
+  {
+    "841",
+    "honor",
+    "honesty,  honor"
+  },
+  {
+    "842",
+    "capital",
+    "money[m],  city[f],  capital"
+  },
+  {
+    "843",
+    "liberar",
+    "liberate,  to free"
+  },
+  {
+    "844",
+    "completar",
+    "to complete"
+  },
+  {
+    "845",
+    "interior",
+    "inside,  interior"
+  },
+  {
+    "846",
+    "ajeno",
+    "detached,  not belonging to"
+  },
+  {
+    "847",
+    "despedir",
+    "dismiss,  to say goodbye[to]"
+  },
+  {
+    "848",
+    "chico",
+    "boy"
+  },
+  {
+    "849",
+    "nacimiento",
+    "origin,  birth"
+  },
+  {
+    "850",
+    "seco",
+    "arid,  dry"
+  },
+  {
+    "851",
+    "apoyo",
+    "backing,  support"
+  },
+  {
+    "852",
+    "dividir",
+    "to divide"
+  },
+  {
+    "853",
+    "pesado",
+    "tiresome,  boring,  heavy"
+  },
+  {
+    "854",
+    "texto",
+    "text"
+  },
+  {
+    "855",
+    "reserva",
+    "reserve,  reservation"
+  },
+  {
+    "856",
+    "defender",
+    "protect,  to defend"
+  },
+  {
+    "857",
+    "pertenecer",
+    "to belong"
+  },
+  {
+    "858",
+    "formación",
+    "education,  formation"
+  },
+  {
+    "859",
+    "boca",
+    "opening,  entrance,  mouth"
+  },
+  {
+    "860",
+    "distancia",
+    "distance"
+  },
+  {
+    "861",
+    "azul",
+    "blue"
+  },
+  {
+    "862",
+    "opinar",
+    "be of the opinion,  to think"
+  },
+  {
+    "863",
+    "máquina",
+    "machine"
+  },
+  {
+    "864",
+    "título  -  heading,  title"
+  },
+  {
+    "865",
+    "habitual",
+    "habitual,  usual,  customary"
+  },
+  {
+    "866",
+    "negar",
+    "refuse,  to deny"
+  },
+  {
+    "867",
+    "llamada",
+    "knock,  call"
+  },
+  {
+    "868",
+    "ideal",
+    "goal,  ideal"
+  },
+  {
+    "869",
+    "suyo",
+    "yours[informal],  theirs,  hers,  his"
+  },
+  {
+    "870",
+    "directo",
+    "straight,  direct"
+  },
+  {
+    "871",
+    "método",
+    "method"
+  },
+  {
+    "872",
+    "preciso",
+    "necessary,  precise"
+  },
+  {
+    "873",
+    "debajo",
+    "below,  underneath"
+  },
+  {
+    "874",
+    "averiguar",
+    "ﬁnd out,  to investigate"
+  },
+  {
+    "875",
+    "presión",
+    "pressure"
+  },
+  {
+    "876",
+    "ignorar",
+    "to be unaware"
+  },
+  {
+    "877",
+    "automóvil",
+    "automobile"
+  },
+  {
+    "878",
+    "detrás",
+    "behind"
+  },
+  {
+    "879",
+    "contenido",
+    "content,  contents"
+  },
+  {
+    "880",
+    "hija",
+    "daughter"
+  },
+  {
+    "881",
+    "agosto",
+    "August"
+  },
+  {
+    "882",
+    "cobrar",
+    "to charge[money]"
+  },
+  {
+    "883",
+    "barco",
+    "ship,  boat"
+  },
+  {
+    "884",
+    "americano",
+    "American"
+  },
+  {
+    "885",
+    "vender",
+    "to sell"
+  },
+  {
+    "886",
+    "sesenta",
+    "sixty"
+  },
+  {
+    "887",
+    "animar",
+    "to cheer up"
+  },
+  {
+    "888",
+    "página",
+    "page"
+  },
+  {
+    "889",
+    "notar",
+    "to notice"
+  },
+  {
+    "890",
+    "árbol",
+    "tree"
+  },
+  {
+    "891",
+    "plan",
+    "plan"
+  },
+  {
+    "892",
+    "alcance",
+    "scope,  reach"
+  },
+  {
+    "893",
+    "regresar",
+    "to return[to a place]"
+  },
+  {
+    "894",
+    "mandar",
+    "order,  to send"
+  },
+  {
+    "895",
+    "moda",
+    "form,  fashion"
+  },
+  {
+    "896",
+    "satisfacer",
+    "to satisfy"
+  },
+  {
+    "897",
+    "curiosidad",
+    "quaintness,  curiosity"
+  },
+  {
+    "898",
+    "escuela",
+    "school"
+  },
+  {
+    "899",
+    "memoria",
+    "memory"
+  },
+  {
+    "900",
+    "espejo  -  reﬂection,  mirror"
+  },
+  {
+    "901",
+    "elemento",
+    "element"
+  },
+  {
+    "902",
+    "romper",
+    "to break"
+  },
+  {
+    "903",
+    "matar",
+    "to kill"
+  },
+  {
+    "904",
+    "cola",
+    "queue,  line,  tail"
+  },
+  {
+    "905",
+    "juventud",
+    "youth"
+  },
+  {
+    "906",
+    "trato",
+    "agreement,  manner,  treatment"
+  },
+  {
+    "907",
+    "coche",
+    "carriage,  car"
+  },
+  {
+    "908",
+    "veinte",
+    "twenty"
+  },
+  {
+    "909",
+    "acudir",
+    "frequent,  go to,  to attend"
+  },
+  {
+    "910",
+    "examinar",
+    "inspect,  to examine"
+  },
+  {
+    "911",
+    "frío",
+    "cold"
+  },
+  {
+    "912",
+    "simplemente",
+    "just,  simply"
+  },
+  {
+    "913",
+    "tensión",
+    "stress,  tension,  strain"
+  },
+  {
+    "914",
+    "expresar",
+    "to express"
+  },
+  {
+    "915",
+    "generación",
+    "generation"
+  },
+  {
+    "916",
+    "manifestación",
+    "manifestation,  protest"
+  },
+  {
+    "917",
+    "terreno",
+    "terrain,  earth,  ground"
+  },
+  {
+    "918",
+    "seguro",
+    "secure,  sure,  safe"
+  },
+  {
+    "919",
+    "raza",
+    "lineage,  race"
+  },
+  {
+    "920",
+    "arrancar",
+    "uproot,  to start[machine]"
+  },
+  {
+    "921",
+    "sexual",
+    "sexual"
+  },
+  {
+    "922",
+    "puesto",
+    "position,  place,  job"
+  },
+  {
+    "923",
+    "familiar  -  of the family,  familiar"
+  },
+  {
+    "924",
+    "aprobar",
+    "approve,  to pass[test]"
+  },
+  {
+    "925",
+    "abajo",
+    "downward,  below,  down"
+  },
+  {
+    "926",
+    "quejar",
+    "to complain"
+  },
+  {
+    "927",
+    "juicio",
+    "judgment"
+  },
+  {
+    "928",
+    "técnico",
+    "technical"
+  },
+  {
+    "929",
+    "jardín",
+    "garden"
+  },
+  {
+    "930",
+    "intervenir",
+    "to intervene"
+  },
+  {
+    "931",
+    "público",
+    "audience,  public"
+  },
+  {
+    "932",
+    "consecuencia",
+    "consequence"
+  },
+  {
+    "933",
+    "ritmo",
+    "rhythm"
+  },
+  {
+    "934",
+    "perfectamente",
+    "perfectly"
+  },
+  {
+    "935",
+    "feliz",
+    "fortunate,  happy"
+  },
+  {
+    "936",
+    "exacto",
+    "true,  faithful,  exact"
+  },
+  {
+    "937",
+    "esposa",
+    "wife"
+  },
+  {
+    "938",
+    "personaje",
+    "character[e.g. movie]"
+  },
+  {
+    "939",
+    "patria",
+    "fatherland,  native land"
+  },
+  {
+    "940",
+    "inteligente",
+    "intelligent"
+  },
+  {
+    "941",
+    "calidad",
+    "quality"
+  },
+  {
+    "942",
+    "belleza",
+    "beauty"
+  },
+  {
+    "943",
+    "continuo",
+    "continuous"
+  },
+  {
+    "944",
+    "instrucción",
+    "instruction"
+  },
+  {
+    "945",
+    "inclinación",
+    "incline,  slope,  tendency"
+  },
+  {
+    "946",
+    "temperatura",
+    "temperature"
+  },
+  {
+    "947",
+    "huella",
+    "track,  trace,  footstep"
+  },
+  {
+    "948",
+    "mezcla  -  blend,  mixture"
+  },
+  {
+    "949",
+    "ciego",
+    "blind"
+  },
+  {
+    "950",
+    "lejano",
+    "distant"
+  },
+  {
+    "951",
+    "gusto",
+    "preference,  taste,  pleasure"
+  },
+  {
+    "952",
+    "ejercicio",
+    "practice,  exercise"
+  },
+  {
+    "953",
+    "hospital",
+    "hospital"
+  },
+  {
+    "954",
+    "radio",
+    "communication[f],  set[m],  radio"
+  },
+  {
+    "955",
+    "treinta",
+    "thirty"
+  },
+  {
+    "956",
+    "conveniente",
+    "convenient"
+  },
+  {
+    "957",
+    "salida",
+    "outcome,  escape,  exit"
+  },
+  {
+    "958",
+    "sentimiento",
+    "sentiment,  feeling"
+  },
+  {
+    "959",
+    "salvar",
+    "rescue,  to save"
+  },
+  {
+    "960",
+    "mar",
+    "sea"
+  },
+  {
+    "961",
+    "cuarto",
+    "chamber,  room"
+  },
+  {
+    "962",
+    "parar",
+    "to stop[moving]"
+  },
+  {
+    "963",
+    "saber",
+    "knowledge"
+  },
+  {
+    "964",
+    "cargo",
+    "fee,  charge,  position"
+  },
+  {
+    "965",
+    "poesía",
+    "poem,  poetry"
+  },
+  {
+    "966",
+    "música",
+    "music"
+  },
+  {
+    "967",
+    "estación",
+    "season,  station"
+  },
+  {
+    "968",
+    "justicia",
+    "fairness,  justice"
+  },
+  {
+    "969",
+    "brillante",
+    "sparkling,  shiny,  brilliant"
+  },
+  {
+    "970",
+    "destino",
+    "destiny,  destination"
+  },
+  {
+    "971",
+    "revolución",
+    "revolution"
+  },
+  {
+    "972",
+    "entrega",
+    "delivery"
+  },
+  {
+    "973",
+    "sensación",
+    "feeling,  sensation"
+  },
+  {
+    "974",
+    "intelectual",
+    "intellectual"
+  },
+  {
+    "975",
+    "representante",
+    "representative"
+  },
+  {
+    "976",
+    "agudo",
+    "acute,  sharp"
+  },
+  {
+    "977",
+    "rato  -  while,  moment,  time"
+  },
+  {
+    "978",
+    "doce",
+    "twelve"
+  },
+  {
+    "979",
+    "salto",
+    "hop,  jump,  skip"
+  },
+  {
+    "980",
+    "alegría",
+    "happiness,  joy"
+  },
+  {
+    "981",
+    "aun",
+    "still,  even[though]"
+  },
+  {
+    "982",
+    "operación",
+    "operation"
+  },
+  {
+    "983",
+    "delicado",
+    "delicate"
+  },
+  {
+    "984",
+    "nota",
+    "grade,  note"
+  },
+  {
+    "985",
+    "convencido",
+    "persuaded,  convinced"
+  },
+  {
+    "986",
+    "simple",
+    "simple-minded,  mere,  simple"
+  },
+  {
+    "987",
+    "construcción",
+    "construction"
+  },
+  {
+    "988",
+    "secretario",
+    "secretary"
+  },
+  {
+    "989",
+    "exposición",
+    "display,  exhibition"
+  },
+  {
+    "990",
+    "internacional",
+    "international"
+  },
+  {
+    "991",
+    "clave",
+    "key"
+  },
+  {
+    "992",
+    "cruzar",
+    "to cross"
+  },
+  {
+    "993",
+    "personal",
+    "personal"
+  },
+  {
+    "994",
+    "pared  -  [interior]wall"
+  },
+  {
+    "995",
+    "griego",
+    "Greek"
+  },
+  {
+    "996",
+    "poderoso",
+    "powerful"
+  },
+  {
+    "997",
+    "punta",
+    "point,  tip"
+  },
+  {
+    "998",
+    "mundial",
+    "worldwide"
+  },
+  {
+    "999",
+    "especialmente",
+    "especially"
+  },
+  {
+    "1000",
+    "empleo",
+    "job,  work,  occupation"
+  }
+]

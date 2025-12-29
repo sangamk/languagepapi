@@ -1,0 +1,31 @@
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;
+  --fg:#e8e8e8;
+  --accent:#00ff88;
+  --dim:#666;
+  --card:#151515;
+  --border:#333;
+}
+html{font:16px/1.5 "SF Mono",Monaco,Consolas,monospace;background:var(--bg);color:var(--fg)}
+body{min-height:100dvh;padding:1rem;max-width:480px;margin:0 auto}
+.container{display:flex;flex-direction:column;gap:2rem;padding-top:2rem}
+.header{text-align:center}
+.logo{font-size:1.5rem;font-weight:700;letter-spacing:-.02em;color:var(--accent)}
+.tagline{color:var(--dim);font-size:.875rem;margin-top:.25rem}
+.nav{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-block;
+  padding:.75rem 1.25rem;
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--fg);
+  text-decoration:none;
+  font-size:.875rem;
+  transition:border-color .15s,color .15s;
+}
+.btn:hover,.btn:focus{border-color:var(--accent);color:var(--accent);outline:none}
+.stats{display:flex;justify-content:center;gap:2rem}
+.stat{text-align:center}
+.stat-num{display:block;font-size:2rem;font-weight:700;color:var(--accent)}
+.stat-label{font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
