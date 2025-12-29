@@ -1,4 +1,4 @@
-.PHONY: dev build build-windows run generate clean
+.PHONY: dev build build-windows run generate clean sync-static
 
 # Development with hot reload
 dev:
@@ -9,11 +9,14 @@ dev:
 generate:
 	@templ generate
 
+# Sync static files for embedding
+sync-static:
+	@cp -r static/* cmd/server/static/
+
 # Build everything for deployment (Linux server)
-build: generate
+build: generate sync-static
 	@mkdir -p bin/deploy
 	GOOS=linux GOARCH=amd64 go build -o bin/deploy/server ./cmd/server
-	@cp -r static bin/deploy/
 	@cp .env.example bin/deploy/.env.example
 	@if [ -f .env ]; then cp .env bin/deploy/.env; fi
 	@if [ -f languagepapi.db ]; then cp languagepapi.db bin/deploy/; fi
@@ -23,13 +26,12 @@ build: generate
 	@echo ""
 	@echo "On server: ./server"
 
-# Build for Windows (binary with embedded schema + migrations)
-# Schema migrations run automatically when the server starts
-build-windows: generate
+# Build for Windows (binary with embedded static files)
+# Static files are embedded - no need to copy separately
+build-windows: generate sync-static
 	go build -o bin/server.exe ./cmd/server
-	@cp -r static bin/
 	@echo Build complete: bin/server.exe
-	@echo "Note: Schema migrations will run automatically on first startup"
+	@echo "Static files are embedded in the binary"
 
 # Run locally (builds for current platform)
 run: generate

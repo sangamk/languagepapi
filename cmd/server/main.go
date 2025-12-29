@@ -1,6 +1,8 @@
 package main
 
 import (
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +12,9 @@ import (
 	"languagepapi/internal/db"
 	"languagepapi/internal/handlers"
 )
+
+//go:embed static
+var staticFiles embed.FS
 
 func main() {
 	// Load .env file (ignore error if not found - use system env vars)
@@ -57,8 +62,9 @@ func main() {
 	mux.HandleFunc("GET /settings", handlers.HandleSettings)
 	mux.HandleFunc("POST /settings", handlers.HandleSaveSettings)
 
-	// Static files
-	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	// Static files (embedded in binary)
+	staticFS, _ := fs.Sub(staticFiles, "static")
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFS))))
 
 	log.Printf("Server running on http://localhost:%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
