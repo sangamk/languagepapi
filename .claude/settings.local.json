@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make dev:*)",
+      "Bash(go install:*)",
+      "Bash(gcc --version:*)",
+      "Bash(go mod tidy:*)",
+      "Bash(make build:*)"
+    ]
+  }
+}

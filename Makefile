@@ -11,13 +11,13 @@ generate:
 
 # Build for production
 build: generate
-	@CGO_ENABLED=1 go build -o bin/server ./cmd/server
+	go build -o bin/server.exe ./cmd/server
 
 # Run production build
 run: build
-	@./bin/server
+	./bin/server.exe
 
 # Clean build artifacts
 clean:
-	@rm -rf bin/
-	@rm -f languagepapi.db
+	rm -rf bin/
+	rm -f languagepapi.db

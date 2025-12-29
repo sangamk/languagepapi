@@ -19,8 +19,8 @@ func main() {
 	http.HandleFunc("GET /", handleHome)
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Server running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Server running on http://localhost:8081")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
 func handleHome(w http.ResponseWriter, r *http.Request) {
