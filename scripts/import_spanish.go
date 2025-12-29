@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -10,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	_ "modernc.org/sqlite"
+	"languagepapi/internal/db"
 )
 
 // SpanishWord represents a parsed word entry
@@ -22,15 +21,11 @@ type SpanishWord struct {
 }
 
 func main() {
-	// Open database
-	db, err := sql.Open("sqlite", "languagepapi.db")
-	if err != nil {
+	// Initialize database (creates tables if needed)
+	if err := db.Init("languagepapi.db"); err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
-
-	// Enable foreign keys
-	db.Exec("PRAGMA foreign_keys = ON")
 
 	// Parse spanish.json
 	words, err := parseSpanishJSON("spanish.json")
@@ -50,14 +45,14 @@ func main() {
 
 		// Check if word already exists
 		var exists int
-		db.QueryRow("SELECT COUNT(*) FROM cards WHERE term = ?", w.Term).Scan(&exists)
+		db.DB.QueryRow("SELECT COUNT(*) FROM cards WHERE term = ?", w.Term).Scan(&exists)
 		if exists > 0 {
 			skipped++
 			continue
 		}
 
 		// Insert card
-		_, err := db.Exec(`
+		_, err := db.DB.Exec(`
 			INSERT INTO cards (island_id, term, translation, notes, frequency_rank)
 			VALUES (?, ?, ?, ?, ?)
 		`, islandID, w.Term, w.Translation, w.Notes, w.Rank)

@@ -5,7 +5,10 @@
       "Bash(go install:*)",
       "Bash(gcc --version:*)",
       "Bash(go mod tidy:*)",
-      "Bash(make build:*)"
+      "Bash(make build:*)",
+      "Bash(templ generate:*)",
+      "Bash(go build:*)",
+      "Bash(go run:*)"
     ]
   }
 }
