@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	_ "embed"
 
+	"languagepapi/internal/db/migrations"
+
 	_ "modernc.org/sqlite"
 )
 
@@ -25,8 +27,12 @@ func Init(path string) error {
 	}
 
 	// Execute schema (creates tables, indexes, and seed data)
-	_, err = DB.Exec(schema)
-	return err
+	if _, err = DB.Exec(schema); err != nil {
+		return err
+	}
+
+	// Run any pending migrations
+	return migrations.Run(DB)
 }
 
 func Close() error {

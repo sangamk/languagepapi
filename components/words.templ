@@ -6,14 +6,29 @@ import (
 )
 
 // WordsList renders the paginated word list
-templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, totalCards int, filterIsland int64) {
-	@Layout("Words - Spanish OS") {
+templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, totalCards int, filterIsland int64, searchQuery string) {
+	@Layout("Words - languagepapi") {
 		<main class="words-page">
 			<header class="page-header">
 				<a href="/" class="back-link" hx-get="/" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
 				<h1>Words</h1>
 				<span class="word-count">{ fmt.Sprintf("%d words", totalCards) }</span>
 			</header>
+
+			<div class="search-bar">
+				<input
+					type="search"
+					name="q"
+					placeholder="Search words..."
+					value={ searchQuery }
+					hx-get="/words"
+					hx-trigger="input changed delay:300ms, search"
+					hx-target="main"
+					hx-swap="outerHTML"
+					hx-include="[name='island']"
+					class="search-input"
+				/>
+			</div>
 
 			<div class="filters">
 				<select
@@ -22,7 +37,7 @@ templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, 
 					hx-target="main"
 					hx-swap="outerHTML"
 					name="island"
-					hx-include="this"
+					hx-include="[name='q']"
 				>
 					<option value="0" selected?={ filterIsland == 0 }>All Islands</option>
 					for _, island := range islands {
@@ -36,7 +51,11 @@ templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, 
 
 			if len(cards) == 0 {
 				<div class="empty-state">
-					<p>No words found.</p>
+					if searchQuery != "" {
+						<p>No words found for "{ searchQuery }"</p>
+					} else {
+						<p>No words found.</p>
+					}
 					<a href="/add" class="btn btn-primary" hx-get="/add" hx-target="main" hx-swap="outerHTML">Add your first word</a>
 				</div>
 			} else {
@@ -46,7 +65,7 @@ templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, 
 					}
 				</div>
 
-				if totalPages > 1 {
+				if totalPages > 1 && searchQuery == "" {
 					<div class="pagination">
 						if page > 1 {
 							<a
@@ -86,11 +105,19 @@ templ WordCard(card models.Card) {
 				<span class="word-rank">#{ fmt.Sprintf("%d", card.FrequencyRank.Int64) }</span>
 			}
 			<button
+				class="btn-icon btn-edit"
+				hx-get={ fmt.Sprintf("/words/%d/edit", card.ID) }
+				hx-target="body"
+				hx-swap="innerHTML"
+				title="Edit"
+			>✎</button>
+			<button
 				class="btn-icon btn-delete"
 				hx-delete={ fmt.Sprintf("/words/%d", card.ID) }
 				hx-target={ fmt.Sprintf("#word-%d", card.ID) }
 				hx-swap="outerHTML"
 				hx-confirm="Delete this word?"
+				title="Delete"
 			>×</button>
 		</div>
 	</div>
@@ -98,4 +125,33 @@ templ WordCard(card models.Card) {
 
 // WordDeleted renders the deleted state (empty for removal)
 templ WordDeleted() {
+}
+
+// CardBridges renders the bridges for a card
+templ CardBridges(bridges []models.Bridge) {
+	<div class="bridges" id="card-bridges">
+		if len(bridges) == 0 {
+			<p class="no-bridges">No memory bridges yet</p>
+		} else {
+			for _, b := range bridges {
+				<div class={ "bridge", fmt.Sprintf("bridge-%s", b.BridgeType) }>
+					<span class="bridge-type">{ bridgeLabel(b.BridgeType) }</span>
+					<span class="bridge-content">{ b.BridgeContent }</span>
+				</div>
+			}
+		}
+	</div>
+}
+
+func bridgeLabel(bt models.BridgeType) string {
+	switch bt {
+	case models.BridgeHindiPhonetic:
+		return "Hindi"
+	case models.BridgeDutchSyntax:
+		return "Dutch"
+	case models.BridgeEnglishCognate:
+		return "English"
+	default:
+		return string(bt)
+	}
 }

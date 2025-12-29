@@ -14,7 +14,6 @@ import (
 
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
-	"languagepapi/internal/repository"
 )
 
 // GeminiService handles bridge generation using Gemini API
@@ -153,6 +152,116 @@ func (s *GeminiService) GenerateAndSaveBridges(ctx context.Context, cardID int64
 	}
 
 	return nil
+}
+
+// GenerateExampleSentence generates an example sentence for a word
+func (s *GeminiService) GenerateExampleSentence(ctx context.Context, term, translation string) (string, error) {
+	prompt := fmt.Sprintf(`Generate a simple, natural Spanish sentence using the word "%s" (meaning: %s).
+
+Rules:
+- Use everyday, conversational Spanish
+- Keep it under 15 words
+- Include the word in a natural context
+- Return ONLY the Spanish sentence, nothing else`, term, translation)
+
+	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	if err != nil {
+		return "", fmt.Errorf("failed to generate content: %w", err)
+	}
+
+	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
+		return "", fmt.Errorf("no response from Gemini")
+	}
+
+	text := ""
+	for _, part := range resp.Candidates[0].Content.Parts {
+		if t, ok := part.(genai.Text); ok {
+			text += string(t)
+		}
+	}
+
+	return strings.TrimSpace(text), nil
+}
+
+// GenerateHint generates a hint for a card when the user gets it wrong
+func (s *GeminiService) GenerateHint(ctx context.Context, term, translation string, bridges []models.Bridge) (string, error) {
+	bridgeInfo := ""
+	for _, b := range bridges {
+		bridgeInfo += fmt.Sprintf("- %s: %s\n", b.BridgeType, b.BridgeContent)
+	}
+
+	prompt := fmt.Sprintf(`The user is trying to remember the Spanish word "%s" meaning "%s".
+
+Existing memory bridges:
+%s
+
+Generate a SHORT (1-2 sentence) hint to help them remember. Be creative and memorable.
+Return ONLY the hint text.`, term, translation, bridgeInfo)
+
+	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	if err != nil {
+		return "", fmt.Errorf("failed to generate content: %w", err)
+	}
+
+	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
+		return "", fmt.Errorf("no response from Gemini")
+	}
+
+	text := ""
+	for _, part := range resp.Candidates[0].Content.Parts {
+		if t, ok := part.(genai.Text); ok {
+			text += string(t)
+		}
+	}
+
+	return strings.TrimSpace(text), nil
+}
+
+// GenerateCards generates vocabulary cards for a topic
+func (s *GeminiService) GenerateCards(ctx context.Context, topic string, count int) ([]CardSuggestion, error) {
+	prompt := fmt.Sprintf(`Generate %d Spanish vocabulary words for the topic: "%s"
+
+Return ONLY valid JSON array in this format:
+[{"term": "Spanish word", "translation": "English translation", "example": "Example sentence in Spanish"}]
+
+Focus on practical, commonly used words.`, count, topic)
+
+	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate content: %w", err)
+	}
+
+	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
+		return nil, fmt.Errorf("no response from Gemini")
+	}
+
+	text := ""
+	for _, part := range resp.Candidates[0].Content.Parts {
+		if t, ok := part.(genai.Text); ok {
+			text += string(t)
+		}
+	}
+
+	// Clean up the response
+	text = strings.TrimSpace(text)
+	text = strings.TrimPrefix(text, "```json")
+	text = strings.TrimPrefix(text, "```")
+	text = strings.TrimSuffix(text, "```")
+	text = strings.TrimSpace(text)
+
+	var cards []CardSuggestion
+	if err := json.Unmarshal([]byte(text), &cards); err != nil {
+		return nil, fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	return cards, nil
+}
+
+// CardSuggestion represents an AI-generated card suggestion
+type CardSuggestion struct {
+	Term        string `json:"term"`
+	Translation string `json:"translation"`
+	Example     string `json:"example"`
 }
 
 // GenerateBridgesForBatch generates bridges for multiple cards with rate limiting

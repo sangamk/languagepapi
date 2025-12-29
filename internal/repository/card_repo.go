@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"database/sql"
+
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
 )
@@ -107,6 +109,95 @@ func CreateBridge(bridge *models.Bridge) error {
 func DeleteCard(id int64) error {
 	_, err := db.DB.Exec(`DELETE FROM cards WHERE id = ?`, id)
 	return err
+}
+
+// UpdateCard updates an existing card
+func UpdateCard(card *models.Card) error {
+	_, err := db.DB.Exec(`
+		UPDATE cards SET
+			island_id = ?,
+			term = ?,
+			translation = ?,
+			example_sentence = ?,
+			notes = ?,
+			audio_url = ?
+		WHERE id = ?
+	`, card.IslandID, card.Term, card.Translation, card.ExampleSentence, card.Notes, card.AudioURL, card.ID)
+	return err
+}
+
+// DeleteBridgesForCard removes all bridges for a card
+func DeleteBridgesForCard(cardID int64) error {
+	_, err := db.DB.Exec(`DELETE FROM bridges WHERE card_id = ?`, cardID)
+	return err
+}
+
+// SearchCards searches for cards by term or translation
+func SearchCards(query string, islandID int64) ([]models.Card, error) {
+	searchPattern := "%" + query + "%"
+	var rows *sql.Rows
+	var err error
+
+	if islandID > 0 {
+		rows, err = db.DB.Query(`
+			SELECT id, island_id, term, translation,
+			       COALESCE(example_sentence, ''), COALESCE(notes, ''), COALESCE(audio_url, ''),
+			       frequency_rank, created_at
+			FROM cards
+			WHERE island_id = ? AND (term LIKE ? OR translation LIKE ? OR example_sentence LIKE ?)
+			ORDER BY frequency_rank ASC, id ASC
+			LIMIT 100
+		`, islandID, searchPattern, searchPattern, searchPattern)
+	} else {
+		rows, err = db.DB.Query(`
+			SELECT id, island_id, term, translation,
+			       COALESCE(example_sentence, ''), COALESCE(notes, ''), COALESCE(audio_url, ''),
+			       frequency_rank, created_at
+			FROM cards
+			WHERE term LIKE ? OR translation LIKE ? OR example_sentence LIKE ?
+			ORDER BY frequency_rank ASC, id ASC
+			LIMIT 100
+		`, searchPattern, searchPattern, searchPattern)
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var cards []models.Card
+	for rows.Next() {
+		var c models.Card
+		if err := rows.Scan(
+			&c.ID, &c.IslandID, &c.Term, &c.Translation,
+			&c.ExampleSentence, &c.Notes, &c.AudioURL, &c.FrequencyRank, &c.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		cards = append(cards, c)
+	}
+	return cards, rows.Err()
+}
+
+// GetBridgesForCard retrieves all bridges for a card
+func GetBridgesForCard(cardID int64) ([]models.Bridge, error) {
+	rows, err := db.DB.Query(`
+		SELECT id, card_id, bridge_type, bridge_content, COALESCE(explanation, '')
+		FROM bridges WHERE card_id = ?
+	`, cardID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var bridges []models.Bridge
+	for rows.Next() {
+		var b models.Bridge
+		if err := rows.Scan(&b.ID, &b.CardID, &b.BridgeType, &b.BridgeContent, &b.Explanation); err != nil {
+			return nil, err
+		}
+		bridges = append(bridges, b)
+	}
+	return bridges, rows.Err()
 }
 
 // CountCards returns total card count

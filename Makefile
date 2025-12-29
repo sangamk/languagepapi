@@ -23,10 +23,12 @@ build: generate
 	@echo ""
 	@echo "On server: ./server"
 
-# Build for Windows (just the binary)
+# Build for Windows (binary with embedded schema + migrations)
+# Schema migrations run automatically when the server starts
 build-windows: generate
 	go build -o bin/server.exe ./cmd/server
 	@echo Build complete: bin/server.exe
+	@echo "Note: Schema migrations will run automatically on first startup"
 
 # Run locally (builds for current platform)
 run: generate

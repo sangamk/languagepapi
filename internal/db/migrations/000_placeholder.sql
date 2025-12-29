@@ -1,0 +1,9 @@
+-- Placeholder migration file
+-- Add your schema migrations here with naming convention: NNN_description.sql
+-- Example: 001_add_user_email.sql
+--
+-- Migrations are applied in alphabetical order and tracked in schema_migrations table.
+-- Each migration runs only once.
+--
+-- Example migration content:
+-- ALTER TABLE users ADD COLUMN email TEXT;
