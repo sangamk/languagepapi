@@ -98,3 +98,22 @@ func GetTotalCardsLearned(userID int64) (int, error) {
 	`, userID).Scan(&count)
 	return count, err
 }
+
+// CountTotalReviews counts all reviews by a user
+func CountTotalReviews(userID int64) (int, error) {
+	var count int
+	err := db.DB.QueryRow(`
+		SELECT COUNT(*) FROM review_logs WHERE user_id = ?
+	`, userID).Scan(&count)
+	return count, err
+}
+
+// CountWordsLearned counts words learned (reviewed at least once with Good or Easy)
+func CountWordsLearned(userID int64) (int, error) {
+	var count int
+	err := db.DB.QueryRow(`
+		SELECT COUNT(DISTINCT card_id) FROM card_progress
+		WHERE user_id = ? AND state IN ('learning', 'review') AND reps > 0
+	`, userID).Scan(&count)
+	return count, err
+}

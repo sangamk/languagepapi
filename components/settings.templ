@@ -1,0 +1,103 @@
+package components
+
+import (
+	"fmt"
+	"languagepapi/internal/repository"
+)
+
+templ Settings(settings *repository.UserSettings, message string, success bool) {
+	@Layout("Settings - languagepapi") {
+		<main class="settings-page">
+			<header class="page-header">
+				<a href="/" class="back-link" hx-get="/" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
+				<h1>Settings</h1>
+			</header>
+
+			if message != "" {
+				<div class={ "toast", templ.KV("toast-success", success), templ.KV("toast-error", !success) }>
+					{ message }
+				</div>
+			}
+
+			<form
+				class="settings-form"
+				hx-post="/settings"
+				hx-target="main"
+				hx-swap="outerHTML"
+			>
+				<section class="settings-section">
+					<h2>Daily Goals</h2>
+					<div class="form-group">
+						<label for="daily_goal">Daily review goal</label>
+						<input
+							type="number"
+							id="daily_goal"
+							name="daily_goal"
+							min="1"
+							max="100"
+							value={ fmt.Sprintf("%d", settings.DailyGoal) }
+						/>
+						<span class="hint">Cards to review each day</span>
+					</div>
+					<div class="form-group">
+						<label for="new_cards_per_day">New cards per day</label>
+						<input
+							type="number"
+							id="new_cards_per_day"
+							name="new_cards_per_day"
+							min="0"
+							max="50"
+							value={ fmt.Sprintf("%d", settings.NewCardsPerDay) }
+						/>
+						<span class="hint">Maximum new cards to introduce daily</span>
+					</div>
+					<div class="form-group">
+						<label for="reviews_per_session">Cards per session</label>
+						<input
+							type="number"
+							id="reviews_per_session"
+							name="reviews_per_session"
+							min="5"
+							max="50"
+							value={ fmt.Sprintf("%d", settings.ReviewsPerSession) }
+						/>
+						<span class="hint">Cards per practice session</span>
+					</div>
+				</section>
+
+				<section class="settings-section">
+					<h2>Practice Mode</h2>
+					<div class="form-group">
+						<label for="default_mode">Default mode</label>
+						<select id="default_mode" name="default_mode">
+							<option value="standard" selected?={ settings.DefaultMode == "standard" }>Standard (ES→EN)</option>
+							<option value="reverse" selected?={ settings.DefaultMode == "reverse" }>Reverse (EN→ES)</option>
+							<option value="typing" selected?={ settings.DefaultMode == "typing" }>Typing</option>
+						</select>
+					</div>
+				</section>
+
+				<section class="settings-section">
+					<h2>Features</h2>
+					<div class="form-group checkbox-group">
+						<label class="checkbox-label">
+							<input type="checkbox" name="show_bridges" checked?={ settings.ShowBridges } />
+							<span>Show memory bridges on cards</span>
+						</label>
+					</div>
+					<div class="form-group checkbox-group">
+						<label class="checkbox-label">
+							<input type="checkbox" name="enable_tts" checked?={ settings.EnableTTS } />
+							<span>Enable text-to-speech (coming soon)</span>
+						</label>
+					</div>
+				</section>
+
+				<div class="form-actions">
+					<a href="/" class="btn" hx-get="/" hx-target="body" hx-swap="innerHTML">Cancel</a>
+					<button type="submit" class="btn btn-primary">Save Settings</button>
+				</div>
+			</form>
+		</main>
+	}
+}

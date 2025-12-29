@@ -234,3 +234,64 @@ type SessionStats struct {
 	XPEarned   int
 	Duration   time.Duration
 }
+
+// CheckAchievements checks and awards any new achievements
+func (s *ReviewService) CheckAchievements(userID int64) []models.Achievement {
+	var newAchievements []models.Achievement
+
+	// Get user stats
+	user, err := repository.GetUser(userID)
+	if err != nil {
+		return newAchievements
+	}
+
+	// Get all achievements
+	achievements, err := repository.GetAllAchievements()
+	if err != nil {
+		return newAchievements
+	}
+
+	// Get earned achievements
+	earned, err := repository.GetUserAchievements(userID)
+	if err != nil {
+		return newAchievements
+	}
+
+	earnedMap := make(map[int64]bool)
+	for _, e := range earned {
+		earnedMap[e.AchievementID] = true
+	}
+
+	// Get total review count
+	totalReviews, _ := repository.CountTotalReviews(userID)
+
+	// Get words learned count
+	wordsLearned, _ := repository.CountWordsLearned(userID)
+
+	// Check each achievement
+	for _, a := range achievements {
+		if earnedMap[a.ID] {
+			continue // Already earned
+		}
+
+		var earned bool
+		switch a.ConditionType {
+		case "cards_reviewed":
+			earned = totalReviews >= a.ConditionValue
+		case "streak":
+			earned = user.CurrentStreak >= a.ConditionValue
+		case "words_learned":
+			earned = wordsLearned >= a.ConditionValue
+		}
+
+		if earned {
+			if err := repository.AwardAchievement(userID, a.ID); err == nil {
+				// Add XP reward
+				repository.UpdateUserXP(userID, a.XPReward)
+				newAchievements = append(newAchievements, a)
+			}
+		}
+	}
+
+	return newAchievements
+}

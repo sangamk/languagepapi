@@ -7,88 +7,251 @@ import (
 )
 
 // PracticeCard renders a flashcard with rating buttons
-templ PracticeCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int) {
-	<div class="practice-container">
-		<div class="progress-bar">
-			<div class="progress-fill" style={ fmt.Sprintf("width: %d%%", current*100/total) }></div>
-			<span class="progress-text">{ fmt.Sprintf("%d / %d", current, total) }</span>
-		</div>
-
-		<div class="card" id="flashcard" onclick="this.classList.toggle('flipped')">
-			<div class="card-inner">
-				<div class="card-front">
-					<span class="card-term">{ card.Term }</span>
-					<span class="card-hint">tap to reveal</span>
-				</div>
-				<div class="card-back">
-					<span class="card-term">{ card.Term }</span>
-					<span class="card-translation">{ card.Translation }</span>
-					if card.ExampleSentence != "" {
-						<span class="card-example">{ card.ExampleSentence }</span>
-					}
-					if len(card.Bridges) > 0 {
-						<div class="bridges">
-							for _, b := range card.Bridges {
-								<div class={ "bridge", fmt.Sprintf("bridge-%s", b.BridgeType) }>
-									<span class="bridge-type">{ bridgeTypeLabel(b.BridgeType) }</span>
-									<span class="bridge-content">{ b.BridgeContent }</span>
-								</div>
-							}
-						</div>
-					}
-				</div>
+templ PracticeCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int, mode string) {
+	<div class="practice-container" id="practice-container">
+		<div class="practice-header">
+			<div class="progress-bar">
+				<div class="progress-fill" style={ fmt.Sprintf("width: %d%%", current*100/total) }></div>
+			</div>
+			<div class="practice-meta">
+				<span class="progress-text">{ fmt.Sprintf("%d / %d", current, total) }</span>
+				<span class="practice-mode">{ modeLabel(mode) }</span>
 			</div>
 		</div>
 
-		<div class="rating-buttons">
-			<button
-				class="rating-btn rating-again"
-				hx-post="/practice/review"
-				hx-target=".practice-container"
-				hx-swap="outerHTML"
-				hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "1"}`, card.ID) }
-			>
-				<span class="rating-label">Again</span>
-				<span class="rating-interval">{ formatInterval(preview[models.RatingAgain].Interval) }</span>
-			</button>
-			<button
-				class="rating-btn rating-hard"
-				hx-post="/practice/review"
-				hx-target=".practice-container"
-				hx-swap="outerHTML"
-				hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "2"}`, card.ID) }
-			>
-				<span class="rating-label">Hard</span>
-				<span class="rating-interval">{ formatInterval(preview[models.RatingHard].Interval) }</span>
-			</button>
-			<button
-				class="rating-btn rating-good"
-				hx-post="/practice/review"
-				hx-target=".practice-container"
-				hx-swap="outerHTML"
-				hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "3"}`, card.ID) }
-			>
-				<span class="rating-label">Good</span>
-				<span class="rating-interval">{ formatInterval(preview[models.RatingGood].Interval) }</span>
-			</button>
-			<button
-				class="rating-btn rating-easy"
-				hx-post="/practice/review"
-				hx-target=".practice-container"
-				hx-swap="outerHTML"
-				hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "4"}`, card.ID) }
-			>
-				<span class="rating-label">Easy</span>
-				<span class="rating-interval">{ formatInterval(preview[models.RatingEasy].Interval) }</span>
-			</button>
+		if mode == "typing" {
+			@TypingCard(card, current, total)
+		} else if mode == "reverse" {
+			@ReverseCard(card, preview, current, total)
+		} else {
+			@StandardCard(card, preview, current, total)
+		}
+
+		<div class="keyboard-hint">
+			<span>Keyboard: 1=Again 2=Hard 3=Good 4=Easy S=Skip</span>
 		</div>
+	</div>
+	@keyboardScript()
+}
+
+// StandardCard renders the standard flashcard (Spanish → English)
+templ StandardCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int) {
+	<div class="card" id="flashcard" onclick="this.classList.toggle('flipped')">
+		<div class="card-inner">
+			<div class="card-front">
+				<span class="card-term">{ card.Term }</span>
+				<span class="card-hint">tap to reveal</span>
+			</div>
+			<div class="card-back">
+				<span class="card-term">{ card.Term }</span>
+				<span class="card-translation">{ card.Translation }</span>
+				if card.ExampleSentence != "" {
+					<span class="card-example">{ card.ExampleSentence }</span>
+				}
+				if len(card.Bridges) > 0 {
+					<div class="bridges">
+						for _, b := range card.Bridges {
+							<div class={ "bridge", fmt.Sprintf("bridge-%s", b.BridgeType) }>
+								<span class="bridge-type">{ bridgeTypeLabel(b.BridgeType) }</span>
+								<span class="bridge-content">{ b.BridgeContent }</span>
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	@ratingButtons(card.ID, preview)
+}
+
+// ReverseCard renders the reverse flashcard (English → Spanish)
+templ ReverseCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int) {
+	<div class="card" id="flashcard" onclick="this.classList.toggle('flipped')">
+		<div class="card-inner">
+			<div class="card-front">
+				<span class="card-term reverse-prompt">{ card.Translation }</span>
+				<span class="card-hint">What's the Spanish word?</span>
+			</div>
+			<div class="card-back">
+				<span class="card-translation reverse-answer">{ card.Translation }</span>
+				<span class="card-term">{ card.Term }</span>
+				if card.ExampleSentence != "" {
+					<span class="card-example">{ card.ExampleSentence }</span>
+				}
+			</div>
+		</div>
+	</div>
+
+	@ratingButtons(card.ID, preview)
+}
+
+// TypingCard renders the typing practice card
+templ TypingCard(card *models.CardWithProgress, current, total int) {
+	<div class="typing-card">
+		<div class="typing-prompt">
+			<span class="card-translation">{ card.Translation }</span>
+			<span class="card-hint">Type the Spanish word</span>
+		</div>
+		<form class="typing-form" id="typing-form">
+			<input
+				type="text"
+				id="typing-input"
+				name="answer"
+				class="typing-input"
+				autocomplete="off"
+				autofocus
+				placeholder="Type here..."
+			/>
+			<input type="hidden" name="card_id" value={ fmt.Sprintf("%d", card.ID) }/>
+			<input type="hidden" name="correct_answer" value={ card.Term }/>
+			<button type="submit" class="btn btn-primary">Check</button>
+		</form>
+		<div id="typing-result" class="typing-result"></div>
+	</div>
+	@typingScript(card.Term)
+}
+
+templ typingScript(correctAnswer string) {
+	<script>
+		document.getElementById('typing-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const input = document.getElementById('typing-input');
+			const result = document.getElementById('typing-result');
+			const answer = input.value.trim().toLowerCase();
+			const correct = '{ correctAnswer }'.toLowerCase();
+
+			if (answer === correct) {
+				result.innerHTML = '<span class="correct">Correct!</span>';
+				result.className = 'typing-result correct';
+				// Auto-submit good rating after 1 second
+				setTimeout(() => {
+					htmx.ajax('POST', '/practice/review', {
+						target: '.practice-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '3' }
+					});
+				}, 1000);
+			} else {
+				result.innerHTML = '<span class="incorrect">Incorrect. The answer is: <strong>{ correctAnswer }</strong></span>';
+				result.className = 'typing-result incorrect';
+				// Auto-submit again rating after 2 seconds
+				setTimeout(() => {
+					htmx.ajax('POST', '/practice/review', {
+						target: '.practice-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '1' }
+					});
+				}, 2000);
+			}
+		});
+	</script>
+}
+
+templ ratingButtons(cardID int64, preview map[models.Rating]fsrs.SchedulingPreview) {
+	<div class="rating-buttons">
+		<button
+			class="rating-btn rating-again"
+			id="btn-again"
+			hx-post="/practice/review"
+			hx-target=".practice-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "1"}`, cardID) }
+		>
+			<span class="rating-label">Again</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingAgain].Interval) }</span>
+			<span class="rating-key">1</span>
+		</button>
+		<button
+			class="rating-btn rating-hard"
+			id="btn-hard"
+			hx-post="/practice/review"
+			hx-target=".practice-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "2"}`, cardID) }
+		>
+			<span class="rating-label">Hard</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingHard].Interval) }</span>
+			<span class="rating-key">2</span>
+		</button>
+		<button
+			class="rating-btn rating-good"
+			id="btn-good"
+			hx-post="/practice/review"
+			hx-target=".practice-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "3"}`, cardID) }
+		>
+			<span class="rating-label">Good</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingGood].Interval) }</span>
+			<span class="rating-key">3</span>
+		</button>
+		<button
+			class="rating-btn rating-easy"
+			id="btn-easy"
+			hx-post="/practice/review"
+			hx-target=".practice-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "4"}`, cardID) }
+		>
+			<span class="rating-label">Easy</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingEasy].Interval) }</span>
+			<span class="rating-key">4</span>
+		</button>
+	</div>
+	<div class="skip-container">
+		<button
+			class="btn btn-skip"
+			id="btn-skip"
+			hx-post="/practice/skip"
+			hx-target=".practice-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d"}`, cardID) }
+		>
+			Skip (S)
+		</button>
 	</div>
 }
 
-// PracticeComplete renders the session complete screen
-templ PracticeComplete(reviewed, correct, xpEarned int) {
+templ keyboardScript() {
+	<script>
+		document.addEventListener('keydown', function(e) {
+			// Don't trigger if typing in an input
+			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+			const flashcard = document.getElementById('flashcard');
+
+			switch(e.key) {
+				case ' ':
+					e.preventDefault();
+					if (flashcard) flashcard.classList.toggle('flipped');
+					break;
+				case '1':
+					document.getElementById('btn-again')?.click();
+					break;
+				case '2':
+					document.getElementById('btn-hard')?.click();
+					break;
+				case '3':
+					document.getElementById('btn-good')?.click();
+					break;
+				case '4':
+					document.getElementById('btn-easy')?.click();
+					break;
+				case 's':
+				case 'S':
+					document.getElementById('btn-skip')?.click();
+					break;
+			}
+		});
+	</script>
+}
+
+// PracticeComplete renders the session complete screen with celebration
+templ PracticeComplete(reviewed, correct, xpEarned int, newAchievements []models.Achievement) {
 	<div class="practice-container">
 		<div class="complete-screen">
+			<div class="celebration" id="celebration"></div>
 			<h2 class="complete-title">Session Complete!</h2>
 			<div class="complete-stats">
 				<div class="complete-stat">
@@ -109,12 +272,53 @@ templ PracticeComplete(reviewed, correct, xpEarned int) {
 					{ fmt.Sprintf("%.0f%% accuracy", float64(correct)/float64(reviewed)*100) }
 				</div>
 			}
+			if len(newAchievements) > 0 {
+				<div class="new-achievements">
+					<h3>New Achievements!</h3>
+					for _, a := range newAchievements {
+						<div class="achievement-unlocked">
+							<span class="achievement-icon">{ achievementIconMap(a.Icon) }</span>
+							<span class="achievement-name">{ a.Name }</span>
+						</div>
+					}
+				</div>
+			}
 			<div class="complete-actions">
 				<a href="/" class="btn" hx-get="/" hx-target="body" hx-swap="innerHTML">done</a>
 				<a href="/practice" class="btn btn-primary" hx-get="/practice" hx-target=".practice-container" hx-swap="outerHTML">continue</a>
 			</div>
 		</div>
 	</div>
+	@celebrationScript()
+}
+
+templ celebrationScript() {
+	<script>
+		// Simple confetti effect
+		const celebration = document.getElementById('celebration');
+		const colors = ['#00ff88', '#ff4444', '#4488ff', '#ff8844', '#ffff00'];
+		for (let i = 0; i < 50; i++) {
+			const confetti = document.createElement('div');
+			confetti.className = 'confetti';
+			confetti.style.left = Math.random() * 100 + '%';
+			confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+			confetti.style.animationDelay = Math.random() * 2 + 's';
+			confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+			celebration.appendChild(confetti);
+		}
+	</script>
+}
+
+func achievementIconMap(icon string) string {
+	icons := map[string]string{
+		"sparkles": "✨", "seedling": "🌱", "books": "📚", "hundred": "💯",
+		"crown": "👑", "fire": "🔥", "zap": "⚡", "trophy": "🏆",
+		"star": "⭐", "gem": "💎", "rocket": "🚀", "brain": "🧠",
+	}
+	if e, ok := icons[icon]; ok {
+		return e
+	}
+	return "🏅"
 }
 
 // PracticeStats renders session stats (for HTMX partial updates)
@@ -135,6 +339,38 @@ templ PracticeEmpty() {
 			<div class="empty-actions">
 				<a href="/" class="btn" hx-get="/" hx-target="body" hx-swap="innerHTML">home</a>
 				<a href="/add" class="btn btn-primary" hx-get="/add" hx-target="main" hx-swap="innerHTML">add words</a>
+			</div>
+		</div>
+	</div>
+}
+
+// PracticeModeSelector renders the mode selection screen
+templ PracticeModeSelector(dueCount, newCount int) {
+	<div class="practice-container">
+		<div class="mode-selector">
+			<h2>Choose Practice Mode</h2>
+			<p class="due-info">{ fmt.Sprintf("%d due, %d new cards available", dueCount, newCount) }</p>
+
+			<div class="mode-options">
+				<a href="/practice?mode=standard" class="mode-card" hx-get="/practice?mode=standard" hx-target=".practice-container" hx-swap="outerHTML">
+					<span class="mode-icon">🎴</span>
+					<span class="mode-name">Standard</span>
+					<span class="mode-desc">Spanish → English flashcards</span>
+				</a>
+				<a href="/practice?mode=reverse" class="mode-card" hx-get="/practice?mode=reverse" hx-target=".practice-container" hx-swap="outerHTML">
+					<span class="mode-icon">🔄</span>
+					<span class="mode-name">Reverse</span>
+					<span class="mode-desc">English → Spanish recall</span>
+				</a>
+				<a href="/practice?mode=typing" class="mode-card" hx-get="/practice?mode=typing" hx-target=".practice-container" hx-swap="outerHTML">
+					<span class="mode-icon">⌨️</span>
+					<span class="mode-name">Typing</span>
+					<span class="mode-desc">Type the Spanish word</span>
+				</a>
+			</div>
+
+			<div class="mode-back">
+				<a href="/" class="btn" hx-get="/" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
 			</div>
 		</div>
 	</div>
@@ -168,4 +404,15 @@ func formatInterval(days int) string {
 		return fmt.Sprintf("%dmo", days/30)
 	}
 	return fmt.Sprintf("%dy", days/365)
+}
+
+func modeLabel(mode string) string {
+	switch mode {
+	case "reverse":
+		return "Reverse Mode"
+	case "typing":
+		return "Typing Mode"
+	default:
+		return "Standard Mode"
+	}
 }

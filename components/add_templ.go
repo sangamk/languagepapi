@@ -137,13 +137,13 @@ func AddCard(islands []models.Island, message string, success bool) templ.Compon
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</select></div><div class=\"form-group\"><label for=\"example\">Example Sentence (optional)</label> <input type=\"text\" id=\"example\" name=\"example\" placeholder=\"e.g., ¡Hola! ¿Cómo estás?\" autocomplete=\"off\"></div><details class=\"bridges-section\"><summary>Memory Bridges (optional)</summary><div class=\"bridges-form\"><div class=\"form-group\"><label for=\"bridge_hindi\">Hindi Phonetic Bridge</label> <input type=\"text\" id=\"bridge_hindi\" name=\"bridge_hindi\" placeholder=\"Phonetic similarity to Hindi\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_dutch\">Dutch Syntax Bridge</label> <input type=\"text\" id=\"bridge_dutch\" name=\"bridge_dutch\" placeholder=\"Grammar parallel to Dutch\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_english\">English Cognate</label> <input type=\"text\" id=\"bridge_english\" name=\"bridge_english\" placeholder=\"Related English word\" autocomplete=\"off\"></div></div></details><div class=\"form-actions\"><a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"body\" hx-swap=\"innerHTML\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">Add Word</button></div></form></main>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</select></div><div class=\"form-group\"><label for=\"example\">Example Sentence (optional)</label> <input type=\"text\" id=\"example\" name=\"example\" placeholder=\"e.g., ¡Hola! ¿Cómo estás?\" autocomplete=\"off\"></div><div class=\"form-group checkbox-group\"><label class=\"checkbox-label\"><input type=\"checkbox\" name=\"generate_bridges\" checked> <span>Generate memory bridges with AI</span></label></div><details class=\"bridges-section\"><summary>Or add bridges manually</summary><div class=\"bridges-form\"><div class=\"form-group\"><label for=\"bridge_hindi\">Hindi Phonetic Bridge</label> <input type=\"text\" id=\"bridge_hindi\" name=\"bridge_hindi\" placeholder=\"Phonetic similarity to Hindi\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_dutch\">Dutch Syntax Bridge</label> <input type=\"text\" id=\"bridge_dutch\" name=\"bridge_dutch\" placeholder=\"Grammar parallel to Dutch\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_english\">English Cognate</label> <input type=\"text\" id=\"bridge_english\" name=\"bridge_english\" placeholder=\"Related English word\" autocomplete=\"off\"></div></div></details><div class=\"form-actions\"><a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"body\" hx-swap=\"innerHTML\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">Add Word</button></div></form></main>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Layout("Add Word - Spanish OS").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Layout("Add Word - languagepapi").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -203,7 +203,7 @@ func AddCardPartial(islands []models.Island, message string, success bool) templ
 			var templ_7745c5c3_Var12 string
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 130, Col: 13}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 137, Col: 13}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -226,7 +226,7 @@ func AddCardPartial(islands []models.Island, message string, success bool) templ
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", island.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 168, Col: 50}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 175, Col: 50}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -239,7 +239,7 @@ func AddCardPartial(islands []models.Island, message string, success bool) templ
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(island.Icon)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 169, Col: 20}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 176, Col: 20}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -252,7 +252,7 @@ func AddCardPartial(islands []models.Island, message string, success bool) templ
 			var templ_7745c5c3_Var15 string
 			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(island.Name)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 169, Col: 36}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/add.templ`, Line: 176, Col: 36}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
@@ -263,7 +263,7 @@ func AddCardPartial(islands []models.Island, message string, success bool) templ
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</select></div><div class=\"form-group\"><label for=\"example\">Example Sentence (optional)</label> <input type=\"text\" id=\"example\" name=\"example\" placeholder=\"e.g., ¡Hola! ¿Cómo estás?\" autocomplete=\"off\"></div><details class=\"bridges-section\"><summary>Memory Bridges (optional)</summary><div class=\"bridges-form\"><div class=\"form-group\"><label for=\"bridge_hindi\">Hindi Phonetic Bridge</label> <input type=\"text\" id=\"bridge_hindi\" name=\"bridge_hindi\" placeholder=\"Phonetic similarity to Hindi\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_dutch\">Dutch Syntax Bridge</label> <input type=\"text\" id=\"bridge_dutch\" name=\"bridge_dutch\" placeholder=\"Grammar parallel to Dutch\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_english\">English Cognate</label> <input type=\"text\" id=\"bridge_english\" name=\"bridge_english\" placeholder=\"Related English word\" autocomplete=\"off\"></div></div></details><div class=\"form-actions\"><a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"body\" hx-swap=\"innerHTML\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">Add Word</button></div></form></main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</select></div><div class=\"form-group\"><label for=\"example\">Example Sentence (optional)</label> <input type=\"text\" id=\"example\" name=\"example\" placeholder=\"e.g., ¡Hola! ¿Cómo estás?\" autocomplete=\"off\"></div><div class=\"form-group checkbox-group\"><label class=\"checkbox-label\"><input type=\"checkbox\" name=\"generate_bridges\" checked> <span>Generate memory bridges with AI</span></label></div><details class=\"bridges-section\"><summary>Or add bridges manually</summary><div class=\"bridges-form\"><div class=\"form-group\"><label for=\"bridge_hindi\">Hindi Phonetic Bridge</label> <input type=\"text\" id=\"bridge_hindi\" name=\"bridge_hindi\" placeholder=\"Phonetic similarity to Hindi\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_dutch\">Dutch Syntax Bridge</label> <input type=\"text\" id=\"bridge_dutch\" name=\"bridge_dutch\" placeholder=\"Grammar parallel to Dutch\" autocomplete=\"off\"></div><div class=\"form-group\"><label for=\"bridge_english\">English Cognate</label> <input type=\"text\" id=\"bridge_english\" name=\"bridge_english\" placeholder=\"Related English word\" autocomplete=\"off\"></div></div></details><div class=\"form-actions\"><a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"body\" hx-swap=\"innerHTML\">Cancel</a> <button type=\"submit\" class=\"btn btn-primary\">Add Word</button></div></form></main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

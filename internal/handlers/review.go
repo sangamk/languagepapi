@@ -7,6 +7,7 @@ import (
 
 	"languagepapi/components"
 	"languagepapi/internal/models"
+	"languagepapi/internal/repository"
 	"languagepapi/internal/service"
 )
 
@@ -21,6 +22,22 @@ const defaultUserID int64 = 1
 
 // HandlePractice starts or continues a review session
 func HandlePractice(w http.ResponseWriter, r *http.Request) {
+	mode := r.URL.Query().Get("mode")
+
+	// If no mode specified, show mode selector
+	if mode == "" {
+		dueCount, _ := repository.CountDueCards(defaultUserID)
+		newCount, _ := repository.CountNewCards(defaultUserID)
+
+		if dueCount+newCount == 0 {
+			components.PracticeEmpty().Render(r.Context(), w)
+			return
+		}
+
+		components.PracticeModeSelector(dueCount, newCount).Render(r.Context(), w)
+		return
+	}
+
 	sessionsLock.Lock()
 	session, exists := sessions[defaultUserID]
 	if !exists || session.CurrentIndex >= len(session.Cards) {
@@ -45,20 +62,32 @@ func HandlePractice(w http.ResponseWriter, r *http.Request) {
 	// Get current card
 	card, hasMore := reviewService.GetNextCard(session)
 	if !hasMore {
-		// Session complete
+		// Session complete - check for new achievements
+		newAchievements := reviewService.CheckAchievements(defaultUserID)
 		stats := reviewService.GetSessionStats(session)
-		components.PracticeComplete(stats.Reviewed, stats.Correct, stats.XPEarned).Render(r.Context(), w)
+		components.PracticeComplete(stats.Reviewed, stats.Correct, stats.XPEarned, newAchievements).Render(r.Context(), w)
 		return
+	}
+
+	// Fetch bridges for the card
+	if len(card.Bridges) == 0 {
+		bridges, _ := repository.GetBridgesForCard(card.ID)
+		card.Bridges = bridges
 	}
 
 	// Get scheduling preview for rating buttons
 	preview := reviewService.GetSchedulingPreview(card)
 
-	components.PracticeCard(card, preview, session.CurrentIndex+1, len(session.Cards)).Render(r.Context(), w)
+	components.PracticeCard(card, preview, session.CurrentIndex+1, len(session.Cards), mode).Render(r.Context(), w)
 }
 
 // HandlePracticeCard returns just the card content (HTMX partial)
 func HandlePracticeCard(w http.ResponseWriter, r *http.Request) {
+	mode := r.URL.Query().Get("mode")
+	if mode == "" {
+		mode = "standard"
+	}
+
 	sessionsLock.RLock()
 	session, exists := sessions[defaultUserID]
 	sessionsLock.RUnlock()
@@ -70,13 +99,20 @@ func HandlePracticeCard(w http.ResponseWriter, r *http.Request) {
 
 	card, hasMore := reviewService.GetNextCard(session)
 	if !hasMore {
+		newAchievements := reviewService.CheckAchievements(defaultUserID)
 		stats := reviewService.GetSessionStats(session)
-		components.PracticeComplete(stats.Reviewed, stats.Correct, stats.XPEarned).Render(r.Context(), w)
+		components.PracticeComplete(stats.Reviewed, stats.Correct, stats.XPEarned, newAchievements).Render(r.Context(), w)
 		return
 	}
 
+	// Fetch bridges
+	if len(card.Bridges) == 0 {
+		bridges, _ := repository.GetBridgesForCard(card.ID)
+		card.Bridges = bridges
+	}
+
 	preview := reviewService.GetSchedulingPreview(card)
-	components.PracticeCard(card, preview, session.CurrentIndex+1, len(session.Cards)).Render(r.Context(), w)
+	components.PracticeCard(card, preview, session.CurrentIndex+1, len(session.Cards), mode).Render(r.Context(), w)
 }
 
 // HandleReview processes a review submission
@@ -96,6 +132,11 @@ func HandleReview(w http.ResponseWriter, r *http.Request) {
 	if err != nil || rating < 1 || rating > 4 {
 		http.Error(w, "invalid rating", http.StatusBadRequest)
 		return
+	}
+
+	mode := r.FormValue("mode")
+	if mode == "" {
+		mode = "standard"
 	}
 
 	durationMs, _ := strconv.Atoi(r.FormValue("duration_ms"))
@@ -118,7 +159,8 @@ func HandleReview(w http.ResponseWriter, r *http.Request) {
 
 	// Return next card or completion screen
 	if result.SessionDone {
-		components.PracticeComplete(result.TotalReviewed, result.TotalCorrect, result.TotalXP).Render(r.Context(), w)
+		newAchievements := reviewService.CheckAchievements(defaultUserID)
+		components.PracticeComplete(result.TotalReviewed, result.TotalCorrect, result.TotalXP, newAchievements).Render(r.Context(), w)
 		return
 	}
 
@@ -129,8 +171,63 @@ func HandleReview(w http.ResponseWriter, r *http.Request) {
 	cardIndex := session.CurrentIndex + 1
 	sessionsLock.RUnlock()
 
+	// Fetch bridges
+	if card != nil && len(card.Bridges) == 0 {
+		bridges, _ := repository.GetBridgesForCard(card.ID)
+		card.Bridges = bridges
+	}
+
 	preview := reviewService.GetSchedulingPreview(card)
-	components.PracticeCard(card, preview, cardIndex, cardCount).Render(r.Context(), w)
+	components.PracticeCard(card, preview, cardIndex, cardCount, mode).Render(r.Context(), w)
+}
+
+// HandleSkip skips the current card without rating
+func HandleSkip(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	mode := r.FormValue("mode")
+	if mode == "" {
+		mode = "standard"
+	}
+
+	sessionsLock.Lock()
+	session, exists := sessions[defaultUserID]
+	if !exists {
+		sessionsLock.Unlock()
+		http.Error(w, "no active session", http.StatusBadRequest)
+		return
+	}
+
+	// Move to next card without submitting a review
+	session.CurrentIndex++
+	sessionsLock.Unlock()
+
+	// Check if session is complete
+	if session.CurrentIndex >= len(session.Cards) {
+		newAchievements := reviewService.CheckAchievements(defaultUserID)
+		stats := reviewService.GetSessionStats(session)
+		components.PracticeComplete(stats.Reviewed, stats.Correct, stats.XPEarned, newAchievements).Render(r.Context(), w)
+		return
+	}
+
+	// Get next card
+	sessionsLock.RLock()
+	card, _ := reviewService.GetNextCard(session)
+	cardCount := len(session.Cards)
+	cardIndex := session.CurrentIndex + 1
+	sessionsLock.RUnlock()
+
+	// Fetch bridges
+	if card != nil && len(card.Bridges) == 0 {
+		bridges, _ := repository.GetBridgesForCard(card.ID)
+		card.Bridges = bridges
+	}
+
+	preview := reviewService.GetSchedulingPreview(card)
+	components.PracticeCard(card, preview, cardIndex, cardCount, mode).Render(r.Context(), w)
 }
 
 // HandlePracticeStats returns session stats (HTMX partial)

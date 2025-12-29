@@ -27,19 +27,32 @@ func main() {
 
 	// Routes
 	http.HandleFunc("GET /", handlers.HandleHome)
+
+	// Practice routes
 	http.HandleFunc("GET /practice", handlers.HandlePractice)
 	http.HandleFunc("GET /practice/card", handlers.HandlePracticeCard)
 	http.HandleFunc("POST /practice/review", handlers.HandleReview)
+	http.HandleFunc("POST /practice/skip", handlers.HandleSkip)
 	http.HandleFunc("GET /practice/stats", handlers.HandlePracticeStats)
 
 	// Words management
 	http.HandleFunc("GET /words", handlers.HandleWords)
 	http.HandleFunc("GET /add", handlers.HandleAddCard)
 	http.HandleFunc("POST /add", handlers.HandleCreateCard)
+	http.HandleFunc("GET /words/{id}/edit", handlers.HandleEditCard)
+	http.HandleFunc("PUT /words/{id}", handlers.HandleUpdateCard)
 	http.HandleFunc("DELETE /words/{id}", handlers.HandleDeleteCard)
+
+	// AI generation routes
+	http.HandleFunc("POST /words/{id}/generate-bridges", handlers.HandleGenerateBridges)
+	http.HandleFunc("POST /words/{id}/generate-example", handlers.HandleGenerateExample)
 
 	// Calendar / Stats
 	http.HandleFunc("GET /calendar", handlers.HandleCalendar)
+
+	// Settings
+	http.HandleFunc("GET /settings", handlers.HandleSettings)
+	http.HandleFunc("POST /settings", handlers.HandleSaveSettings)
 
 	// Static files
 	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

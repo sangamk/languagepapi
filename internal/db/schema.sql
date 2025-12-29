@@ -105,6 +105,12 @@ CREATE TABLE IF NOT EXISTS user_achievements (
     PRIMARY KEY(user_id, achievement_id)
 );
 
+-- User Settings (JSON storage for flexibility)
+CREATE TABLE IF NOT EXISTS user_settings (
+    user_id INTEGER PRIMARY KEY REFERENCES users(id),
+    settings TEXT NOT NULL DEFAULT '{}'
+);
+
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_card_progress_due ON card_progress(due);
 CREATE INDEX IF NOT EXISTS idx_card_progress_user_state ON card_progress(user_id, state);
@@ -113,6 +119,8 @@ CREATE INDEX IF NOT EXISTS idx_daily_logs_user_date ON daily_logs(user_id, date)
 CREATE INDEX IF NOT EXISTS idx_cards_island ON cards(island_id);
 CREATE INDEX IF NOT EXISTS idx_cards_frequency ON cards(frequency_rank);
 CREATE INDEX IF NOT EXISTS idx_bridges_card ON bridges(card_id);
+CREATE INDEX IF NOT EXISTS idx_cards_term ON cards(term);
+CREATE INDEX IF NOT EXISTS idx_cards_translation ON cards(translation);
 
 -- Seed Data: Default user
 INSERT OR IGNORE INTO users (id, username) VALUES (1, 'sangam');

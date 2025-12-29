@@ -7,7 +7,7 @@ import (
 
 // AddCard renders the add card form
 templ AddCard(islands []models.Island, message string, success bool) {
-	@Layout("Add Word - Spanish OS") {
+	@Layout("Add Word - languagepapi") {
 		<main class="add-page">
 			<header class="page-header">
 				<a href="/words" class="back-link" hx-get="/words" hx-target="body" hx-swap="innerHTML">&larr; Words</a>
@@ -72,8 +72,15 @@ templ AddCard(islands []models.Island, message string, success bool) {
 					/>
 				</div>
 
+				<div class="form-group checkbox-group">
+					<label class="checkbox-label">
+						<input type="checkbox" name="generate_bridges" checked />
+						<span>Generate memory bridges with AI</span>
+					</label>
+				</div>
+
 				<details class="bridges-section">
-					<summary>Memory Bridges (optional)</summary>
+					<summary>Or add bridges manually</summary>
 					<div class="bridges-form">
 						<div class="form-group">
 							<label for="bridge_hindi">Hindi Phonetic Bridge</label>
@@ -183,8 +190,15 @@ templ AddCardPartial(islands []models.Island, message string, success bool) {
 				/>
 			</div>
 
+			<div class="form-group checkbox-group">
+				<label class="checkbox-label">
+					<input type="checkbox" name="generate_bridges" checked />
+					<span>Generate memory bridges with AI</span>
+				</label>
+			</div>
+
 			<details class="bridges-section">
-				<summary>Memory Bridges (optional)</summary>
+				<summary>Or add bridges manually</summary>
 				<div class="bridges-form">
 					<div class="form-group">
 						<label for="bridge_hindi">Hindi Phonetic Bridge</label>
