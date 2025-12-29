@@ -42,7 +42,7 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"apple-touch-icon\" href=\"/static/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/static/logo.svg\"><link rel=\"stylesheet\" href=\"/static/style.css\"><script src=\"https://cdn.jsdelivr.net/npm/htmx.org@4.0.0-alpha5/dist/htmx.min.js\" defer></script></head><body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"apple-touch-icon\" href=\"/static/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/static/logo.svg\"><link rel=\"stylesheet\" href=\"/static/style.css?v=2\"><script src=\"https://cdn.jsdelivr.net/npm/htmx.org@4.0.0-alpha5/dist/htmx.min.js\" defer></script></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
