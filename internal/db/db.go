@@ -2,9 +2,13 @@ package db
 
 import (
 	"database/sql"
+	_ "embed"
 
 	_ "modernc.org/sqlite"
 )
+
+//go:embed schema.sql
+var schema string
 
 var DB *sql.DB
 
@@ -15,29 +19,12 @@ func Init(path string) error {
 		return err
 	}
 
-	// Create tables
-	schema := `
-	CREATE TABLE IF NOT EXISTS words (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		term TEXT NOT NULL,
-		translation TEXT NOT NULL,
-		notes TEXT,
-		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		last_reviewed DATETIME,
-		review_count INTEGER DEFAULT 0,
-		ease_factor REAL DEFAULT 2.5
-	);
+	// Enable foreign keys
+	if _, err = DB.Exec("PRAGMA foreign_keys = ON"); err != nil {
+		return err
+	}
 
-	CREATE TABLE IF NOT EXISTS sessions (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		date DATE NOT NULL,
-		words_reviewed INTEGER DEFAULT 0,
-		correct INTEGER DEFAULT 0
-	);
-
-	CREATE INDEX IF NOT EXISTS idx_words_last_reviewed ON words(last_reviewed);
-	`
-
+	// Execute schema (creates tables, indexes, and seed data)
 	_, err = DB.Exec(schema)
 	return err
 }

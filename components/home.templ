@@ -1,6 +1,8 @@
 package components
 
-templ Home() {
+import "fmt"
+
+templ Home(cardCount, streak, dueCount, totalXP int) {
 	@Layout("languagepapi") {
 		<main class="container">
 			<header class="header">
@@ -8,18 +10,27 @@ templ Home() {
 				<p class="tagline">learn words. keep them.</p>
 			</header>
 			<nav class="nav">
-				<a href="/practice" class="btn" hx-get="/practice" hx-target="main" hx-swap="innerHTML">practice</a>
+				<a href="/practice" class="btn btn-primary" hx-get="/practice" hx-target="main" hx-swap="innerHTML">
+					practice
+					if dueCount > 0 {
+						<span class="badge">{ fmt.Sprintf("%d", dueCount) }</span>
+					}
+				</a>
 				<a href="/words" class="btn" hx-get="/words" hx-target="main" hx-swap="innerHTML">my words</a>
 				<a href="/add" class="btn" hx-get="/add" hx-target="main" hx-swap="innerHTML">+ add</a>
 			</nav>
 			<section class="stats">
 				<div class="stat">
-					<span class="stat-num">0</span>
+					<span class="stat-num">{ fmt.Sprintf("%d", cardCount) }</span>
 					<span class="stat-label">words</span>
 				</div>
 				<div class="stat">
-					<span class="stat-num">0</span>
+					<span class="stat-num">{ fmt.Sprintf("%d", streak) }</span>
 					<span class="stat-label">streak</span>
+				</div>
+				<div class="stat">
+					<span class="stat-num">{ fmt.Sprintf("%d", totalXP) }</span>
+					<span class="stat-label">xp</span>
 				</div>
 			</section>
 		</main>

@@ -1,0 +1,101 @@
+package components
+
+import (
+	"fmt"
+	"languagepapi/internal/models"
+)
+
+// WordsList renders the paginated word list
+templ WordsList(cards []models.Card, islands []models.Island, page, totalPages, totalCards int, filterIsland int64) {
+	@Layout("Words - Spanish OS") {
+		<main class="words-page">
+			<header class="page-header">
+				<a href="/" class="back-link" hx-get="/" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
+				<h1>Words</h1>
+				<span class="word-count">{ fmt.Sprintf("%d words", totalCards) }</span>
+			</header>
+
+			<div class="filters">
+				<select
+					class="island-filter"
+					hx-get="/words"
+					hx-target="main"
+					hx-swap="outerHTML"
+					name="island"
+					hx-include="this"
+				>
+					<option value="0" selected?={ filterIsland == 0 }>All Islands</option>
+					for _, island := range islands {
+						<option value={ fmt.Sprintf("%d", island.ID) } selected?={ filterIsland == island.ID }>
+							{ island.Icon } { island.Name }
+						</option>
+					}
+				</select>
+				<a href="/add" class="btn btn-primary" hx-get="/add" hx-target="main" hx-swap="outerHTML">+ Add Word</a>
+			</div>
+
+			if len(cards) == 0 {
+				<div class="empty-state">
+					<p>No words found.</p>
+					<a href="/add" class="btn btn-primary" hx-get="/add" hx-target="main" hx-swap="outerHTML">Add your first word</a>
+				</div>
+			} else {
+				<div class="words-list">
+					for _, card := range cards {
+						@WordCard(card)
+					}
+				</div>
+
+				if totalPages > 1 {
+					<div class="pagination">
+						if page > 1 {
+							<a
+								href={ templ.SafeURL(fmt.Sprintf("/words?page=%d&island=%d", page-1, filterIsland)) }
+								class="btn"
+								hx-get={ fmt.Sprintf("/words?page=%d&island=%d", page-1, filterIsland) }
+								hx-target="main"
+								hx-swap="outerHTML"
+							>&larr; Prev</a>
+						}
+						<span class="page-info">{ fmt.Sprintf("Page %d of %d", page, totalPages) }</span>
+						if page < totalPages {
+							<a
+								href={ templ.SafeURL(fmt.Sprintf("/words?page=%d&island=%d", page+1, filterIsland)) }
+								class="btn"
+								hx-get={ fmt.Sprintf("/words?page=%d&island=%d", page+1, filterIsland) }
+								hx-target="main"
+								hx-swap="outerHTML"
+							>Next &rarr;</a>
+						}
+					</div>
+				}
+			}
+		</main>
+	}
+}
+
+// WordCard renders a single word in the list
+templ WordCard(card models.Card) {
+	<div class="word-card" id={ fmt.Sprintf("word-%d", card.ID) }>
+		<div class="word-main">
+			<span class="word-term">{ card.Term }</span>
+			<span class="word-translation">{ card.Translation }</span>
+		</div>
+		<div class="word-meta">
+			if card.FrequencyRank.Valid && card.FrequencyRank.Int64 > 0 {
+				<span class="word-rank">#{ fmt.Sprintf("%d", card.FrequencyRank.Int64) }</span>
+			}
+			<button
+				class="btn-icon btn-delete"
+				hx-delete={ fmt.Sprintf("/words/%d", card.ID) }
+				hx-target={ fmt.Sprintf("#word-%d", card.ID) }
+				hx-swap="outerHTML"
+				hx-confirm="Delete this word?"
+			>×</button>
+		</div>
+	</div>
+}
+
+// WordDeleted renders the deleted state (empty for removal)
+templ WordDeleted() {
+}
