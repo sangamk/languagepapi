@@ -14,6 +14,7 @@ import (
 
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
+	"languagepapi/internal/repository"
 )
 
 // GeminiService handles bridge generation using Gemini API

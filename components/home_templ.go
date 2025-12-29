@@ -43,7 +43,7 @@ func Home(cardCount, streak, dueCount, totalXP int) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<main class=\"container\"><header class=\"header\"><h1 class=\"logo\">languagepapi</h1><p class=\"tagline\">learn words. keep them.</p></header><nav class=\"nav\"><a href=\"/practice\" class=\"btn btn-primary\" hx-get=\"/practice\" hx-target=\"main\" hx-swap=\"innerHTML\">practice ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<main class=\"container\"><header class=\"header\"><h1 class=\"logo\">languagepapi</h1><p class=\"tagline\">learn words. keep them.</p></header><nav class=\"nav\"><a href=\"/practice\" class=\"btn btn-primary\" hx-get=\"/practice\" hx-target=\"body\" hx-swap=\"innerHTML\">practice ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -66,14 +66,14 @@ func Home(cardCount, streak, dueCount, totalXP int) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</a> <a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"main\" hx-swap=\"innerHTML\">my words</a> <a href=\"/add\" class=\"btn\" hx-get=\"/add\" hx-target=\"main\" hx-swap=\"innerHTML\">+ add</a> <a href=\"/calendar\" class=\"btn\" hx-get=\"/calendar\" hx-target=\"body\">stats</a></nav><section class=\"stats\"><div class=\"stat\"><span class=\"stat-num\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</a> <a href=\"/words\" class=\"btn\" hx-get=\"/words\" hx-target=\"body\" hx-swap=\"innerHTML\">my words</a> <a href=\"/add\" class=\"btn\" hx-get=\"/add\" hx-target=\"body\" hx-swap=\"innerHTML\">+ add</a> <a href=\"/calendar\" class=\"btn\" hx-get=\"/calendar\" hx-target=\"body\">stats</a> <a href=\"/settings\" class=\"btn\" hx-get=\"/settings\" hx-target=\"body\" hx-swap=\"innerHTML\">settings</a></nav><section class=\"stats\"><div class=\"stat\"><span class=\"stat-num\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", cardCount))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 25, Col: 58}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 26, Col: 58}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -86,7 +86,7 @@ func Home(cardCount, streak, dueCount, totalXP int) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", streak))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 29, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 30, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -99,7 +99,7 @@ func Home(cardCount, streak, dueCount, totalXP int) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", totalXP))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 33, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/home.templ`, Line: 34, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {

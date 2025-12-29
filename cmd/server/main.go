@@ -25,40 +25,43 @@ func main() {
 	}
 	defer db.Close()
 
+	// Create a new ServeMux to avoid conflicts with default mux
+	mux := http.NewServeMux()
+
 	// Routes
-	http.HandleFunc("GET /", handlers.HandleHome)
+	mux.HandleFunc("GET /", handlers.HandleHome)
 
 	// Practice routes
-	http.HandleFunc("GET /practice", handlers.HandlePractice)
-	http.HandleFunc("GET /practice/card", handlers.HandlePracticeCard)
-	http.HandleFunc("POST /practice/review", handlers.HandleReview)
-	http.HandleFunc("POST /practice/skip", handlers.HandleSkip)
-	http.HandleFunc("GET /practice/stats", handlers.HandlePracticeStats)
+	mux.HandleFunc("GET /practice", handlers.HandlePractice)
+	mux.HandleFunc("GET /practice/card", handlers.HandlePracticeCard)
+	mux.HandleFunc("POST /practice/review", handlers.HandleReview)
+	mux.HandleFunc("POST /practice/skip", handlers.HandleSkip)
+	mux.HandleFunc("GET /practice/stats", handlers.HandlePracticeStats)
 
 	// Words management
-	http.HandleFunc("GET /words", handlers.HandleWords)
-	http.HandleFunc("GET /add", handlers.HandleAddCard)
-	http.HandleFunc("POST /add", handlers.HandleCreateCard)
-	http.HandleFunc("GET /words/{id}/edit", handlers.HandleEditCard)
-	http.HandleFunc("PUT /words/{id}", handlers.HandleUpdateCard)
-	http.HandleFunc("DELETE /words/{id}", handlers.HandleDeleteCard)
+	mux.HandleFunc("GET /words", handlers.HandleWords)
+	mux.HandleFunc("GET /add", handlers.HandleAddCard)
+	mux.HandleFunc("POST /add", handlers.HandleCreateCard)
+	mux.HandleFunc("GET /words/{id}/edit", handlers.HandleEditCard)
+	mux.HandleFunc("PUT /words/{id}", handlers.HandleUpdateCard)
+	mux.HandleFunc("DELETE /words/{id}", handlers.HandleDeleteCard)
 
 	// AI generation routes
-	http.HandleFunc("POST /words/{id}/generate-bridges", handlers.HandleGenerateBridges)
-	http.HandleFunc("POST /words/{id}/generate-example", handlers.HandleGenerateExample)
+	mux.HandleFunc("POST /words/{id}/generate-bridges", handlers.HandleGenerateBridges)
+	mux.HandleFunc("POST /words/{id}/generate-example", handlers.HandleGenerateExample)
 
 	// Calendar / Stats
-	http.HandleFunc("GET /calendar", handlers.HandleCalendar)
+	mux.HandleFunc("GET /calendar", handlers.HandleCalendar)
 
 	// Settings
-	http.HandleFunc("GET /settings", handlers.HandleSettings)
-	http.HandleFunc("POST /settings", handlers.HandleSaveSettings)
+	mux.HandleFunc("GET /settings", handlers.HandleSettings)
+	mux.HandleFunc("POST /settings", handlers.HandleSaveSettings)
 
 	// Static files
-	http.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	log.Printf("Server running on http://localhost:%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
 
 // getEnv returns environment variable or default value

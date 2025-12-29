@@ -259,7 +259,7 @@ func (s *ReviewService) CheckAchievements(userID int64) []models.Achievement {
 
 	earnedMap := make(map[int64]bool)
 	for _, e := range earned {
-		earnedMap[e.AchievementID] = true
+		earnedMap[e.ID] = true
 	}
 
 	// Get total review count

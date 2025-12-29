@@ -27,6 +27,7 @@ build: generate
 # Schema migrations run automatically when the server starts
 build-windows: generate
 	go build -o bin/server.exe ./cmd/server
+	@cp -r static bin/
 	@echo Build complete: bin/server.exe
 	@echo "Note: Schema migrations will run automatically on first startup"
 

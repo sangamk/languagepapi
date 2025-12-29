@@ -10,15 +10,16 @@ templ Home(cardCount, streak, dueCount, totalXP int) {
 				<p class="tagline">learn words. keep them.</p>
 			</header>
 			<nav class="nav">
-				<a href="/practice" class="btn btn-primary" hx-get="/practice" hx-target="main" hx-swap="innerHTML">
+				<a href="/practice" class="btn btn-primary" hx-get="/practice" hx-target="body" hx-swap="innerHTML">
 					practice
 					if dueCount > 0 {
 						<span class="badge">{ fmt.Sprintf("%d", dueCount) }</span>
 					}
 				</a>
-				<a href="/words" class="btn" hx-get="/words" hx-target="main" hx-swap="innerHTML">my words</a>
-				<a href="/add" class="btn" hx-get="/add" hx-target="main" hx-swap="innerHTML">+ add</a>
+				<a href="/words" class="btn" hx-get="/words" hx-target="body" hx-swap="innerHTML">my words</a>
+				<a href="/add" class="btn" hx-get="/add" hx-target="body" hx-swap="innerHTML">+ add</a>
 				<a href="/calendar" class="btn" hx-get="/calendar" hx-target="body">stats</a>
+				<a href="/settings" class="btn" hx-get="/settings" hx-target="body" hx-swap="innerHTML">settings</a>
 			</nav>
 			<section class="stats">
 				<div class="stat">
