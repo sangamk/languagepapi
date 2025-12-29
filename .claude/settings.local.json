@@ -8,7 +8,9 @@
       "Bash(make build:*)",
       "Bash(templ generate:*)",
       "Bash(go build:*)",
-      "Bash(go run:*)"
+      "Bash(go run:*)",
+      "Bash(make build-windows:*)",
+      "Bash(sqlite3:*)"
     ]
   }
 }

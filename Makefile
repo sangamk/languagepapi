@@ -23,19 +23,10 @@ build: generate
 	@echo ""
 	@echo "On server: ./server"
 
-# Build everything for Windows
+# Build for Windows (just the binary)
 build-windows: generate
-	@mkdir -p bin/deploy-windows
-	GOOS=windows GOARCH=amd64 go build -o bin/deploy-windows/server.exe ./cmd/server
-	@cp -r static bin/deploy-windows/
-	@cp .env.example bin/deploy-windows/.env.example
-	@if [ -f .env ]; then cp .env bin/deploy-windows/.env; fi
-	@if [ -f languagepapi.db ]; then cp languagepapi.db bin/deploy-windows/; fi
-	@echo ""
-	@echo "Windows build complete! Deploy contents of bin/deploy-windows/:"
-	@ls -la bin/deploy-windows/
-	@echo ""
-	@echo "On Windows: server.exe"
+	go build -o bin/server.exe ./cmd/server
+	@echo Build complete: bin/server.exe
 
 # Run locally (builds for current platform)
 run: generate
