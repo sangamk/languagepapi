@@ -23,6 +23,7 @@ func main() {
 	// Get config from environment
 	dbPath := getEnv("DB_PATH", "languagepapi.db")
 	port := getEnv("PORT", "8080")
+	songsPath := getEnv("SONGS_PATH", "./songs")
 
 	// Initialize database
 	if err := db.Init(dbPath); err != nil {
@@ -36,12 +37,17 @@ func main() {
 	// Routes
 	mux.HandleFunc("GET /", handlers.HandleHome)
 
-	// Practice routes
+	// Practice routes (legacy - kept for "extra practice")
 	mux.HandleFunc("GET /practice", handlers.HandlePractice)
 	mux.HandleFunc("GET /practice/card", handlers.HandlePracticeCard)
 	mux.HandleFunc("POST /practice/review", handlers.HandleReview)
 	mux.HandleFunc("POST /practice/skip", handlers.HandleSkip)
 	mux.HandleFunc("GET /practice/stats", handlers.HandlePracticeStats)
+
+	// Daily lesson routes (new journey mode)
+	mux.HandleFunc("GET /lesson/start", handlers.HandleLessonStart)
+	mux.HandleFunc("POST /lesson/review", handlers.HandleLessonReview)
+	mux.HandleFunc("POST /lesson/skip", handlers.HandleLessonSkip)
 
 	// Words management
 	mux.HandleFunc("GET /words", handlers.HandleWords)
@@ -62,9 +68,33 @@ func main() {
 	mux.HandleFunc("GET /settings", handlers.HandleSettings)
 	mux.HandleFunc("POST /settings", handlers.HandleSaveSettings)
 
+	// Grammar
+	mux.HandleFunc("GET /grammar", handlers.HandleGrammar)
+	mux.HandleFunc("GET /grammar/{rule_key}", handlers.HandleGrammarDetail)
+	mux.HandleFunc("GET /grammar/card/{card_id}", handlers.HandleGrammarForCard)
+
+	// Song lessons
+	mux.HandleFunc("GET /songs", handlers.HandleSongHome)
+	mux.HandleFunc("GET /songs/{id}", handlers.HandleSongDetail)
+	mux.HandleFunc("GET /songs/{id}/start", handlers.HandleSongStart)
+	mux.HandleFunc("POST /songs/{id}/vocab-review", handlers.HandleSongVocabReview)
+	mux.HandleFunc("POST /songs/{id}/next-phase", handlers.HandleSongNextPhase)
+	mux.HandleFunc("POST /songs/{id}/next-line", handlers.HandleSongNextLine)
+	mux.HandleFunc("POST /songs/{id}/skip-line", handlers.HandleSongSkipLine)
+	mux.HandleFunc("POST /songs/{id}/submit-blank", handlers.HandleSongBlankSubmit)
+	mux.HandleFunc("POST /songs/{id}/complete", handlers.HandleSongComplete)
+	mux.HandleFunc("POST /songs/{id}/fetch-lyrics", handlers.HandleFetchLyrics)
+
 	// Static files (embedded in binary)
 	staticFS, _ := fs.Sub(staticFiles, "static")
 	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.FS(staticFS))))
+
+	// Songs served from filesystem (not embedded - keeps binary small)
+	mux.Handle("GET /audio/", http.StripPrefix("/audio/", http.FileServer(http.Dir(songsPath))))
+
+	// Album art extracted from audio file metadata
+	handlers.SongsPath = songsPath
+	mux.HandleFunc("GET /audio/cover/{filename}", handlers.HandleAlbumArt)
 
 	log.Printf("Server running on http://localhost:%s", port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))

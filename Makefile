@@ -1,5 +1,9 @@
 .PHONY: dev build build-windows run generate clean sync-static sync-static-windows
 
+# Build version (timestamp)
+VERSION := $(shell powershell -NoProfile -Command "Get-Date -Format 'yyyyMMddHHmmss'")
+LDFLAGS := -ldflags "-X languagepapi/internal/version.BuildVersion=$(VERSION)"
+
 # Development with hot reload
 dev:
 	@templ generate --watch &
@@ -20,7 +24,7 @@ sync-static-windows:
 # Build everything for deployment (Linux server)
 build: generate sync-static
 	@mkdir -p bin/deploy
-	GOOS=linux GOARCH=amd64 go build -o bin/deploy/server ./cmd/server
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o bin/deploy/server ./cmd/server
 	@cp .env.example bin/deploy/.env.example
 	@if [ -f .env ]; then cp .env bin/deploy/.env; fi
 	@if [ -f languagepapi.db ]; then cp languagepapi.db bin/deploy/; fi
@@ -31,15 +35,13 @@ build: generate sync-static
 	@echo "On server: ./server"
 
 # Build for Windows (binary with embedded static files)
-# Static files are embedded - no need to copy separately
 build-windows: generate sync-static-windows
-	go build -o bin/server.exe ./cmd/server
-	@echo Build complete: bin/server.exe
-	@echo "Static files are embedded in the binary"
+	go build $(LDFLAGS) -o bin/server.exe ./cmd/server
+	@echo Build complete: bin/server.exe [version: $(VERSION)]
 
 # Run locally (builds for current platform)
-run: generate
-	go build -o bin/server ./cmd/server
+run: generate sync-static
+	go build $(LDFLAGS) -o bin/server ./cmd/server
 	./bin/server
 
 # Clean build artifacts

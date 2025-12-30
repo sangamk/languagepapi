@@ -1,0 +1,610 @@
+package components
+
+import (
+	"fmt"
+	"strings"
+
+	"languagepapi/internal/models"
+	"languagepapi/internal/service"
+)
+
+// getAudioMimeType returns the correct MIME type based on file extension
+func getAudioMimeType(path string) string {
+	lower := strings.ToLower(path)
+	switch {
+	case strings.HasSuffix(lower, ".flac"):
+		return "audio/flac"
+	case strings.HasSuffix(lower, ".ogg"):
+		return "audio/ogg"
+	case strings.HasSuffix(lower, ".wav"):
+		return "audio/wav"
+	case strings.HasSuffix(lower, ".m4a"):
+		return "audio/mp4"
+	default:
+		return "audio/mpeg"
+	}
+}
+
+// SongHome renders the song lessons browse page
+templ SongHome(data *models.SongHomeData) {
+	@Layout("Song Lessons - languagepapi") {
+		<main class="container song-home">
+			<header class="page-header">
+				<a href="/" class="back-link" hx-get="/" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
+				<h1>Song Lessons</h1>
+				<p class="subtitle">Learn Spanish through music</p>
+			</header>
+
+			if len(data.DueSongs) > 0 {
+				<section class="song-section">
+					<h2>Due for Review</h2>
+					<div class="song-grid">
+						for _, song := range data.DueSongs {
+							@SongCard(&song)
+						}
+					</div>
+				</section>
+			}
+
+			<section class="song-section">
+				<h2>Available Songs</h2>
+				if len(data.AvailableSongs) == 0 {
+					<p class="empty-state">No songs available yet. Add some songs to get started!</p>
+				} else {
+					<div class="song-grid">
+						for _, song := range data.AvailableSongs {
+							@SongCard(&song)
+						}
+					</div>
+				}
+			</section>
+
+			if data.TotalSongsLearned > 0 {
+				<div class="song-stats-footer">
+					<span>{ fmt.Sprintf("%d", data.TotalSongsLearned) } songs learned</span>
+				</div>
+			}
+		</main>
+	}
+}
+
+// SongCard renders a song card in the browse grid
+templ SongCard(song *models.SongWithProgress) {
+	<a href={ templ.SafeURL(fmt.Sprintf("/songs/%d", song.ID)) }
+	   class={ "song-card", song.DifficultyClass() }
+	   hx-get={ fmt.Sprintf("/songs/%d", song.ID) }
+	   hx-target="body"
+	   hx-swap="innerHTML">
+		<div class="song-thumbnail">
+			if song.ThumbnailURL != "" {
+				<img src={ song.ThumbnailURL } alt={ song.Title }/>
+			} else if song.AudioPath != "" {
+				<img src={ fmt.Sprintf("/audio/cover/%s", song.AudioPath) } alt={ song.Title }/>
+			} else {
+				<div class="song-thumbnail-placeholder">
+					<span>{ string([]rune(song.Title)[0]) }</span>
+				</div>
+			}
+			if song.Progress != nil && song.Progress.TotalListens > 0 {
+				<span class="listen-count">{ fmt.Sprintf("%d", song.Progress.TotalListens) } listens</span>
+			}
+		</div>
+		<div class="song-info">
+			<span class="song-title">{ song.Title }</span>
+			<span class="song-artist">{ song.Artist }</span>
+			<span class="song-difficulty">{ song.DifficultyLabel() }</span>
+		</div>
+		if song.Progress != nil && (song.Progress.VocabComplete || song.Progress.LyricsComplete || song.Progress.ListeningComplete) {
+			<div class="song-progress-indicator">
+				if song.Progress.VocabComplete {
+					<span class="phase-done">Vocab</span>
+				}
+				if song.Progress.LyricsComplete {
+					<span class="phase-done">Lyrics</span>
+				}
+				if song.Progress.ListeningComplete {
+					<span class="phase-done">Listening</span>
+				}
+			</div>
+		}
+	</a>
+}
+
+// SongDetail renders the song detail page with mode selection
+templ SongDetail(song *models.Song, progress *models.SongProgress) {
+	@Layout(song.Title + " - languagepapi") {
+		<main class="container song-detail">
+			<header class="page-header">
+				<a href="/songs" class="back-link" hx-get="/songs" hx-target="body" hx-swap="innerHTML">&larr; Back</a>
+			</header>
+
+			<div class="song-hero">
+				if song.ThumbnailURL != "" {
+					<img src={ song.ThumbnailURL } alt={ song.Title } class="song-hero-img"/>
+				} else if song.AudioPath != "" {
+					<img src={ fmt.Sprintf("/audio/cover/%s", song.AudioPath) } alt={ song.Title } class="song-hero-img"/>
+				} else {
+					<div class="song-hero-placeholder">
+						<span>{ string([]rune(song.Title)[0]) }</span>
+					</div>
+				}
+				<h1>{ song.Title }</h1>
+				<p class="song-artist">{ song.Artist }</p>
+				<span class={ "difficulty-badge", song.DifficultyClass() }>{ song.DifficultyLabel() }</span>
+			</div>
+
+			<div class="mode-options">
+				<a href={ templ.SafeURL(fmt.Sprintf("/songs/%d/start?mode=full", song.ID)) }
+				   class="mode-card mode-full"
+				   hx-get={ fmt.Sprintf("/songs/%d/start?mode=full", song.ID) }
+				   hx-target="body"
+				   hx-swap="innerHTML">
+					<span class="mode-icon">&#127925;</span>
+					<span class="mode-name">Full Lesson</span>
+					<span class="mode-desc">Vocab, Listen, Breakdown, Quiz</span>
+				</a>
+
+				<a href={ templ.SafeURL(fmt.Sprintf("/songs/%d/start?mode=vocab", song.ID)) }
+				   class="mode-card"
+				   hx-get={ fmt.Sprintf("/songs/%d/start?mode=vocab", song.ID) }
+				   hx-target="body"
+				   hx-swap="innerHTML">
+					<span class="mode-icon">&#128218;</span>
+					<span class="mode-name">Vocab Only</span>
+					<span class="mode-desc">Learn key vocabulary</span>
+				</a>
+
+				<a href={ templ.SafeURL(fmt.Sprintf("/songs/%d/start?mode=lyrics", song.ID)) }
+				   class="mode-card"
+				   hx-get={ fmt.Sprintf("/songs/%d/start?mode=lyrics", song.ID) }
+				   hx-target="body"
+				   hx-swap="innerHTML">
+					<span class="mode-icon">&#128221;</span>
+					<span class="mode-name">Lyrics Study</span>
+					<span class="mode-desc">Line-by-line breakdown</span>
+				</a>
+
+				<a href={ templ.SafeURL(fmt.Sprintf("/songs/%d/start?mode=listening", song.ID)) }
+				   class="mode-card"
+				   hx-get={ fmt.Sprintf("/songs/%d/start?mode=listening", song.ID) }
+				   hx-target="body"
+				   hx-swap="innerHTML">
+					<span class="mode-icon">&#127911;</span>
+					<span class="mode-name">Listening Quiz</span>
+					<span class="mode-desc">Fill in the blanks</span>
+				</a>
+			</div>
+
+			if progress != nil && progress.Reps > 0 {
+				<div class="song-stats">
+					<div class="stat">
+						<span class="stat-num">{ fmt.Sprintf("%d", progress.TotalListens) }</span>
+						<span class="stat-label">listens</span>
+					</div>
+					<div class="stat">
+						<span class="stat-num">{ fmt.Sprintf("%d", progress.Reps) }</span>
+						<span class="stat-label">reviews</span>
+					</div>
+				</div>
+			}
+
+			if len(song.Lines) > 0 {
+				<details class="lyrics-preview">
+					<summary>Preview Lyrics ({ fmt.Sprintf("%d", len(song.Lines)) } lines)</summary>
+					<div class="lyrics-list">
+						for _, line := range song.Lines {
+							<div class="lyric-preview-line">
+								<span class="spanish">{ line.SpanishText }</span>
+								<span class="english">{ line.EnglishText }</span>
+							</div>
+						}
+					</div>
+				</details>
+			}
+		</main>
+	}
+}
+
+// SongVocabPhase renders the vocab preview phase
+templ SongVocabPhase(lesson *models.SongLesson, current, total int, card *models.SongVocabCard) {
+	@Layout("Vocab - " + lesson.Song.Title) {
+		<main class="container song-lesson-container" id="song-lesson">
+			<div class="lesson-header">
+				<span class="phase-badge">Vocab Preview</span>
+				<div class="lesson-progress">
+					<div class="lesson-progress-bar">
+						<div class="lesson-progress-fill" style={ fmt.Sprintf("width: %d%%", current*100/total) }></div>
+					</div>
+					<span class="lesson-progress-text">{ fmt.Sprintf("%d / %d", current, total) }</span>
+				</div>
+			</div>
+
+			<div class="vocab-card" id="vocab-card" onclick="this.classList.toggle('flipped')">
+				<div class="card-inner">
+					<div class="card-front">
+						if card.Mode == "reverse" {
+							<span class="card-term">{ card.Translation }</span>
+							<span class="card-hint">What's the Spanish word?</span>
+						} else {
+							<span class="card-term">{ card.Word }</span>
+							<span class="card-hint">tap to reveal</span>
+						}
+					</div>
+					<div class="card-back">
+						<span class="card-term">{ card.Word }</span>
+						<span class="card-translation">{ card.Translation }</span>
+						<span class="card-context">from "{ lesson.Song.Title }"</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="rating-buttons">
+				<button id="btn-again" class="rating-btn rating-again"
+						hx-post={ fmt.Sprintf("/songs/%d/vocab-review", lesson.Song.ID) }
+						hx-vals='{"rating": "1"}'
+						hx-target="body"
+						hx-swap="innerHTML">
+					<span class="rating-label">Again</span>
+				</button>
+				<button id="btn-hard" class="rating-btn rating-hard"
+						hx-post={ fmt.Sprintf("/songs/%d/vocab-review", lesson.Song.ID) }
+						hx-vals='{"rating": "2"}'
+						hx-target="body"
+						hx-swap="innerHTML">
+					<span class="rating-label">Hard</span>
+				</button>
+				<button id="btn-good" class="rating-btn rating-good"
+						hx-post={ fmt.Sprintf("/songs/%d/vocab-review", lesson.Song.ID) }
+						hx-vals='{"rating": "3"}'
+						hx-target="body"
+						hx-swap="innerHTML">
+					<span class="rating-label">Good</span>
+				</button>
+				<button id="btn-easy" class="rating-btn rating-easy"
+						hx-post={ fmt.Sprintf("/songs/%d/vocab-review", lesson.Song.ID) }
+						hx-vals='{"rating": "4"}'
+						hx-target="body"
+						hx-swap="innerHTML">
+					<span class="rating-label">Easy</span>
+				</button>
+			</div>
+		</main>
+		@songKeyboardScript()
+	}
+}
+
+// SongFirstListen renders the first listen phase with local audio
+templ SongFirstListen(lesson *models.SongLesson) {
+	@Layout("Listen - " + lesson.Song.Title) {
+		<main class="container song-lesson-container" id="song-lesson">
+			<div class="lesson-header">
+				<span class="phase-badge">First Listen</span>
+				<h2 class="song-title-small">{ lesson.Song.Title }</h2>
+			</div>
+
+			<p class="phase-instruction">Listen carefully. Don't worry about understanding everything yet.</p>
+
+			<div class="audio-player-container">
+				<audio id="song-audio" controls class="song-audio-player">
+					<source src={ fmt.Sprintf("/audio/%s", lesson.Song.AudioPath) } type={ getAudioMimeType(lesson.Song.AudioPath) }/>
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="lyrics-scroll" id="lyrics-scroll">
+				for _, line := range lesson.Song.Lines {
+					<div class="lyric-line"
+					     data-start={ fmt.Sprintf("%d", line.StartTimeMs) }
+					     data-end={ fmt.Sprintf("%d", line.EndTimeMs) }>
+						<span class="spanish">{ line.SpanishText }</span>
+					</div>
+				}
+			</div>
+
+			<button class="btn btn-primary btn-large"
+					hx-post={ fmt.Sprintf("/songs/%d/next-phase", lesson.Song.ID) }
+					hx-target="body"
+					hx-swap="innerHTML">
+				Continue to Breakdown
+			</button>
+		</main>
+		@audioLyricsSync()
+	}
+}
+
+// SongLineBreakdown renders the line-by-line study phase
+templ SongLineBreakdown(lesson *models.SongLesson, currentLine int) {
+	@Layout("Breakdown - " + lesson.Song.Title) {
+		<main class="container song-lesson-container" id="song-lesson">
+			<div class="lesson-header">
+				<span class="phase-badge">Line Breakdown</span>
+				<div class="lesson-progress">
+					<div class="lesson-progress-bar">
+						<div class="lesson-progress-fill" style={ fmt.Sprintf("width: %d%%", (currentLine+1)*100/len(lesson.Song.Lines)) }></div>
+					</div>
+					<span class="lesson-progress-text">{ fmt.Sprintf("%d / %d", currentLine+1, len(lesson.Song.Lines)) }</span>
+				</div>
+			</div>
+
+			<div class="line-study">
+				<div class="line-spanish">{ lesson.Song.Lines[currentLine].SpanishText }</div>
+				<div class="line-english">{ lesson.Song.Lines[currentLine].EnglishText }</div>
+			</div>
+
+			<div class="audio-segment-player">
+				<audio id="line-audio"
+				       data-src={ fmt.Sprintf("/audio/%s", lesson.Song.AudioPath) }
+				       data-start={ fmt.Sprintf("%d", lesson.Song.Lines[currentLine].StartTimeMs) }
+				       data-end={ fmt.Sprintf("%d", lesson.Song.Lines[currentLine].EndTimeMs) }>
+				</audio>
+				<button class="btn btn-icon play-segment-btn" onclick="playSegment()">
+					<span id="play-icon">&#9658;</span> Play Line
+				</button>
+			</div>
+
+			<div class="line-actions">
+				<button class="btn btn-secondary"
+						hx-post={ fmt.Sprintf("/songs/%d/skip-line", lesson.Song.ID) }
+						hx-target="body"
+						hx-swap="innerHTML">
+					Skip
+				</button>
+				<button class="btn btn-primary"
+						hx-post={ fmt.Sprintf("/songs/%d/next-line", lesson.Song.ID) }
+						hx-target="body"
+						hx-swap="innerHTML">
+					Got it
+				</button>
+			</div>
+		</main>
+		@audioSegmentScript()
+	}
+}
+
+// SongFillBlanks renders the fill-in-the-blank quiz phase
+templ SongFillBlanks(lesson *models.SongLesson, blank *models.SongBlank, current, total int) {
+	@Layout("Quiz - " + lesson.Song.Title) {
+		<main class="container song-lesson-container" id="song-lesson">
+			<div class="lesson-header">
+				<span class="phase-badge">Listening Quiz</span>
+				<div class="lesson-progress">
+					<div class="lesson-progress-bar">
+						<div class="lesson-progress-fill" style={ fmt.Sprintf("width: %d%%", current*100/total) }></div>
+					</div>
+					<span class="lesson-progress-text">{ fmt.Sprintf("%d / %d", current, total) }</span>
+				</div>
+			</div>
+
+			<div class="blank-question">
+				<div class="audio-segment-player">
+					<audio id="line-audio"
+					       data-src={ fmt.Sprintf("/audio/%s", lesson.Song.AudioPath) }
+					       data-start={ fmt.Sprintf("%d", blank.Line.StartTimeMs) }
+					       data-end={ fmt.Sprintf("%d", blank.Line.EndTimeMs) }
+					       data-autoplay="true">
+					</audio>
+					<button class="btn btn-icon play-segment-btn" onclick="playSegment()">
+						<span id="play-icon">&#9658;</span> Replay
+					</button>
+				</div>
+
+				<div class="blank-line">
+					{ service.RenderBlankLine(blank.Line.SpanishText, blank.BlankIndex) }
+				</div>
+
+				<form class="blank-form"
+					  hx-post={ fmt.Sprintf("/songs/%d/submit-blank", lesson.Song.ID) }
+					  hx-target="body"
+					  hx-swap="innerHTML">
+					<input type="text"
+					       name="answer"
+					       class="blank-input"
+					       autocomplete="off"
+					       autofocus
+					       placeholder="Type missing word..."/>
+					<button type="submit" class="btn btn-primary">Check</button>
+				</form>
+
+				<p class="blank-hint">Hint: { blank.Line.EnglishText }</p>
+			</div>
+		</main>
+		@audioSegmentScript()
+	}
+}
+
+// SongFinalListen renders the final listen phase
+templ SongFinalListen(lesson *models.SongLesson) {
+	@Layout("Final Listen - " + lesson.Song.Title) {
+		<main class="container song-lesson-container" id="song-lesson">
+			<div class="lesson-header">
+				<span class="phase-badge">Final Listen</span>
+				<h2 class="song-title-small">{ lesson.Song.Title }</h2>
+			</div>
+
+			<p class="phase-instruction">Listen again with your new understanding!</p>
+
+			<div class="audio-player-container">
+				<audio id="song-audio" controls autoplay class="song-audio-player">
+					<source src={ fmt.Sprintf("/audio/%s", lesson.Song.AudioPath) } type={ getAudioMimeType(lesson.Song.AudioPath) }/>
+					Your browser does not support the audio element.
+				</audio>
+			</div>
+
+			<div class="lyrics-scroll bilingual" id="lyrics-scroll">
+				for _, line := range lesson.Song.Lines {
+					<div class="lyric-line"
+					     data-start={ fmt.Sprintf("%d", line.StartTimeMs) }
+					     data-end={ fmt.Sprintf("%d", line.EndTimeMs) }>
+						<span class="spanish">{ line.SpanishText }</span>
+						<span class="english">{ line.EnglishText }</span>
+					</div>
+				}
+			</div>
+
+			<button class="btn btn-primary btn-large"
+					hx-post={ fmt.Sprintf("/songs/%d/complete", lesson.Song.ID) }
+					hx-target="body"
+					hx-swap="innerHTML">
+				Complete Lesson
+			</button>
+		</main>
+		@audioLyricsSync()
+	}
+}
+
+// SongComplete renders the song lesson completion screen
+templ SongComplete(summary *models.SongLessonSummary) {
+	@Layout("Complete - " + summary.Song.Title) {
+		<main class="container song-lesson-container">
+			<div class="lesson-complete">
+				<div class="complete-header">
+					<div class="complete-icon">&#127881;</div>
+					<h2>Song Complete!</h2>
+					<p class="song-title-small">{ summary.Song.Title }</p>
+				</div>
+
+				<div class="session-summary">
+					if summary.VocabReviewed > 0 {
+						<div class="summary-stat">
+							<span class="summary-num">{ fmt.Sprintf("%d/%d", summary.VocabCorrect, summary.VocabReviewed) }</span>
+							<span class="summary-label">vocab correct</span>
+						</div>
+					}
+					if summary.LinesStudied > 0 {
+						<div class="summary-stat">
+							<span class="summary-num">{ fmt.Sprintf("%d", summary.LinesStudied) }</span>
+							<span class="summary-label">lines studied</span>
+						</div>
+					}
+					if summary.BlanksTotal > 0 {
+						<div class="summary-stat">
+							<span class="summary-num">{ fmt.Sprintf("%d/%d", summary.BlanksCorrect, summary.BlanksTotal) }</span>
+							<span class="summary-label">blanks correct</span>
+						</div>
+					}
+					<div class="summary-stat xp-stat">
+						<span class="summary-num">+{ fmt.Sprintf("%d", summary.XPEarned) }</span>
+						<span class="summary-label">XP</span>
+					</div>
+				</div>
+
+				if summary.Accuracy > 0 {
+					<div class="accuracy-display">
+						<span class="accuracy-num">{ fmt.Sprintf("%d%%", summary.Accuracy) }</span>
+						<span class="accuracy-label">accuracy</span>
+					</div>
+				}
+
+				<p class="motivation">{ summary.Message }</p>
+
+				<div class="complete-actions">
+					<a href="/songs" class="btn btn-secondary" hx-get="/songs" hx-target="body" hx-swap="innerHTML">More Songs</a>
+					<a href="/" class="btn btn-primary" hx-get="/" hx-target="body" hx-swap="innerHTML">Done</a>
+				</div>
+			</div>
+		</main>
+	}
+}
+
+// songKeyboardScript adds keyboard shortcuts for song lessons
+templ songKeyboardScript() {
+	<script>
+		document.addEventListener('keydown', function(e) {
+			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+			switch(e.key) {
+				case '1': document.getElementById('btn-again')?.click(); break;
+				case '2': document.getElementById('btn-hard')?.click(); break;
+				case '3': document.getElementById('btn-good')?.click(); break;
+				case '4': document.getElementById('btn-easy')?.click(); break;
+				case ' ': // Space to flip card
+					e.preventDefault();
+					document.getElementById('vocab-card')?.classList.toggle('flipped');
+					break;
+			}
+		});
+	</script>
+}
+
+// Helper to render a blank line
+func renderBlankLine(text string, blankIndex int) string {
+	words := strings.Fields(text)
+	if blankIndex < 0 || blankIndex >= len(words) {
+		return text
+	}
+	words[blankIndex] = "____"
+	return strings.Join(words, " ")
+}
+
+// audioLyricsSync adds script for syncing lyrics with audio playback
+templ audioLyricsSync() {
+	<script>
+		(function() {
+			const audio = document.getElementById('song-audio');
+			const lyricsContainer = document.getElementById('lyrics-scroll');
+			if (!audio || !lyricsContainer) return;
+
+			const lines = lyricsContainer.querySelectorAll('.lyric-line');
+
+			audio.addEventListener('timeupdate', function() {
+				const currentMs = audio.currentTime * 1000;
+				lines.forEach(line => {
+					const start = parseInt(line.dataset.start);
+					const end = parseInt(line.dataset.end);
+					if (currentMs >= start && currentMs <= end) {
+						line.classList.add('active');
+						line.scrollIntoView({ behavior: 'smooth', block: 'center' });
+					} else {
+						line.classList.remove('active');
+					}
+				});
+			});
+
+			// Click on lyric line to seek
+			lines.forEach(line => {
+				line.addEventListener('click', function() {
+					const start = parseInt(this.dataset.start);
+					audio.currentTime = start / 1000;
+					audio.play();
+				});
+			});
+		})();
+	</script>
+}
+
+// audioSegmentScript adds script for playing audio segments
+templ audioSegmentScript() {
+	<script>
+		let segmentAudio = null;
+		let stopTime = null;
+
+		function playSegment() {
+			const audioEl = document.getElementById('line-audio');
+			const src = audioEl.dataset.src;
+			const startMs = parseInt(audioEl.dataset.start);
+			const endMs = parseInt(audioEl.dataset.end);
+
+			if (!segmentAudio) {
+				segmentAudio = new Audio(src);
+			}
+
+			segmentAudio.currentTime = startMs / 1000;
+			stopTime = endMs / 1000;
+
+			segmentAudio.play();
+
+			segmentAudio.ontimeupdate = function() {
+				if (segmentAudio.currentTime >= stopTime) {
+					segmentAudio.pause();
+				}
+			};
+		}
+
+		// Auto-play on load if data-autoplay is set
+		document.addEventListener('DOMContentLoaded', function() {
+			const audioEl = document.getElementById('line-audio');
+			if (audioEl && audioEl.dataset.autoplay === 'true') {
+				setTimeout(playSegment, 300);
+			}
+		});
+	</script>
+}

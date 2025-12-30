@@ -4,22 +4,20 @@ import (
 	"net/http"
 
 	"languagepapi/components"
-	"languagepapi/internal/repository"
+	"languagepapi/internal/service"
 )
 
-// HandleHome renders the home page with dynamic stats
-func HandleHome(w http.ResponseWriter, r *http.Request) {
-	// Get user stats
-	user, _ := repository.GetUser(defaultUserID)
-	cardCount, _ := repository.CountCards()
-	dueCount, _ := repository.CountDueCards(defaultUserID)
+// lessonService is the shared lesson service instance
+var lessonService = service.NewLessonService()
 
-	streak := 0
-	totalXP := 0
-	if user != nil {
-		streak = user.CurrentStreak
-		totalXP = user.TotalXP
+// HandleHome renders the journey home page
+func HandleHome(w http.ResponseWriter, r *http.Request) {
+	// Get journey home data
+	data, err := lessonService.GetJourneyHomeData(defaultUserID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	components.Home(cardCount, streak, dueCount, totalXP).Render(r.Context(), w)
+	components.Home(data).Render(r.Context(), w)
 }

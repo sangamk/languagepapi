@@ -1,40 +1,124 @@
 package components
 
-import "fmt"
+import (
+	"fmt"
+	"languagepapi/internal/models"
+)
 
-templ Home(cardCount, streak, dueCount, totalXP int) {
+templ Home(data *models.JourneyHomeData) {
 	@Layout("languagepapi") {
-		<main class="container">
+		<main class="container journey-home">
 			<header class="header">
-				<h1 class="logo">languagepapi</h1>
-				<p class="tagline">learn words. keep them.</p>
+				<h1 class="logo">
+					languagepapi
+					<span class="fire-container" title="this is fine">
+						<span class="fire-glow"></span>
+						<span class="flame"></span>
+					</span>
+				</h1>
 			</header>
-			<nav class="nav">
-				<a href="/practice" class="btn btn-primary" hx-get="/practice" hx-target="body" hx-swap="innerHTML">
-					practice
-					if dueCount > 0 {
-						<span class="badge">{ fmt.Sprintf("%d", dueCount) }</span>
-					}
-				</a>
-				<a href="/words" class="btn" hx-get="/words" hx-target="body" hx-swap="innerHTML">my words</a>
-				<a href="/add" class="btn" hx-get="/add" hx-target="body" hx-swap="innerHTML">+ add</a>
-				<a href="/calendar" class="btn" hx-get="/calendar" hx-target="body">stats</a>
-				<a href="/settings" class="btn" hx-get="/settings" hx-target="body" hx-swap="innerHTML">settings</a>
-			</nav>
-			<section class="stats">
-				<div class="stat">
-					<span class="stat-num">{ fmt.Sprintf("%d", cardCount) }</span>
-					<span class="stat-label">words</span>
+
+			<!-- Journey Progress -->
+			<section class="journey-progress">
+				<div class="day-display">
+					<span class="day-label">Day</span>
+					<span class="day-number">{ fmt.Sprintf("%d", data.DayNumber) }</span>
+					<span class="day-total">of { fmt.Sprintf("%d", data.TotalDays) }</span>
 				</div>
-				<div class="stat">
-					<span class="stat-num">{ fmt.Sprintf("%d", streak) }</span>
-					<span class="stat-label">streak</span>
+				<div class="progress-bar-container">
+					<div class="progress-bar-fill" style={ fmt.Sprintf("width: %d%%", data.DayNumber * 100 / data.TotalDays) }></div>
 				</div>
-				<div class="stat">
-					<span class="stat-num">{ fmt.Sprintf("%d", totalXP) }</span>
-					<span class="stat-label">xp</span>
+				<div class="phase-info">
+					<span class="phase-name">{ data.CurrentPhase.Name }</span>
+					<span class="phase-desc">{ data.CurrentPhase.Description }</span>
 				</div>
 			</section>
+
+			<!-- Main Lesson CTA -->
+			<section class="lesson-cta">
+				if data.TodayCompleted {
+					<div class="lesson-done">
+						<span class="checkmark-circle">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+								<polyline points="20 6 9 17 4 12"></polyline>
+							</svg>
+						</span>
+						<p class="done-text">Today's lesson complete!</p>
+						if data.TodayStats != "" {
+							<p class="done-stats">{ data.TodayStats }</p>
+						}
+					</div>
+					<a href="/lesson/start" class="btn btn-secondary" hx-get="/lesson/start" hx-target="body" hx-swap="innerHTML">
+						Extra practice
+					</a>
+				} else {
+					<a href="/lesson/start" class="btn btn-primary btn-large" hx-get="/lesson/start" hx-target="body" hx-swap="innerHTML">
+						Start Today's Lesson
+					</a>
+					if data.DueCount > 0 || data.NewCount > 0 {
+						<p class="lesson-preview">
+							if data.DueCount > 0 && data.NewCount > 0 {
+								{ fmt.Sprintf("%d reviews + %d new words", data.DueCount, data.NewCount) }
+							} else if data.DueCount > 0 {
+								{ fmt.Sprintf("%d reviews", data.DueCount) }
+							} else {
+								{ fmt.Sprintf("%d new words", data.NewCount) }
+							}
+							if data.EstimatedMins > 0 {
+								<br/>
+								<span class="time-estimate">~{ fmt.Sprintf("%d", data.EstimatedMins) } minutes</span>
+							}
+						</p>
+					}
+				}
+			</section>
+
+			<!-- Song Lessons Entry -->
+			<section class="song-cta-home">
+				<a href="/songs" class="btn btn-song" hx-get="/songs" hx-target="body" hx-swap="innerHTML">
+					&#127925; Learn with Music
+				</a>
+			</section>
+
+			<!-- Minimal Streak Display -->
+			<section class="streak-display">
+				if data.Streak > 0 {
+					<span class="streak-icon">🔥</span>
+					<span class="streak-count">{ fmt.Sprintf("%d", data.Streak) } day streak</span>
+				} else {
+					<span class="streak-count">Start your streak today!</span>
+				}
+			</section>
+
+			<!-- Hidden Settings Toggle -->
+			<button class="settings-toggle" onclick="toggleSettingsMenu()" aria-label="Settings">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+					<circle cx="12" cy="12" r="3"></circle>
+					<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+				</svg>
+			</button>
+			<nav class="settings-menu hidden" id="settings-menu">
+				<a href="/songs" hx-get="/songs" hx-target="body" hx-swap="innerHTML">Song Lessons</a>
+				<a href="/calendar" hx-get="/calendar" hx-target="body" hx-swap="innerHTML">View Stats</a>
+				<a href="/words" hx-get="/words" hx-target="body" hx-swap="innerHTML">My Words</a>
+				<a href="/add" hx-get="/add" hx-target="body" hx-swap="innerHTML">Add Words</a>
+				<a href="/settings" hx-get="/settings" hx-target="body" hx-swap="innerHTML">Settings</a>
+			</nav>
+
+			<script>
+				function toggleSettingsMenu() {
+					const menu = document.getElementById('settings-menu');
+					menu.classList.toggle('hidden');
+				}
+				// Close menu when clicking outside
+				document.addEventListener('click', function(e) {
+					const menu = document.getElementById('settings-menu');
+					const toggle = document.querySelector('.settings-toggle');
+					if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+						menu.classList.add('hidden');
+					}
+				});
+			</script>
 		</main>
 	}
 }

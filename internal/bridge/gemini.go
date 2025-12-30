@@ -5,12 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
 
-	"github.com/google/generative-ai-go/genai"
-	"google.golang.org/api/option"
+	"google.golang.org/genai"
 
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
@@ -20,7 +18,7 @@ import (
 // GeminiService handles bridge generation using Gemini API
 type GeminiService struct {
 	client *genai.Client
-	model  *genai.GenerativeModel
+	model  string
 }
 
 // BridgeResponse represents the JSON response from Gemini
@@ -32,30 +30,32 @@ type BridgeResponse struct {
 
 // NewGeminiService creates a new Gemini service
 func NewGeminiService(ctx context.Context) (*GeminiService, error) {
-	apiKey := os.Getenv("GEMINI_API_KEY")
-	if apiKey == "" {
-		return nil, fmt.Errorf("GEMINI_API_KEY environment variable not set")
-	}
-
-	client, err := genai.NewClient(ctx, option.WithAPIKey(apiKey))
+	// The client gets the API key from the environment variable GEMINI_API_KEY
+	client, err := genai.NewClient(ctx, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Gemini client: %w", err)
 	}
 
-	model := client.GenerativeModel("gemini-1.5-flash")
-	model.SetTemperature(0.7)
-
 	return &GeminiService{
 		client: client,
-		model:  model,
+		model:  "gemini-2.5-flash",
 	}, nil
 }
 
 // Close closes the Gemini client
 func (s *GeminiService) Close() {
-	if s.client != nil {
-		s.client.Close()
+	// New SDK doesn't require explicit close
+}
+
+// GenerateContent sends a prompt to Gemini and returns the text response
+func (s *GeminiService) GenerateContent(ctx context.Context, prompt string) (string, error) {
+	result, err := s.client.Models.GenerateContent(ctx, s.model, genai.Text(prompt), nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate content: %w", err)
 	}
+
+	text := result.Text()
+	return strings.TrimSpace(text), nil
 }
 
 // GenerateBridges generates bridges for a single word
@@ -77,22 +77,12 @@ Respond ONLY with valid JSON in this exact format (use null for unhelpful bridge
 
 Be concise - max 50 characters per bridge. Focus on the most memorable connection.`, term, translation)
 
-	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	result, err := s.client.Models.GenerateContent(ctx, s.model, genai.Text(prompt), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
-		return nil, fmt.Errorf("no response from Gemini")
-	}
-
-	// Extract text response
-	text := ""
-	for _, part := range resp.Candidates[0].Content.Parts {
-		if t, ok := part.(genai.Text); ok {
-			text += string(t)
-		}
-	}
+	text := result.Text()
 
 	// Clean up the response (remove markdown code blocks if present)
 	text = strings.TrimSpace(text)
@@ -165,23 +155,12 @@ Rules:
 - Include the word in a natural context
 - Return ONLY the Spanish sentence, nothing else`, term, translation)
 
-	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	result, err := s.client.Models.GenerateContent(ctx, s.model, genai.Text(prompt), nil)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
-		return "", fmt.Errorf("no response from Gemini")
-	}
-
-	text := ""
-	for _, part := range resp.Candidates[0].Content.Parts {
-		if t, ok := part.(genai.Text); ok {
-			text += string(t)
-		}
-	}
-
-	return strings.TrimSpace(text), nil
+	return strings.TrimSpace(result.Text()), nil
 }
 
 // GenerateHint generates a hint for a card when the user gets it wrong
@@ -199,23 +178,12 @@ Existing memory bridges:
 Generate a SHORT (1-2 sentence) hint to help them remember. Be creative and memorable.
 Return ONLY the hint text.`, term, translation, bridgeInfo)
 
-	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	result, err := s.client.Models.GenerateContent(ctx, s.model, genai.Text(prompt), nil)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
-		return "", fmt.Errorf("no response from Gemini")
-	}
-
-	text := ""
-	for _, part := range resp.Candidates[0].Content.Parts {
-		if t, ok := part.(genai.Text); ok {
-			text += string(t)
-		}
-	}
-
-	return strings.TrimSpace(text), nil
+	return strings.TrimSpace(result.Text()), nil
 }
 
 // GenerateCards generates vocabulary cards for a topic
@@ -227,21 +195,12 @@ Return ONLY valid JSON array in this format:
 
 Focus on practical, commonly used words.`, count, topic)
 
-	resp, err := s.model.GenerateContent(ctx, genai.Text(prompt))
+	result, err := s.client.Models.GenerateContent(ctx, s.model, genai.Text(prompt), nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate content: %w", err)
 	}
 
-	if len(resp.Candidates) == 0 || len(resp.Candidates[0].Content.Parts) == 0 {
-		return nil, fmt.Errorf("no response from Gemini")
-	}
-
-	text := ""
-	for _, part := range resp.Candidates[0].Content.Parts {
-		if t, ok := part.(genai.Text); ok {
-			text += string(t)
-		}
-	}
+	text := result.Text()
 
 	// Clean up the response
 	text = strings.TrimSpace(text)

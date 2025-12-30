@@ -1,0 +1,786 @@
+package components
+
+import (
+	"fmt"
+	"math/rand"
+	"strings"
+
+	"languagepapi/internal/fsrs"
+	"languagepapi/internal/models"
+	"languagepapi/internal/repository"
+)
+
+// LessonCard renders a card within the daily lesson context
+templ LessonCard(card *models.LessonCard, preview map[models.Rating]fsrs.SchedulingPreview, current, total int, dayNumber int, phase *models.CurriculumPhase) {
+	<div class="lesson-container" id="lesson-container">
+		<div class="lesson-header">
+			<span class="day-badge">Day { fmt.Sprintf("%d", dayNumber) }</span>
+			if card.IsSongVocab && card.SongTitle != "" {
+				<span class="song-source-badge">🎵 { card.SongTitle }</span>
+			}
+			<div class="lesson-progress">
+				<div class="lesson-progress-bar">
+					<div class="lesson-progress-fill" style={ fmt.Sprintf("width: %d%%", current*100/total) }></div>
+				</div>
+				<span class="lesson-progress-text">{ fmt.Sprintf("%d / %d", current, total) }</span>
+			</div>
+		</div>
+
+		if card.Mode == "typing" {
+			@LessonTypingCard(&card.CardWithProgress, current, total)
+		} else if card.Mode == "reverse" {
+			@LessonReverseCard(&card.CardWithProgress, preview, current, total, card.ID)
+		} else if card.Mode == "mcq" {
+			@LessonMCQCard(&card.CardWithProgress, card.ID)
+		} else if card.Mode == "fill_blank" {
+			@LessonFillBlankCard(&card.CardWithProgress, card.ID)
+		} else if card.Mode == "sentence_build" {
+			@LessonSentenceBuildCard(&card.CardWithProgress, card.ID)
+		} else {
+			@LessonStandardCard(&card.CardWithProgress, preview, current, total, card.ID)
+		}
+
+		<div class="keyboard-hint">
+			if card.Mode == "mcq" || card.Mode == "fill_blank" || card.Mode == "sentence_build" {
+				<span>Select your answer</span>
+			} else {
+				<span>Keyboard: 1=Again 2=Hard 3=Good 4=Easy S=Skip</span>
+			}
+		</div>
+	</div>
+	@lessonKeyboardScript()
+}
+
+// LessonStandardCard renders the standard flashcard for lesson mode
+templ LessonStandardCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int, cardID int64) {
+	<div class="card" id="flashcard" onclick="this.classList.toggle('flipped')">
+		<div class="card-inner">
+			<div class="card-front">
+				<span class="card-term">{ card.Term }</span>
+				<span class="card-hint">tap to reveal</span>
+			</div>
+			<div class="card-back">
+				<span class="card-term">{ card.Term }</span>
+				<span class="card-translation">{ card.Translation }</span>
+				if card.ExampleSentence != "" {
+					<span class="card-example">{ card.ExampleSentence }</span>
+				}
+				if len(card.Bridges) > 0 {
+					<div class="bridges">
+						for _, b := range card.Bridges {
+							<div class={ "bridge", fmt.Sprintf("bridge-%s", b.BridgeType) }>
+								<span class="bridge-type">{ bridgeTypeLabel(b.BridgeType) }</span>
+								<span class="bridge-content">{ b.BridgeContent }</span>
+							</div>
+						}
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+
+	@lessonRatingButtons(cardID, preview)
+}
+
+// LessonReverseCard renders the reverse flashcard for lesson mode
+templ LessonReverseCard(card *models.CardWithProgress, preview map[models.Rating]fsrs.SchedulingPreview, current, total int, cardID int64) {
+	<div class="card" id="flashcard" onclick="this.classList.toggle('flipped')">
+		<div class="card-inner">
+			<div class="card-front">
+				<span class="card-term reverse-prompt">{ card.Translation }</span>
+				<span class="card-hint">What's the Spanish word?</span>
+			</div>
+			<div class="card-back">
+				<span class="card-translation reverse-answer">{ card.Translation }</span>
+				<span class="card-term">{ card.Term }</span>
+				if card.ExampleSentence != "" {
+					<span class="card-example">{ card.ExampleSentence }</span>
+				}
+			</div>
+		</div>
+	</div>
+
+	@lessonRatingButtons(cardID, preview)
+}
+
+// LessonTypingCard renders the typing practice card for lesson mode
+templ LessonTypingCard(card *models.CardWithProgress, current, total int) {
+	<div class="typing-card">
+		<div class="typing-prompt">
+			<span class="card-translation">{ card.Translation }</span>
+			<span class="card-hint">Type the Spanish word</span>
+		</div>
+		<form class="typing-form" id="typing-form">
+			<input
+				type="text"
+				id="typing-input"
+				name="answer"
+				class="typing-input"
+				autocomplete="off"
+				autofocus
+				placeholder="Type here..."
+			/>
+			<input type="hidden" name="card_id" value={ fmt.Sprintf("%d", card.ID) }/>
+			<input type="hidden" name="correct_answer" value={ card.Term }/>
+			<button type="submit" class="btn btn-primary">Check</button>
+		</form>
+		<div id="typing-result" class="typing-result"></div>
+	</div>
+	@lessonTypingScript(card.Term)
+}
+
+templ lessonTypingScript(correctAnswer string) {
+	<script>
+		document.getElementById('typing-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const input = document.getElementById('typing-input');
+			const result = document.getElementById('typing-result');
+			const answer = input.value.trim().toLowerCase();
+			const correct = '{ correctAnswer }'.toLowerCase();
+
+			if (answer === correct) {
+				result.innerHTML = '<span class="correct">Correct!</span>';
+				result.className = 'typing-result correct';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '3' }
+					});
+				}, 1000);
+			} else {
+				result.innerHTML = '<span class="incorrect">Incorrect. The answer is: <strong>{ correctAnswer }</strong></span>';
+				result.className = 'typing-result incorrect';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '1' }
+					});
+				}, 2000);
+			}
+		});
+	</script>
+}
+
+// generateMCQOptions creates shuffled MCQ options with the correct answer at a random position
+func generateMCQOptions(correctAnswer string, cardID int64) ([]string, int) {
+	// Get 3 random distractors from other cards
+	distractors, err := repository.GetRandomTranslations(cardID, 3)
+	if err != nil || len(distractors) < 3 {
+		// Fallback distractors if database query fails
+		distractors = []string{"otra palabra", "algo diferente", "no es esto"}
+	}
+
+	// Create options array with correct answer at random position
+	options := make([]string, 4)
+	correctIdx := rand.Intn(4)
+
+	distIdx := 0
+	for i := 0; i < 4; i++ {
+		if i == correctIdx {
+			options[i] = correctAnswer
+		} else {
+			options[i] = distractors[distIdx]
+			distIdx++
+		}
+	}
+	return options, correctIdx
+}
+
+// LessonMCQCard renders a multiple choice question card
+templ LessonMCQCard(card *models.CardWithProgress, cardID int64) {
+	{{ options, correctIdx := generateMCQOptions(card.Translation, cardID) }}
+	<div class="mcq-card" id="mcq-card">
+		<div class="mcq-question">
+			<span class="mcq-stem">What does <strong>{ card.Term }</strong> mean?</span>
+		</div>
+		<div class="mcq-options" id="mcq-options">
+			for i, opt := range options {
+				<button class="mcq-option" data-index={ fmt.Sprintf("%d", i) }>
+					{ opt }
+				</button>
+			}
+		</div>
+		<div id="mcq-result" class="mcq-result"></div>
+		<input type="hidden" id="mcq-card-id" value={ fmt.Sprintf("%d", cardID) }/>
+		<input type="hidden" id="mcq-correct" value={ fmt.Sprintf("%d", correctIdx) }/>
+	</div>
+	@mcqScript()
+}
+
+templ mcqScript() {
+	<script>
+		(function() {
+			const options = document.querySelectorAll('.mcq-option');
+			options.forEach(btn => {
+				btn.addEventListener('click', function() {
+					selectMCQOption(this, parseInt(this.dataset.index));
+				});
+			});
+		})();
+
+		function selectMCQOption(btn, index) {
+			const options = document.querySelectorAll('.mcq-option');
+			const result = document.getElementById('mcq-result');
+			const cardId = document.getElementById('mcq-card-id').value;
+			const correctIndex = parseInt(document.getElementById('mcq-correct').value);
+
+			// Disable all options
+			options.forEach(opt => opt.disabled = true);
+
+			if (index === correctIndex) {
+				btn.classList.add('correct');
+				result.innerHTML = '<span class="correct">Correct!</span>';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: cardId, rating: '3' }
+					});
+				}, 1000);
+			} else {
+				btn.classList.add('incorrect');
+				options[correctIndex].classList.add('correct');
+				result.innerHTML = '<span class="incorrect">Incorrect</span>';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: cardId, rating: '1' }
+					});
+				}, 1500);
+			}
+		}
+	</script>
+}
+
+// LessonFillBlankCard renders a fill-in-the-blank card
+templ LessonFillBlankCard(card *models.CardWithProgress, cardID int64) {
+	<div class="fill-blank-card">
+		<div class="fill-blank-prompt">
+			<span class="fill-blank-hint">Fill in the blank:</span>
+			<p class="fill-blank-sentence">
+				{ getFillBlankSentence(card.ExampleSentence, card.Term) }
+			</p>
+		</div>
+		<form class="fill-blank-form" id="fill-blank-form">
+			<input
+				type="text"
+				id="fill-blank-input"
+				name="answer"
+				class="fill-blank-input"
+				autocomplete="off"
+				autofocus
+				placeholder="Type the missing word..."
+			/>
+			<input type="hidden" name="card_id" value={ fmt.Sprintf("%d", cardID) }/>
+			<input type="hidden" name="correct_answer" value={ card.Term }/>
+			<button type="submit" class="btn btn-primary">Check</button>
+		</form>
+		<div class="fill-blank-context">
+			<span>Hint: { card.Translation }</span>
+		</div>
+		<div id="fill-blank-result" class="fill-blank-result"></div>
+	</div>
+	@fillBlankScript(card.Term)
+}
+
+func getFillBlankSentence(sentence, term string) string {
+	if sentence == "" {
+		return "____"
+	}
+	// Simple replacement - in production you'd want smarter blank insertion
+	result := sentence
+	if idx := findTermIndex(sentence, term); idx >= 0 {
+		result = sentence[:idx] + "____" + sentence[idx+len(term):]
+	}
+	return result
+}
+
+func findTermIndex(sentence, term string) int {
+	// Case-insensitive search
+	lowerSentence := strings.ToLower(sentence)
+	lowerTerm := strings.ToLower(term)
+	return strings.Index(lowerSentence, lowerTerm)
+}
+
+templ fillBlankScript(correctAnswer string) {
+	<script>
+		document.getElementById('fill-blank-form').addEventListener('submit', function(e) {
+			e.preventDefault();
+			const input = document.getElementById('fill-blank-input');
+			const result = document.getElementById('fill-blank-result');
+			const answer = input.value.trim().toLowerCase();
+			const correct = '{ correctAnswer }'.toLowerCase();
+
+			if (answer === correct) {
+				result.innerHTML = '<span class="correct">Correct!</span>';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '3' }
+					});
+				}, 1000);
+			} else {
+				result.innerHTML = '<span class="incorrect">Incorrect. The answer is: <strong>{ correctAnswer }</strong></span>';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: document.querySelector('[name="card_id"]').value, rating: '1' }
+					});
+				}, 2000);
+			}
+		});
+	</script>
+}
+
+// LessonSentenceBuildCard renders a sentence building card
+templ LessonSentenceBuildCard(card *models.CardWithProgress, cardID int64) {
+	<div class="sentence-build-card">
+		<div class="sentence-build-prompt">
+			<span class="sentence-build-hint">Build the sentence:</span>
+			<p class="sentence-build-translation">{ card.Translation }</p>
+		</div>
+		<div class="word-bank" id="word-bank">
+			for _, word := range shuffleWords(card.ExampleSentence) {
+				<button class="word-chip" onclick="addWord(this)">{ word }</button>
+			}
+		</div>
+		<div class="sentence-area" id="sentence-area">
+			<span class="placeholder">Tap words to build sentence</span>
+		</div>
+		<div class="sentence-build-actions">
+			<button class="btn btn-small" onclick="clearSentence()">Clear</button>
+			<button class="btn btn-primary" onclick="checkSentence()">Check</button>
+		</div>
+		<div id="sentence-result" class="sentence-result"></div>
+		<input type="hidden" id="sb-card-id" value={ fmt.Sprintf("%d", cardID) }/>
+		<input type="hidden" id="sb-correct" value={ card.ExampleSentence }/>
+	</div>
+	@sentenceBuildScript()
+}
+
+func shuffleWords(sentence string) []string {
+	if sentence == "" {
+		return []string{"word"}
+	}
+	words := strings.Fields(sentence)
+	// Fisher-Yates shuffle
+	for i := len(words) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		words[i], words[j] = words[j], words[i]
+	}
+	return words
+}
+
+templ sentenceBuildScript() {
+	<script>
+		let selectedWords = [];
+
+		function addWord(btn) {
+			if (btn.classList.contains('used')) return;
+			btn.classList.add('used');
+			selectedWords.push(btn.textContent);
+			updateSentenceArea();
+		}
+
+		function updateSentenceArea() {
+			const area = document.getElementById('sentence-area');
+			if (selectedWords.length === 0) {
+				area.innerHTML = '<span class="placeholder">Tap words to build sentence</span>';
+			} else {
+				area.innerHTML = selectedWords.map((w, i) =>
+					`<span class="selected-word" onclick="removeWord(${i})">${w}</span>`
+				).join(' ');
+			}
+		}
+
+		function removeWord(index) {
+			const word = selectedWords[index];
+			selectedWords.splice(index, 1);
+			// Re-enable the word in bank
+			document.querySelectorAll('.word-chip').forEach(btn => {
+				if (btn.textContent === word && btn.classList.contains('used')) {
+					btn.classList.remove('used');
+				}
+			});
+			updateSentenceArea();
+		}
+
+		function clearSentence() {
+			selectedWords = [];
+			document.querySelectorAll('.word-chip').forEach(btn => btn.classList.remove('used'));
+			updateSentenceArea();
+		}
+
+		function checkSentence() {
+			const result = document.getElementById('sentence-result');
+			const cardId = document.getElementById('sb-card-id').value;
+			const correct = document.getElementById('sb-correct').value;
+			const userSentence = selectedWords.join(' ');
+
+			// Normalize comparison (remove punctuation, lowercase)
+			const normalize = s => s.toLowerCase().replace(/[.,!?]/g, '').trim();
+
+			if (normalize(userSentence) === normalize(correct)) {
+				result.innerHTML = '<span class="correct">Correct!</span>';
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: cardId, rating: '3' }
+					});
+				}, 1000);
+			} else {
+				result.innerHTML = `<span class="incorrect">Not quite. Correct: <strong>${correct}</strong></span>`;
+				setTimeout(() => {
+					htmx.ajax('POST', '/lesson/review', {
+						target: '.lesson-container',
+						swap: 'outerHTML',
+						values: { card_id: cardId, rating: '1' }
+					});
+				}, 2500);
+			}
+		}
+	</script>
+}
+
+templ lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.SchedulingPreview) {
+	<div class="rating-buttons">
+		<button
+			class="rating-btn rating-again"
+			id="btn-again"
+			hx-post="/lesson/review"
+			hx-target=".lesson-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "1"}`, cardID) }
+		>
+			<span class="rating-label">Again</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingAgain].Interval) }</span>
+			<span class="rating-key">1</span>
+		</button>
+		<button
+			class="rating-btn rating-hard"
+			id="btn-hard"
+			hx-post="/lesson/review"
+			hx-target=".lesson-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "2"}`, cardID) }
+		>
+			<span class="rating-label">Hard</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingHard].Interval) }</span>
+			<span class="rating-key">2</span>
+		</button>
+		<button
+			class="rating-btn rating-good"
+			id="btn-good"
+			hx-post="/lesson/review"
+			hx-target=".lesson-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "3"}`, cardID) }
+		>
+			<span class="rating-label">Good</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingGood].Interval) }</span>
+			<span class="rating-key">3</span>
+		</button>
+		<button
+			class="rating-btn rating-easy"
+			id="btn-easy"
+			hx-post="/lesson/review"
+			hx-target=".lesson-container"
+			hx-swap="outerHTML"
+			hx-vals={ fmt.Sprintf(`{"card_id": "%d", "rating": "4"}`, cardID) }
+		>
+			<span class="rating-label">Easy</span>
+			<span class="rating-interval">{ formatInterval(preview[models.RatingEasy].Interval) }</span>
+			<span class="rating-key">4</span>
+		</button>
+	</div>
+	<div class="skip-container">
+		<button
+			class="btn btn-skip"
+			id="btn-skip"
+			hx-post="/lesson/skip"
+			hx-target=".lesson-container"
+			hx-swap="outerHTML"
+		>
+			Skip (S)
+		</button>
+	</div>
+}
+
+templ lessonKeyboardScript() {
+	<script>
+		document.addEventListener('keydown', function(e) {
+			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+			const flashcard = document.getElementById('flashcard');
+
+			switch(e.key) {
+				case ' ':
+					e.preventDefault();
+					if (flashcard) flashcard.classList.toggle('flipped');
+					break;
+				case '1':
+					document.getElementById('btn-again')?.click();
+					break;
+				case '2':
+					document.getElementById('btn-hard')?.click();
+					break;
+				case '3':
+					document.getElementById('btn-good')?.click();
+					break;
+				case '4':
+					document.getElementById('btn-easy')?.click();
+					break;
+				case 's':
+				case 'S':
+					document.getElementById('btn-skip')?.click();
+					break;
+			}
+		});
+	</script>
+}
+
+// LessonComplete renders the lesson completion screen
+templ LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newLearned, accuracy, xpEarned int, message string, newAchievements []models.Achievement) {
+	<div class="lesson-container">
+		<div class="lesson-complete">
+			<div class="celebration" id="celebration"></div>
+
+			<div class="complete-header">
+				<h2>Day { fmt.Sprintf("%d", dayNumber) } Complete!</h2>
+				<p class="phase-context">{ phase.Name }</p>
+			</div>
+
+			<div class="progress-visual">
+				<svg class="day-ring" viewBox="0 0 100 100">
+					<circle class="ring-bg" cx="50" cy="50" r="42"></circle>
+					<circle
+						class="ring-fill"
+						cx="50"
+						cy="50"
+						r="42"
+						stroke-dasharray={ fmt.Sprintf("%.1f 264", float64(dayNumber)/180.0*264) }
+					></circle>
+				</svg>
+				<div class="progress-center">
+					<span class="day">{ fmt.Sprintf("%d", dayNumber) }</span>
+					<span class="total">/180</span>
+				</div>
+			</div>
+
+			<div class="session-summary">
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", reviewed) }</span>
+					<span class="summary-label">reviewed</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", newLearned) }</span>
+					<span class="summary-label">new words</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", accuracy) }%</span>
+					<span class="summary-label">accuracy</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num xp">+{ fmt.Sprintf("%d", xpEarned) }</span>
+					<span class="summary-label">xp</span>
+				</div>
+			</div>
+
+			if len(newAchievements) > 0 {
+				<div class="new-achievements">
+					<h3>New Achievements!</h3>
+					for _, a := range newAchievements {
+						<div class="achievement-unlocked">
+							<span class="achievement-icon">{ achievementIconMap(a.Icon) }</span>
+							<span class="achievement-name">{ a.Name }</span>
+						</div>
+					}
+				</div>
+			}
+
+			<p class="motivation">{ message }</p>
+
+			<a href="/" class="btn btn-primary" hx-get="/" hx-target="body" hx-swap="innerHTML">Done</a>
+		</div>
+	</div>
+	@celebrationScript()
+}
+
+// LessonEmpty renders when there are no cards for today's lesson
+templ LessonEmpty(dayNumber int, phase *models.CurriculumPhase) {
+	<div class="lesson-container">
+		<div class="empty-state">
+			<div class="day-badge">Day { fmt.Sprintf("%d", dayNumber) }</div>
+			<h2>All caught up!</h2>
+			<p>No cards due today. Come back tomorrow or add more words.</p>
+			<div class="empty-actions">
+				<a href="/" class="btn btn-primary" hx-get="/" hx-target="body" hx-swap="innerHTML">done</a>
+			</div>
+		</div>
+	</div>
+}
+
+// LessonCompleteWithSummary renders the enhanced lesson completion screen with per-card breakdown
+templ LessonCompleteWithSummary(summary *models.LessonSummary) {
+	<div class="lesson-container">
+		<div class="lesson-complete">
+			<div class="celebration" id="celebration"></div>
+
+			<div class="complete-header">
+				<h2>Day { fmt.Sprintf("%d", summary.DayNumber) } Complete!</h2>
+				<p class="phase-context">{ summary.Phase.Name }</p>
+			</div>
+
+			<div class="progress-visual">
+				<svg class="day-ring" viewBox="0 0 100 100">
+					<circle class="ring-bg" cx="50" cy="50" r="42"></circle>
+					<circle
+						class="ring-fill"
+						cx="50"
+						cy="50"
+						r="42"
+						stroke-dasharray={ fmt.Sprintf("%.1f 264", float64(summary.DayNumber)/180.0*264) }
+					></circle>
+				</svg>
+				<div class="progress-center">
+					<span class="day">{ fmt.Sprintf("%d", summary.DayNumber) }</span>
+					<span class="total">/180</span>
+				</div>
+			</div>
+
+			<div class="session-summary">
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", summary.TotalCards) }</span>
+					<span class="summary-label">reviewed</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", summary.NewLearned) }</span>
+					<span class="summary-label">new words</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num">{ fmt.Sprintf("%d", summary.Accuracy) }%</span>
+					<span class="summary-label">accuracy</span>
+				</div>
+				<div class="summary-stat">
+					<span class="summary-num xp">+{ fmt.Sprintf("%d", summary.XPEarned) }</span>
+					<span class="summary-label">xp</span>
+				</div>
+			</div>
+
+			// Time stats
+			<div class="time-stats">
+				<span class="time-total">{ formatDuration(summary.TotalTimeMs) } total</span>
+				<span class="time-sep">&middot;</span>
+				<span class="time-avg">{ formatDuration(summary.AvgTimePerCard) } avg/card</span>
+			</div>
+
+			if len(summary.Achievements) > 0 {
+				<div class="new-achievements">
+					<h3>New Achievements!</h3>
+					for _, a := range summary.Achievements {
+						<div class="achievement-unlocked">
+							<span class="achievement-icon">{ achievementIconMap(a.Icon) }</span>
+							<span class="achievement-name">{ a.Name }</span>
+						</div>
+					}
+				</div>
+			}
+
+			// Struggles section
+			if len(summary.Struggles) > 0 {
+				<div class="struggles-section">
+					<h3 class="struggles-title">Needs more practice ({ fmt.Sprintf("%d", len(summary.Struggles)) })</h3>
+					<div class="struggles-list">
+						for _, card := range summary.Struggles {
+							<div class="struggle-card">
+								<span class="struggle-term">{ card.Term }</span>
+								<span class="struggle-translation">{ card.Translation }</span>
+								<span class={ "struggle-rating", ratingClass(card.Rating) }>{ card.Rating.Label() }</span>
+							</div>
+						}
+					</div>
+				</div>
+			}
+
+			// Card breakdown (collapsible)
+			if len(summary.CardResults) > 0 {
+				<details class="card-breakdown">
+					<summary class="breakdown-toggle">View all cards ({ fmt.Sprintf("%d", len(summary.CardResults)) })</summary>
+					<div class="breakdown-list">
+						for _, card := range summary.CardResults {
+							<div class={ "breakdown-card", ratingBgClass(card.Rating) }>
+								<div class="breakdown-info">
+									<span class="breakdown-term">{ card.Term }</span>
+									<span class="breakdown-translation">{ card.Translation }</span>
+								</div>
+								<div class="breakdown-meta">
+									<span class={ "breakdown-rating", ratingClass(card.Rating) }>{ card.Rating.Label() }</span>
+									<span class="breakdown-time">{ formatDuration(card.TimeSpentMs) }</span>
+									if card.IsNew {
+										<span class="breakdown-new">new</span>
+									}
+								</div>
+							</div>
+						}
+					</div>
+				</details>
+			}
+
+			<p class="motivation">{ summary.Message }</p>
+
+			<a href="/" class="btn btn-primary" hx-get="/" hx-target="body" hx-swap="innerHTML">Done</a>
+		</div>
+	</div>
+	@celebrationScript()
+}
+
+// formatDuration formats milliseconds into a readable duration
+func formatDuration(ms int64) string {
+	if ms < 1000 {
+		return fmt.Sprintf("%dms", ms)
+	}
+	secs := ms / 1000
+	if secs < 60 {
+		return fmt.Sprintf("%ds", secs)
+	}
+	mins := secs / 60
+	remainSecs := secs % 60
+	if remainSecs == 0 {
+		return fmt.Sprintf("%dm", mins)
+	}
+	return fmt.Sprintf("%dm %ds", mins, remainSecs)
+}
+
+// ratingClass returns the CSS class for a rating
+func ratingClass(r models.Rating) string {
+	switch r {
+	case models.RatingAgain:
+		return "rating-again"
+	case models.RatingHard:
+		return "rating-hard"
+	case models.RatingGood:
+		return "rating-good"
+	case models.RatingEasy:
+		return "rating-easy"
+	default:
+		return ""
+	}
+}
+
+// ratingBgClass returns a subtle background class for card items
+func ratingBgClass(r models.Rating) string {
+	switch r {
+	case models.RatingAgain:
+		return "bg-again"
+	case models.RatingHard:
+		return "bg-hard"
+	default:
+		return "bg-good"
+	}
+}

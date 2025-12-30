@@ -1,0 +1,184 @@
+package components
+
+import (
+	"fmt"
+	"languagepapi/internal/models"
+)
+
+// GrammarPage renders the grammar index with all rules
+templ GrammarPage(rules []models.GrammarRule) {
+	@Layout("Grammar") {
+		<div class="grammar-page">
+			<header class="grammar-header">
+				<h1>Grammar Guide</h1>
+				<p class="grammar-subtitle">Master Spanish grammar one rule at a time</p>
+			</header>
+
+			if len(rules) == 0 {
+				<div class="grammar-empty">
+					<p>No grammar rules yet. They will appear as you learn new words!</p>
+				</div>
+			} else {
+				<div class="grammar-sections">
+					@grammarSection("Basics", 1, rules)
+					@grammarSection("Intermediate", 2, rules)
+					@grammarSection("Advanced", 3, rules)
+				</div>
+			}
+		</div>
+	}
+}
+
+// grammarSection renders a difficulty-based section of rules
+templ grammarSection(title string, difficulty int, rules []models.GrammarRule) {
+	@templ.Raw("")
+	for _, rule := range rules {
+		if rule.DifficultyLevel == difficulty {
+			<section class="grammar-section">
+				<h2 class="section-title">{ title }</h2>
+				<div class="grammar-list">
+					@grammarRuleCard(rule)
+				</div>
+			</section>
+		}
+	}
+}
+
+// grammarRuleCard renders a single grammar rule card in the list
+templ grammarRuleCard(rule models.GrammarRule) {
+	<a href={ templ.SafeURL("/grammar/" + rule.RuleKey) } class="grammar-rule-card">
+		<div class="rule-icon">
+			@difficultyIcon(rule.DifficultyLevel)
+		</div>
+		<div class="rule-info">
+			<h3 class="rule-title">{ rule.Title }</h3>
+			<p class="rule-preview">{ truncate(rule.Explanation, 80) }</p>
+		</div>
+		<span class="rule-arrow">→</span>
+	</a>
+}
+
+// difficultyIcon returns an icon based on difficulty level
+templ difficultyIcon(level int) {
+	switch level {
+		case 1:
+			<span class="difficulty-badge basic">A1</span>
+		case 2:
+			<span class="difficulty-badge intermediate">A2</span>
+		case 3:
+			<span class="difficulty-badge advanced">B1</span>
+		default:
+			<span class="difficulty-badge">?</span>
+	}
+}
+
+// GrammarDetail renders a full grammar lesson page
+templ GrammarDetail(rule *models.GrammarRule, examples []models.GrammarExample, cards []models.Card) {
+	@Layout(rule.Title) {
+		<div class="grammar-detail">
+			<header class="grammar-detail-header">
+				<a href="/grammar" class="back-link">← Grammar Guide</a>
+				<h1>{ rule.Title }</h1>
+				@difficultyIcon(rule.DifficultyLevel)
+			</header>
+
+			<section class="explanation-section">
+				<h2>Explanation</h2>
+				<div class="explanation-text">
+					{ rule.Explanation }
+				</div>
+			</section>
+
+			if len(examples) > 0 {
+				<section class="examples-section">
+					<h2>Examples</h2>
+					<div class="example-list">
+						for _, ex := range examples {
+							<div class="example-item">
+								<p class="example-spanish">{ ex.Spanish }</p>
+								<p class="example-english">{ ex.English }</p>
+							</div>
+						}
+					</div>
+				</section>
+			}
+
+			if len(cards) > 0 {
+				<section class="related-cards-section">
+					<h2>Related Words</h2>
+					<p class="section-hint">Words in your deck that use this grammar</p>
+					<div class="related-cards-list">
+						for _, card := range cards {
+							<div class="related-card">
+								<span class="card-term">{ card.Term }</span>
+								<span class="card-translation">{ card.Translation }</span>
+							</div>
+						}
+					</div>
+					if len(cards) > 0 {
+						<a href={ templ.SafeURL(fmt.Sprintf("/review?grammar=%d", rule.ID)) } class="practice-btn">
+							Practice These Words
+						</a>
+					}
+				</section>
+			}
+		</div>
+	}
+}
+
+// GrammarTipComponent renders a grammar tip modal/panel (HTMX response)
+templ GrammarTipComponent(tip *models.GrammarTip) {
+	<div class="grammar-tip-modal">
+		<div class="grammar-tip-content">
+			<h3 class="tip-title">{ tip.Title }</h3>
+			<p class="tip-explanation">{ tip.ShortExplan }</p>
+
+			if len(tip.Examples) > 0 {
+				<div class="tip-examples">
+					for _, ex := range tip.Examples {
+						<div class="tip-example">
+							<span class="ex-spanish">{ ex.Spanish }</span>
+							<span class="ex-english">{ ex.English }</span>
+						</div>
+					}
+				</div>
+			}
+
+			if tip.RuleKey != "" {
+				<a href={ templ.SafeURL("/grammar/" + tip.RuleKey) } class="tip-learn-more">
+					Learn More →
+				</a>
+			}
+		</div>
+	</div>
+}
+
+// GrammarTipPreLesson renders pre-lesson grammar tips
+templ GrammarTipPreLesson(tips []models.GrammarTip) {
+	<div class="prelesson-tips">
+		<h3>Today's Grammar Focus</h3>
+		for _, tip := range tips {
+			<div class="prelesson-tip">
+				<h4>{ tip.Title }</h4>
+				<p>{ tip.ShortExplan }</p>
+				if len(tip.Examples) > 0 {
+					<div class="tip-example-preview">
+						<span class="ex-spanish">{ tip.Examples[0].Spanish }</span>
+						<span class="ex-english">{ tip.Examples[0].English }</span>
+					</div>
+				}
+			</div>
+		}
+		<button class="start-lesson-btn" onclick="closeGrammarTips()">
+			Got it! Start Lesson
+		</button>
+	</div>
+}
+
+// truncate helper to shorten text
+func truncate(s string, maxLen int) string {
+	if len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen-3] + "..."
+}
