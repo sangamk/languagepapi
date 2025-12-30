@@ -55,7 +55,9 @@ func UpsertProgress(p *models.CardProgress) error {
 
 // GetDueCards returns cards due for review
 func GetDueCards(userID int64, limit int) ([]models.CardWithProgress, error) {
-	now := time.Now()
+	// Use substr to extract YYYY-MM-DD HH:MM:SS for consistent comparison
+	// This works regardless of the timezone/monotonic clock suffix in stored dates
+	now := time.Now().Format("2006-01-02 15:04:05")
 	rows, err := db.DB.Query(`
 		SELECT c.id, c.island_id, c.term, c.translation,
 		       COALESCE(c.example_sentence, ''), COALESCE(c.notes, ''), COALESCE(c.audio_url, ''),
@@ -64,7 +66,7 @@ func GetDueCards(userID int64, limit int) ([]models.CardWithProgress, error) {
 		       p.reps, p.lapses, p.state, p.due, p.last_review
 		FROM cards c
 		INNER JOIN card_progress p ON c.id = p.card_id
-		WHERE p.user_id = ? AND p.due <= ? AND p.state IN ('learning', 'review', 'relearning')
+		WHERE p.user_id = ? AND substr(p.due, 1, 19) <= ? AND p.state IN ('learning', 'review', 'relearning')
 		ORDER BY p.due ASC
 		LIMIT ?
 	`, userID, now, limit)
@@ -102,7 +104,7 @@ func GetNewCards(userID int64, limit int) ([]models.CardWithProgress, error) {
 		FROM cards c
 		LEFT JOIN card_progress p ON c.id = p.card_id AND p.user_id = ?
 		WHERE p.id IS NULL OR p.state = 'new'
-		ORDER BY c.frequency_rank ASC, c.id ASC
+		ORDER BY RANDOM()
 		LIMIT ?
 	`, userID, limit)
 	if err != nil {
@@ -128,12 +130,13 @@ func GetNewCards(userID int64, limit int) ([]models.CardWithProgress, error) {
 
 // CountDueCards returns the number of cards due for review
 func CountDueCards(userID int64) (int, error) {
+	now := time.Now().Format("2006-01-02 15:04:05")
 	var count int
 	err := db.DB.QueryRow(`
 		SELECT COUNT(*)
 		FROM card_progress
-		WHERE user_id = ? AND due <= ? AND state IN ('learning', 'review', 'relearning')
-	`, userID, time.Now()).Scan(&count)
+		WHERE user_id = ? AND substr(due, 1, 19) <= ? AND state IN ('learning', 'review', 'relearning')
+	`, userID, now).Scan(&count)
 	return count, err
 }
 
@@ -164,10 +167,11 @@ func GetCardProgressStats(userID int64) (total, learned, due, mastered int, err 
 	}
 
 	// Due
+	now := time.Now().Format("2006-01-02 15:04:05")
 	if err = db.DB.QueryRow(`
 		SELECT COUNT(*) FROM card_progress
-		WHERE user_id = ? AND due <= ? AND state IN ('learning', 'review', 'relearning')
-	`, userID, time.Now()).Scan(&due); err != nil {
+		WHERE user_id = ? AND substr(due, 1, 19) <= ? AND state IN ('learning', 'review', 'relearning')
+	`, userID, now).Scan(&due); err != nil {
 		return
 	}
 

@@ -230,6 +230,7 @@ func UpsertSongProgress(p *models.SongProgress) error {
 
 // GetDueSongs returns songs due for review
 func GetDueSongs(userID int64, limit int) ([]models.SongWithProgress, error) {
+	now := time.Now().Format("2006-01-02 15:04:05")
 	rows, err := db.DB.Query(`
 		SELECT s.id, COALESCE(s.youtube_id, ''), s.genius_id, s.title, s.artist, COALESCE(s.album, ''),
 		       s.difficulty, COALESCE(s.duration_seconds, 0), COALESCE(s.thumbnail_url, ''),
@@ -239,10 +240,10 @@ func GetDueSongs(userID int64, limit int) ([]models.SongWithProgress, error) {
 		       p.listening_complete, p.total_listens
 		FROM songs s
 		JOIN song_progress p ON s.id = p.song_id
-		WHERE p.user_id = ? AND p.due <= CURRENT_TIMESTAMP AND p.state != 'new'
+		WHERE p.user_id = ? AND substr(p.due, 1, 19) <= ? AND p.state != 'new'
 		ORDER BY p.due ASC
 		LIMIT ?
-	`, userID, limit)
+	`, userID, now, limit)
 	if err != nil {
 		return nil, err
 	}

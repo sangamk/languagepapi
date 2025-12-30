@@ -160,7 +160,7 @@ func GetNewCardsFromIslands(userID int64, islandIDs []int64, limit int) ([]model
 		args = append(args, id)
 	}
 	query += `)
-		ORDER BY c.frequency_rank ASC, c.id ASC
+		ORDER BY RANDOM()
 		LIMIT ?`
 	args = append(args, limit)
 

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
 )
@@ -88,12 +90,13 @@ func GetIslandStats(userID, islandID int64) (*models.IslandStats, error) {
 	`, islandID, userID).Scan(&stats.LearnedCards)
 
 	// Due cards
+	now := time.Now().Format("2006-01-02 15:04:05")
 	db.DB.QueryRow(`
 		SELECT COUNT(*)
 		FROM card_progress p
 		INNER JOIN cards c ON c.id = p.card_id
-		WHERE c.island_id = ? AND p.user_id = ? AND p.due <= datetime('now') AND p.state IN ('learning', 'review', 'relearning')
-	`, islandID, userID).Scan(&stats.DueCards)
+		WHERE c.island_id = ? AND p.user_id = ? AND substr(p.due, 1, 19) <= ? AND p.state IN ('learning', 'review', 'relearning')
+	`, islandID, userID, now).Scan(&stats.DueCards)
 
 	// Mastered cards (high stability)
 	db.DB.QueryRow(`

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"time"
 
 	"languagepapi/internal/db"
 	"languagepapi/internal/models"
@@ -267,6 +268,7 @@ func GetAllCards(limit, offset int) ([]models.Card, error) {
 
 // GetDueSongVocabCards fetches song vocabulary cards due for review
 func GetDueSongVocabCards(userID int64, limit int) ([]models.CardWithProgress, error) {
+	now := time.Now().Format("2006-01-02 15:04:05")
 	rows, err := db.DB.Query(`
 		SELECT c.id, c.island_id, c.term, c.translation,
 		       COALESCE(c.example_sentence, ''), COALESCE(c.notes, ''), COALESCE(c.audio_url, ''),
@@ -277,10 +279,10 @@ func GetDueSongVocabCards(userID int64, limit int) ([]models.CardWithProgress, e
 		JOIN card_progress p ON c.id = p.card_id AND p.user_id = ?
 		WHERE c.source = 'song'
 		  AND p.state IN ('learning', 'review', 'relearning')
-		  AND p.due <= datetime('now')
+		  AND substr(p.due, 1, 19) <= ?
 		ORDER BY p.due ASC
 		LIMIT ?
-	`, userID, limit)
+	`, userID, now, limit)
 	if err != nil {
 		return nil, err
 	}
