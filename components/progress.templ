@@ -1,0 +1,142 @@
+package components
+
+import (
+	"fmt"
+	"languagepapi/internal/models"
+)
+
+templ Progress(data *models.ProgressOverviewData) {
+	@Layout("progress") {
+		<main class="progress-page">
+			<header class="page-header">
+				<a href="/" class="back-link" hx-get="/" hx-target="body">&larr; back</a>
+				<h1>progress</h1>
+			</header>
+
+			<!-- Overview Stats -->
+			<section class="progress-stats">
+				<div class="stat-card">
+					<span class="stat-value">{ fmt.Sprintf("%d", data.Stats.LearnedCount) }</span>
+					<span class="stat-label">words learned</span>
+				</div>
+				<div class="stat-card">
+					<span class="stat-value">{ fmt.Sprintf("%d", data.Stats.MasteredCount) }</span>
+					<span class="stat-label">mastered</span>
+				</div>
+				<div class="stat-card">
+					<span class="stat-value">{ fmt.Sprintf("%d", data.TotalXP) }</span>
+					<span class="stat-label">total xp</span>
+				</div>
+				<div class="stat-card">
+					<span class="stat-value">{ fmt.Sprintf("%d", data.CurrentStreak) }</span>
+					<span class="stat-label">streak</span>
+				</div>
+			</section>
+
+			<!-- Progress Bar -->
+			<section class="overall-progress">
+				<div class="progress-header">
+					<span>vocabulary progress</span>
+					<span class="progress-pct">{ fmt.Sprintf("%d/%d", data.Stats.LearnedCount, data.Stats.TotalCards) }</span>
+				</div>
+				<div class="progress-bar-lg">
+					<div class="progress-fill-lg" style={ fmt.Sprintf("width: %d%%", progressPercent(data.Stats.LearnedCount, data.Stats.TotalCards)) }></div>
+				</div>
+				<div class="progress-breakdown">
+					<span class="state-learning">{ fmt.Sprintf("%d learning", data.Stats.LearningCount) }</span>
+					<span class="state-review">{ fmt.Sprintf("%d reviewing", data.Stats.ReviewCount) }</span>
+					<span class="state-mastered">{ fmt.Sprintf("%d mastered", data.Stats.MasteredCount) }</span>
+				</div>
+			</section>
+
+			<!-- Islands Progress -->
+			<section class="islands-section">
+				<h2>progress by category</h2>
+				<div class="island-list">
+					for _, island := range data.Islands {
+						if island.TotalCards > 0 {
+							<div class="island-card">
+								<div class="island-header">
+									<span class="island-icon">{ island.IslandIcon }</span>
+									<span class="island-name">{ island.IslandName }</span>
+									<span class="island-count">{ fmt.Sprintf("%d/%d", island.LearnedCards, island.TotalCards) }</span>
+								</div>
+								<div class="island-bar">
+									<div class="island-fill mastered" style={ fmt.Sprintf("width: %d%%", progressPercent(island.MasteredCards, island.TotalCards)) }></div>
+									<div class="island-fill learned" style={ fmt.Sprintf("width: %d%%", progressPercent(island.LearnedCards - island.MasteredCards, island.TotalCards)) }></div>
+								</div>
+							</div>
+						}
+					}
+				</div>
+			</section>
+
+			<!-- Recent Lessons -->
+			if len(data.RecentLessons) > 0 {
+				<section class="lessons-section">
+					<h2>recent lessons</h2>
+					<div class="lesson-history">
+						for _, lesson := range data.RecentLessons {
+							<div class="lesson-row">
+								<span class="lesson-day">day { fmt.Sprintf("%d", lesson.DayNumber) }</span>
+								<span class="lesson-date">{ lesson.SessionDate.Format("Jan 2") }</span>
+								<span class="lesson-stats">
+									{ fmt.Sprintf("%d cards", lesson.CardsReviewed) }
+									if lesson.NewCardsLearned > 0 {
+										<span class="new-badge">+{ fmt.Sprintf("%d", lesson.NewCardsLearned) } new</span>
+									}
+								</span>
+								<span class="lesson-xp">+{ fmt.Sprintf("%d", lesson.XPEarned) } xp</span>
+							</div>
+						}
+					</div>
+				</section>
+			}
+
+			<!-- Recently Learned Words -->
+			if len(data.RecentWords) > 0 {
+				<section class="words-section">
+					<h2>recently learned</h2>
+					<div class="word-grid">
+						for _, word := range data.RecentWords {
+							<div class={ "word-item", stateClass(word.Progress) }>
+								<span class="word-term">{ word.Term }</span>
+								<span class="word-trans">{ word.Translation }</span>
+								if word.Progress != nil {
+									<span class="word-state">{ string(word.Progress.State) }</span>
+								}
+							</div>
+						}
+					</div>
+				</section>
+			}
+		</main>
+	}
+}
+
+func progressPercent(value, total int) int {
+	if total == 0 {
+		return 0
+	}
+	pct := value * 100 / total
+	if pct > 100 {
+		return 100
+	}
+	return pct
+}
+
+func stateClass(p *models.CardProgress) string {
+	if p == nil {
+		return "state-new"
+	}
+	switch p.State {
+	case models.StateLearning:
+		return "state-learning"
+	case models.StateReview:
+		return "state-review"
+	case models.StateRelearning:
+		return "state-relearning"
+	default:
+		return "state-new"
+	}
+}

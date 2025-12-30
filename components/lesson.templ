@@ -378,29 +378,30 @@ func shuffleWords(sentence string) []string {
 
 templ sentenceBuildScript() {
 	<script>
-		let selectedWords = [];
+		// Reset global state for sentence building
+		window.selectedWords = [];
 
 		function addWord(btn) {
 			if (btn.classList.contains('used')) return;
 			btn.classList.add('used');
-			selectedWords.push(btn.textContent);
+			window.selectedWords.push(btn.textContent);
 			updateSentenceArea();
 		}
 
 		function updateSentenceArea() {
 			const area = document.getElementById('sentence-area');
-			if (selectedWords.length === 0) {
+			if (window.selectedWords.length === 0) {
 				area.innerHTML = '<span class="placeholder">Tap words to build sentence</span>';
 			} else {
-				area.innerHTML = selectedWords.map((w, i) =>
+				area.innerHTML = window.selectedWords.map((w, i) =>
 					`<span class="selected-word" onclick="removeWord(${i})">${w}</span>`
 				).join(' ');
 			}
 		}
 
 		function removeWord(index) {
-			const word = selectedWords[index];
-			selectedWords.splice(index, 1);
+			const word = window.selectedWords[index];
+			window.selectedWords.splice(index, 1);
 			// Re-enable the word in bank
 			document.querySelectorAll('.word-chip').forEach(btn => {
 				if (btn.textContent === word && btn.classList.contains('used')) {
@@ -411,7 +412,7 @@ templ sentenceBuildScript() {
 		}
 
 		function clearSentence() {
-			selectedWords = [];
+			window.selectedWords = [];
 			document.querySelectorAll('.word-chip').forEach(btn => btn.classList.remove('used'));
 			updateSentenceArea();
 		}
@@ -420,7 +421,7 @@ templ sentenceBuildScript() {
 			const result = document.getElementById('sentence-result');
 			const cardId = document.getElementById('sb-card-id').value;
 			const correct = document.getElementById('sb-correct').value;
-			const userSentence = selectedWords.join(' ');
+			const userSentence = window.selectedWords.join(' ');
 
 			// Normalize comparison (remove punctuation, lowercase)
 			const normalize = s => s.toLowerCase().replace(/[.,!?]/g, '').trim();
@@ -514,7 +515,12 @@ templ lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Schedulin
 
 templ lessonKeyboardScript() {
 	<script>
-		document.addEventListener('keydown', function(e) {
+		// Remove any existing keyboard handler to prevent duplicates
+		if (window.lessonKeyHandler) {
+			document.removeEventListener('keydown', window.lessonKeyHandler);
+		}
+
+		window.lessonKeyHandler = function(e) {
 			if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
 			const flashcard = document.getElementById('flashcard');
@@ -541,7 +547,12 @@ templ lessonKeyboardScript() {
 					document.getElementById('btn-skip')?.click();
 					break;
 			}
-		});
+		};
+
+		document.addEventListener('keydown', window.lessonKeyHandler);
+
+		// Blur any focused element to reset visual state
+		document.activeElement?.blur();
 	</script>
 }
 

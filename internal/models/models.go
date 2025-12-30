@@ -605,3 +605,38 @@ func (s *Song) DifficultyClass() string {
 		return ""
 	}
 }
+
+// =============================================
+// PROGRESS OVERVIEW MODELS
+// =============================================
+
+// IslandProgress represents progress for a single island
+type IslandProgress struct {
+	IslandID      int64
+	IslandName    string
+	IslandIcon    string
+	TotalCards    int
+	LearnedCards  int
+	MasteredCards int
+}
+
+// ProgressOverviewStats contains aggregate learning statistics
+type ProgressOverviewStats struct {
+	TotalCards      int
+	LearnedCount    int
+	LearningCount   int
+	ReviewCount     int
+	RelearningCount int
+	MasteredCount   int
+	TotalReviews    int
+}
+
+// ProgressOverviewData holds all data for the progress overview page
+type ProgressOverviewData struct {
+	Stats           *ProgressOverviewStats
+	Islands         []IslandProgress
+	RecentWords     []CardWithProgress
+	RecentLessons   []LessonSession
+	TotalXP         int
+	CurrentStreak   int
+}

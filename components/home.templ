@@ -98,6 +98,7 @@ templ Home(data *models.JourneyHomeData) {
 				</svg>
 			</button>
 			<nav class="settings-menu hidden" id="settings-menu">
+				<a href="/progress" hx-get="/progress" hx-target="body" hx-swap="innerHTML">Progress</a>
 				<a href="/songs" hx-get="/songs" hx-target="body" hx-swap="innerHTML">Song Lessons</a>
 				<a href="/calendar" hx-get="/calendar" hx-target="body" hx-swap="innerHTML">View Stats</a>
 				<a href="/words" hx-get="/words" hx-target="body" hx-swap="innerHTML">My Words</a>

@@ -64,6 +64,9 @@ func main() {
 	// Calendar / Stats
 	mux.HandleFunc("GET /calendar", handlers.HandleCalendar)
 
+	// Progress Overview
+	mux.HandleFunc("GET /progress", handlers.HandleProgress)
+
 	// Settings
 	mux.HandleFunc("GET /settings", handlers.HandleSettings)
 	mux.HandleFunc("POST /settings", handlers.HandleSaveSettings)

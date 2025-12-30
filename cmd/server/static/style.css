@@ -290,3 +290,52 @@
 .accuracy-label{font-size:.75rem;color:var(--dim);text-transform:uppercase}
 
 .empty-state{padding:2rem;text-align:center;color:var(--dim)}
+
+/* Progress Overview Page */
+.progress-page{display:flex;flex-direction:column;gap:1.5rem;padding:1rem 0}
+.progress-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem}
+.stat-card{display:flex;flex-direction:column;align-items:center;gap:.25rem;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.stat-card .stat-value{font-size:1.75rem;font-weight:700;color:var(--accent)}
+.stat-card .stat-label{font-size:.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+
+.overall-progress{padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.progress-header{display:flex;justify-content:space-between;margin-bottom:.5rem;font-size:.875rem}
+.progress-pct{color:var(--accent);font-weight:600}
+.progress-bar-lg{height:12px;background:var(--border);border-radius:6px;overflow:hidden}
+.progress-fill-lg{height:100%;background:var(--accent);border-radius:6px;transition:width .5s ease}
+.progress-breakdown{display:flex;justify-content:center;gap:1rem;margin-top:.75rem;font-size:.7rem}
+.state-learning{color:var(--hard)}
+.state-review{color:var(--good)}
+.state-mastered{color:var(--accent)}
+.state-relearning{color:var(--again)}
+.state-new{color:var(--dim)}
+
+.islands-section h2,.lessons-section h2,.words-section h2{font-size:.875rem;color:var(--dim);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.island-list{display:flex;flex-direction:column;gap:.5rem}
+.island-card{padding:.75rem;background:var(--card);border:1px solid var(--border);border-radius:6px}
+.island-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem}
+.island-icon{font-size:1.25rem}
+.island-name{flex:1;font-size:.875rem;font-weight:500}
+.island-count{font-size:.75rem;color:var(--dim)}
+.island-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;display:flex}
+.island-fill{height:100%;transition:width .3s ease}
+.island-fill.mastered{background:var(--accent)}
+.island-fill.learned{background:var(--good);opacity:.5}
+
+.lesson-history{display:flex;flex-direction:column;gap:.5rem}
+.lesson-row{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--card);border:1px solid var(--border);border-radius:6px;font-size:.875rem}
+.lesson-day{font-weight:600;color:var(--accent);min-width:50px}
+.lesson-date{color:var(--dim);min-width:45px}
+.lesson-stats{flex:1;color:var(--fg)}
+.lesson-stats .new-badge{background:rgba(0,255,136,.15);color:var(--accent);padding:.125rem .375rem;border-radius:2px;font-size:.7rem;margin-left:.5rem}
+.lesson-xp{color:var(--accent);font-weight:500}
+
+.word-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
+.word-item{display:flex;flex-direction:column;gap:.125rem;padding:.75rem;background:var(--card);border:1px solid var(--border);border-radius:6px}
+.word-item .word-term{font-weight:600;color:var(--accent);font-size:.9rem}
+.word-item .word-trans{font-size:.8rem;color:var(--fg)}
+.word-item .word-state{font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;margin-top:.25rem}
+.word-item.state-learning .word-state{color:var(--hard)}
+.word-item.state-review .word-state{color:var(--good)}
+.word-item.state-mastered .word-state{color:var(--accent)}
+.word-item.state-relearning .word-state{color:var(--again)}

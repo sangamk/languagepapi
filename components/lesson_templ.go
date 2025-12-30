@@ -946,7 +946,7 @@ func sentenceBuildScript() templ.Component {
 			templ_7745c5c3_Var43 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<script>\n\t\tlet selectedWords = [];\n\n\t\tfunction addWord(btn) {\n\t\t\tif (btn.classList.contains('used')) return;\n\t\t\tbtn.classList.add('used');\n\t\t\tselectedWords.push(btn.textContent);\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction updateSentenceArea() {\n\t\t\tconst area = document.getElementById('sentence-area');\n\t\t\tif (selectedWords.length === 0) {\n\t\t\t\tarea.innerHTML = '<span class=\"placeholder\">Tap words to build sentence</span>';\n\t\t\t} else {\n\t\t\t\tarea.innerHTML = selectedWords.map((w, i) =>\n\t\t\t\t\t`<span class=\"selected-word\" onclick=\"removeWord(${i})\">${w}</span>`\n\t\t\t\t).join(' ');\n\t\t\t}\n\t\t}\n\n\t\tfunction removeWord(index) {\n\t\t\tconst word = selectedWords[index];\n\t\t\tselectedWords.splice(index, 1);\n\t\t\t// Re-enable the word in bank\n\t\t\tdocument.querySelectorAll('.word-chip').forEach(btn => {\n\t\t\t\tif (btn.textContent === word && btn.classList.contains('used')) {\n\t\t\t\t\tbtn.classList.remove('used');\n\t\t\t\t}\n\t\t\t});\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction clearSentence() {\n\t\t\tselectedWords = [];\n\t\t\tdocument.querySelectorAll('.word-chip').forEach(btn => btn.classList.remove('used'));\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction checkSentence() {\n\t\t\tconst result = document.getElementById('sentence-result');\n\t\t\tconst cardId = document.getElementById('sb-card-id').value;\n\t\t\tconst correct = document.getElementById('sb-correct').value;\n\t\t\tconst userSentence = selectedWords.join(' ');\n\n\t\t\t// Normalize comparison (remove punctuation, lowercase)\n\t\t\tconst normalize = s => s.toLowerCase().replace(/[.,!?]/g, '').trim();\n\n\t\t\tif (normalize(userSentence) === normalize(correct)) {\n\t\t\t\tresult.innerHTML = '<span class=\"correct\">Correct!</span>';\n\t\t\t\tsetTimeout(() => {\n\t\t\t\t\thtmx.ajax('POST', '/lesson/review', {\n\t\t\t\t\t\ttarget: '.lesson-container',\n\t\t\t\t\t\tswap: 'outerHTML',\n\t\t\t\t\t\tvalues: { card_id: cardId, rating: '3' }\n\t\t\t\t\t});\n\t\t\t\t}, 1000);\n\t\t\t} else {\n\t\t\t\tresult.innerHTML = `<span class=\"incorrect\">Not quite. Correct: <strong>${correct}</strong></span>`;\n\t\t\t\tsetTimeout(() => {\n\t\t\t\t\thtmx.ajax('POST', '/lesson/review', {\n\t\t\t\t\t\ttarget: '.lesson-container',\n\t\t\t\t\t\tswap: 'outerHTML',\n\t\t\t\t\t\tvalues: { card_id: cardId, rating: '1' }\n\t\t\t\t\t});\n\t\t\t\t}, 2500);\n\t\t\t}\n\t\t}\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "<script>\n\t\t// Reset global state for sentence building\n\t\twindow.selectedWords = [];\n\n\t\tfunction addWord(btn) {\n\t\t\tif (btn.classList.contains('used')) return;\n\t\t\tbtn.classList.add('used');\n\t\t\twindow.selectedWords.push(btn.textContent);\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction updateSentenceArea() {\n\t\t\tconst area = document.getElementById('sentence-area');\n\t\t\tif (window.selectedWords.length === 0) {\n\t\t\t\tarea.innerHTML = '<span class=\"placeholder\">Tap words to build sentence</span>';\n\t\t\t} else {\n\t\t\t\tarea.innerHTML = window.selectedWords.map((w, i) =>\n\t\t\t\t\t`<span class=\"selected-word\" onclick=\"removeWord(${i})\">${w}</span>`\n\t\t\t\t).join(' ');\n\t\t\t}\n\t\t}\n\n\t\tfunction removeWord(index) {\n\t\t\tconst word = window.selectedWords[index];\n\t\t\twindow.selectedWords.splice(index, 1);\n\t\t\t// Re-enable the word in bank\n\t\t\tdocument.querySelectorAll('.word-chip').forEach(btn => {\n\t\t\t\tif (btn.textContent === word && btn.classList.contains('used')) {\n\t\t\t\t\tbtn.classList.remove('used');\n\t\t\t\t}\n\t\t\t});\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction clearSentence() {\n\t\t\twindow.selectedWords = [];\n\t\t\tdocument.querySelectorAll('.word-chip').forEach(btn => btn.classList.remove('used'));\n\t\t\tupdateSentenceArea();\n\t\t}\n\n\t\tfunction checkSentence() {\n\t\t\tconst result = document.getElementById('sentence-result');\n\t\t\tconst cardId = document.getElementById('sb-card-id').value;\n\t\t\tconst correct = document.getElementById('sb-correct').value;\n\t\t\tconst userSentence = window.selectedWords.join(' ');\n\n\t\t\t// Normalize comparison (remove punctuation, lowercase)\n\t\t\tconst normalize = s => s.toLowerCase().replace(/[.,!?]/g, '').trim();\n\n\t\t\tif (normalize(userSentence) === normalize(correct)) {\n\t\t\t\tresult.innerHTML = '<span class=\"correct\">Correct!</span>';\n\t\t\t\tsetTimeout(() => {\n\t\t\t\t\thtmx.ajax('POST', '/lesson/review', {\n\t\t\t\t\t\ttarget: '.lesson-container',\n\t\t\t\t\t\tswap: 'outerHTML',\n\t\t\t\t\t\tvalues: { card_id: cardId, rating: '3' }\n\t\t\t\t\t});\n\t\t\t\t}, 1000);\n\t\t\t} else {\n\t\t\t\tresult.innerHTML = `<span class=\"incorrect\">Not quite. Correct: <strong>${correct}</strong></span>`;\n\t\t\t\tsetTimeout(() => {\n\t\t\t\t\thtmx.ajax('POST', '/lesson/review', {\n\t\t\t\t\t\ttarget: '.lesson-container',\n\t\t\t\t\t\tswap: 'outerHTML',\n\t\t\t\t\t\tvalues: { card_id: cardId, rating: '1' }\n\t\t\t\t\t});\n\t\t\t\t}, 2500);\n\t\t\t}\n\t\t}\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -982,7 +982,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var45 string
 		templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"card_id": "%d", "rating": "1"}`, cardID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 459, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 460, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 		if templ_7745c5c3_Err != nil {
@@ -995,7 +995,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var46 string
 		templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(formatInterval(preview[models.RatingAgain].Interval))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 462, Col: 87}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 463, Col: 87}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 		if templ_7745c5c3_Err != nil {
@@ -1008,7 +1008,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var47 string
 		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"card_id": "%d", "rating": "2"}`, cardID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 471, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 472, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
 		if templ_7745c5c3_Err != nil {
@@ -1021,7 +1021,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var48 string
 		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(formatInterval(preview[models.RatingHard].Interval))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 474, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 475, Col: 86}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 		if templ_7745c5c3_Err != nil {
@@ -1034,7 +1034,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var49 string
 		templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"card_id": "%d", "rating": "3"}`, cardID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 483, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 484, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
 		if templ_7745c5c3_Err != nil {
@@ -1047,7 +1047,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var50 string
 		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(formatInterval(preview[models.RatingGood].Interval))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 486, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 487, Col: 86}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 		if templ_7745c5c3_Err != nil {
@@ -1060,7 +1060,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var51 string
 		templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf(`{"card_id": "%d", "rating": "4"}`, cardID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 495, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 496, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 		if templ_7745c5c3_Err != nil {
@@ -1073,7 +1073,7 @@ func lessonRatingButtons(cardID int64, preview map[models.Rating]fsrs.Scheduling
 		var templ_7745c5c3_Var52 string
 		templ_7745c5c3_Var52, templ_7745c5c3_Err = templ.JoinStringErrs(formatInterval(preview[models.RatingEasy].Interval))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 498, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 499, Col: 86}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var52))
 		if templ_7745c5c3_Err != nil {
@@ -1108,7 +1108,7 @@ func lessonKeyboardScript() templ.Component {
 			templ_7745c5c3_Var53 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<script>\n\t\tdocument.addEventListener('keydown', function(e) {\n\t\t\tif (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;\n\n\t\t\tconst flashcard = document.getElementById('flashcard');\n\n\t\t\tswitch(e.key) {\n\t\t\t\tcase ' ':\n\t\t\t\t\te.preventDefault();\n\t\t\t\t\tif (flashcard) flashcard.classList.toggle('flipped');\n\t\t\t\t\tbreak;\n\t\t\t\tcase '1':\n\t\t\t\t\tdocument.getElementById('btn-again')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '2':\n\t\t\t\t\tdocument.getElementById('btn-hard')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '3':\n\t\t\t\t\tdocument.getElementById('btn-good')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '4':\n\t\t\t\t\tdocument.getElementById('btn-easy')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase 's':\n\t\t\t\tcase 'S':\n\t\t\t\t\tdocument.getElementById('btn-skip')?.click();\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t});\n\t</script>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<script>\n\t\t// Remove any existing keyboard handler to prevent duplicates\n\t\tif (window.lessonKeyHandler) {\n\t\t\tdocument.removeEventListener('keydown', window.lessonKeyHandler);\n\t\t}\n\n\t\twindow.lessonKeyHandler = function(e) {\n\t\t\tif (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;\n\n\t\t\tconst flashcard = document.getElementById('flashcard');\n\n\t\t\tswitch(e.key) {\n\t\t\t\tcase ' ':\n\t\t\t\t\te.preventDefault();\n\t\t\t\t\tif (flashcard) flashcard.classList.toggle('flipped');\n\t\t\t\t\tbreak;\n\t\t\t\tcase '1':\n\t\t\t\t\tdocument.getElementById('btn-again')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '2':\n\t\t\t\t\tdocument.getElementById('btn-hard')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '3':\n\t\t\t\t\tdocument.getElementById('btn-good')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase '4':\n\t\t\t\t\tdocument.getElementById('btn-easy')?.click();\n\t\t\t\t\tbreak;\n\t\t\t\tcase 's':\n\t\t\t\tcase 'S':\n\t\t\t\t\tdocument.getElementById('btn-skip')?.click();\n\t\t\t\t\tbreak;\n\t\t\t}\n\t\t};\n\n\t\tdocument.addEventListener('keydown', window.lessonKeyHandler);\n\n\t\t// Blur any focused element to reset visual state\n\t\tdocument.activeElement?.blur();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1145,7 +1145,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var55 string
 		templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", dayNumber))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 555, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 566, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
 		if templ_7745c5c3_Err != nil {
@@ -1158,7 +1158,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var56 string
 		templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(phase.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 556, Col: 41}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 567, Col: 41}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
 		if templ_7745c5c3_Err != nil {
@@ -1171,7 +1171,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var57 string
 		templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f 264", float64(dayNumber)/180.0*264))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 567, Col: 78}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 578, Col: 78}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
 		if templ_7745c5c3_Err != nil {
@@ -1184,7 +1184,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var58 string
 		templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", dayNumber))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 571, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 582, Col: 53}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
 		if templ_7745c5c3_Err != nil {
@@ -1197,7 +1197,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var59 string
 		templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", reviewed))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 578, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 589, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
 		if templ_7745c5c3_Err != nil {
@@ -1210,7 +1210,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var60 string
 		templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", newLearned))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 582, Col: 62}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 593, Col: 62}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
 		if templ_7745c5c3_Err != nil {
@@ -1223,7 +1223,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var61 string
 		templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", accuracy))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 586, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 597, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 		if templ_7745c5c3_Err != nil {
@@ -1236,7 +1236,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var62 string
 		templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", xpEarned))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 590, Col: 64}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 601, Col: 64}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
 		if templ_7745c5c3_Err != nil {
@@ -1259,7 +1259,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 				var templ_7745c5c3_Var63 string
 				templ_7745c5c3_Var63, templ_7745c5c3_Err = templ.JoinStringErrs(achievementIconMap(a.Icon))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 600, Col: 66}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 611, Col: 66}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var63))
 				if templ_7745c5c3_Err != nil {
@@ -1272,7 +1272,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 				var templ_7745c5c3_Var64 string
 				templ_7745c5c3_Var64, templ_7745c5c3_Err = templ.JoinStringErrs(a.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 601, Col: 46}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 612, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var64))
 				if templ_7745c5c3_Err != nil {
@@ -1295,7 +1295,7 @@ func LessonComplete(dayNumber int, phase *models.CurriculumPhase, reviewed, newL
 		var templ_7745c5c3_Var65 string
 		templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinStringErrs(message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 607, Col: 34}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 618, Col: 34}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
 		if templ_7745c5c3_Err != nil {
@@ -1342,7 +1342,7 @@ func LessonEmpty(dayNumber int, phase *models.CurriculumPhase) templ.Component {
 		var templ_7745c5c3_Var67 string
 		templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", dayNumber))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 619, Col: 60}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 630, Col: 60}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
 		if templ_7745c5c3_Err != nil {
@@ -1385,7 +1385,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var69 string
 		templ_7745c5c3_Var69, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.DayNumber))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 636, Col: 50}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 647, Col: 50}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var69))
 		if templ_7745c5c3_Err != nil {
@@ -1398,7 +1398,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var70 string
 		templ_7745c5c3_Var70, templ_7745c5c3_Err = templ.JoinStringErrs(summary.Phase.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 637, Col: 49}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 648, Col: 49}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var70))
 		if templ_7745c5c3_Err != nil {
@@ -1411,7 +1411,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var71 string
 		templ_7745c5c3_Var71, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f 264", float64(summary.DayNumber)/180.0*264))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 648, Col: 86}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 659, Col: 86}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var71))
 		if templ_7745c5c3_Err != nil {
@@ -1424,7 +1424,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var72 string
 		templ_7745c5c3_Var72, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.DayNumber))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 652, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 663, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var72))
 		if templ_7745c5c3_Err != nil {
@@ -1437,7 +1437,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var73 string
 		templ_7745c5c3_Var73, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.TotalCards))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 659, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 670, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var73))
 		if templ_7745c5c3_Err != nil {
@@ -1450,7 +1450,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var74 string
 		templ_7745c5c3_Var74, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.NewLearned))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 663, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 674, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var74))
 		if templ_7745c5c3_Err != nil {
@@ -1463,7 +1463,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var75 string
 		templ_7745c5c3_Var75, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.Accuracy))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 667, Col: 68}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 678, Col: 68}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var75))
 		if templ_7745c5c3_Err != nil {
@@ -1476,7 +1476,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var76 string
 		templ_7745c5c3_Var76, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", summary.XPEarned))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 671, Col: 72}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 682, Col: 72}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var76))
 		if templ_7745c5c3_Err != nil {
@@ -1489,7 +1489,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var77 string
 		templ_7745c5c3_Var77, templ_7745c5c3_Err = templ.JoinStringErrs(formatDuration(summary.TotalTimeMs))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 678, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 689, Col: 66}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var77))
 		if templ_7745c5c3_Err != nil {
@@ -1502,7 +1502,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var78 string
 		templ_7745c5c3_Var78, templ_7745c5c3_Err = templ.JoinStringErrs(formatDuration(summary.AvgTimePerCard))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 680, Col: 67}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 691, Col: 67}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var78))
 		if templ_7745c5c3_Err != nil {
@@ -1525,7 +1525,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var79 string
 				templ_7745c5c3_Var79, templ_7745c5c3_Err = templ.JoinStringErrs(achievementIconMap(a.Icon))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 688, Col: 66}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 699, Col: 66}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var79))
 				if templ_7745c5c3_Err != nil {
@@ -1538,7 +1538,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var80 string
 				templ_7745c5c3_Var80, templ_7745c5c3_Err = templ.JoinStringErrs(a.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 689, Col: 46}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 700, Col: 46}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var80))
 				if templ_7745c5c3_Err != nil {
@@ -1562,7 +1562,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 			var templ_7745c5c3_Var81 string
 			templ_7745c5c3_Var81, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(summary.Struggles)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 698, Col: 97}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 709, Col: 97}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var81))
 			if templ_7745c5c3_Err != nil {
@@ -1580,7 +1580,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var82 string
 				templ_7745c5c3_Var82, templ_7745c5c3_Err = templ.JoinStringErrs(card.Term)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 702, Col: 47}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 713, Col: 47}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var82))
 				if templ_7745c5c3_Err != nil {
@@ -1593,7 +1593,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var83 string
 				templ_7745c5c3_Var83, templ_7745c5c3_Err = templ.JoinStringErrs(card.Translation)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 703, Col: 61}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 714, Col: 61}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var83))
 				if templ_7745c5c3_Err != nil {
@@ -1628,7 +1628,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var86 string
 				templ_7745c5c3_Var86, templ_7745c5c3_Err = templ.JoinStringErrs(card.Rating.Label())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 704, Col: 89}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 715, Col: 89}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var86))
 				if templ_7745c5c3_Err != nil {
@@ -1652,7 +1652,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 			var templ_7745c5c3_Var87 string
 			templ_7745c5c3_Var87, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(summary.CardResults)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 714, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 725, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var87))
 			if templ_7745c5c3_Err != nil {
@@ -1688,7 +1688,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var90 string
 				templ_7745c5c3_Var90, templ_7745c5c3_Err = templ.JoinStringErrs(card.Term)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 719, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 730, Col: 49}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var90))
 				if templ_7745c5c3_Err != nil {
@@ -1701,7 +1701,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var91 string
 				templ_7745c5c3_Var91, templ_7745c5c3_Err = templ.JoinStringErrs(card.Translation)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 720, Col: 63}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 731, Col: 63}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var91))
 				if templ_7745c5c3_Err != nil {
@@ -1736,7 +1736,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var94 string
 				templ_7745c5c3_Var94, templ_7745c5c3_Err = templ.JoinStringErrs(card.Rating.Label())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 723, Col: 91}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 734, Col: 91}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var94))
 				if templ_7745c5c3_Err != nil {
@@ -1749,7 +1749,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 				var templ_7745c5c3_Var95 string
 				templ_7745c5c3_Var95, templ_7745c5c3_Err = templ.JoinStringErrs(formatDuration(card.TimeSpentMs))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 724, Col: 72}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 735, Col: 72}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var95))
 				if templ_7745c5c3_Err != nil {
@@ -1782,7 +1782,7 @@ func LessonCompleteWithSummary(summary *models.LessonSummary) templ.Component {
 		var templ_7745c5c3_Var96 string
 		templ_7745c5c3_Var96, templ_7745c5c3_Err = templ.JoinStringErrs(summary.Message)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 735, Col: 42}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/lesson.templ`, Line: 746, Col: 42}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var96))
 		if templ_7745c5c3_Err != nil {
