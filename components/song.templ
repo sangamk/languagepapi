@@ -543,24 +543,79 @@ templ audioLyricsSync() {
 			const lyricsContainer = document.getElementById('lyrics-scroll');
 			if (!audio || !lyricsContainer) return;
 
-			const lines = lyricsContainer.querySelectorAll('.lyric-line');
+			const lines = Array.from(lyricsContainer.querySelectorAll('.lyric-line'));
+			let currentLineIndex = -1;
+
+			// Build a sorted array of line timings for efficient lookup
+			const timings = lines.map((line, index) => ({
+				index,
+				start: parseInt(line.dataset.start),
+				end: parseInt(line.dataset.end),
+				element: line
+			}));
+
+			function findCurrentLine(currentMs) {
+				// Find the line where currentMs falls within [start, end)
+				// Use < for end to avoid overlap at boundaries
+				for (let i = 0; i < timings.length; i++) {
+					const t = timings[i];
+					if (currentMs >= t.start && currentMs < t.end) {
+						return i;
+					}
+				}
+				// If we're past the last line's start but within its end (inclusive for last line)
+				const last = timings[timings.length - 1];
+				if (last && currentMs >= last.start && currentMs <= last.end) {
+					return timings.length - 1;
+				}
+				// If we're between lines (shouldn't happen with continuous timestamps),
+				// find the closest upcoming line
+				for (let i = 0; i < timings.length; i++) {
+					if (currentMs < timings[i].start) {
+						// Show the previous line if we're just past it
+						return i > 0 ? i - 1 : -1;
+					}
+				}
+				return -1;
+			}
 
 			audio.addEventListener('timeupdate', function() {
 				const currentMs = audio.currentTime * 1000;
-				lines.forEach(line => {
-					const start = parseInt(line.dataset.start);
-					const end = parseInt(line.dataset.end);
-					if (currentMs >= start && currentMs <= end) {
-						line.classList.add('active');
-						line.scrollIntoView({ behavior: 'smooth', block: 'center' });
-					} else {
-						line.classList.remove('active');
+				const newLineIndex = findCurrentLine(currentMs);
+
+				if (newLineIndex !== currentLineIndex) {
+					// Remove active from previous line
+					if (currentLineIndex >= 0 && currentLineIndex < lines.length) {
+						lines[currentLineIndex].classList.remove('active');
 					}
-				});
+					// Add active to new line and scroll
+					if (newLineIndex >= 0 && newLineIndex < lines.length) {
+						lines[newLineIndex].classList.add('active');
+						lines[newLineIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+					}
+					currentLineIndex = newLineIndex;
+				}
+			});
+
+			// Also sync on seeked event for when user jumps around
+			audio.addEventListener('seeked', function() {
+				const currentMs = audio.currentTime * 1000;
+				const newLineIndex = findCurrentLine(currentMs);
+
+				// Clear all active states
+				lines.forEach(l => l.classList.remove('active'));
+				currentLineIndex = -1;
+
+				// Set the current line
+				if (newLineIndex >= 0 && newLineIndex < lines.length) {
+					lines[newLineIndex].classList.add('active');
+					lines[newLineIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+					currentLineIndex = newLineIndex;
+				}
 			});
 
 			// Click on lyric line to seek
-			lines.forEach(line => {
+			lines.forEach((line, index) => {
 				line.addEventListener('click', function() {
 					const start = parseInt(this.dataset.start);
 					audio.currentTime = start / 1000;
