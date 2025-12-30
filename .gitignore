@@ -51,3 +51,4 @@ debug
 cmd/server/static/*
 cmd/server/static/
 *_templ.go
+cmd/server/static/style.css
