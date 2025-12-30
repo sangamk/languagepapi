@@ -32,7 +32,7 @@ vendor/
 *.swp
 *.swo
 *~
-
+*.mp3
 # OS files
 .DS_Store
 .DS_Store?
